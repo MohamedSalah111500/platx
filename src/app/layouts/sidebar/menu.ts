@@ -42,7 +42,7 @@ export const MENU: MenuItem[] = [
     id: 12,
     label: "Classes ",
     icon: 'bx-task',
-    link: "/filemanager",
+    link: "/classes",
   },
   {
     id: 12,

@@ -53,7 +53,7 @@ const CandidateList = [
         id: '6',
         type: 'Internship',
         profile: 'assets/images/users/avatar-6.jpg',
-        name: 'Henry Wells',
+        name: 'Mohamed Salah',
         position: 'Executive, HR Operations',
         location: 'Danemark',
         price: 65,

@@ -21,7 +21,7 @@ const customersData = [
     },
     {
         id: 3,
-        username: 'Scott Henry',
+        username: 'Scott Mohamed',
         phone: '704-629-9535',
         email: 'ScottHenry@jourrapide.com',
         address: '3632 Snyder Avenue Bessemer City, NC 28016',
@@ -111,7 +111,7 @@ const customersData = [
     },
     {
         id: 12,
-        username: 'Scott Henry',
+        username: 'Scott Mohamed',
         phone: '704-629-9535',
         email: 'ScottHenry@jourrapide.com',
         address: '3632 Snyder Avenue Bessemer City, NC 28016',

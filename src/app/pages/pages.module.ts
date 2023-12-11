@@ -42,9 +42,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { ChatComponent } from './chat/chat.component';
 
 import { FilemanagerComponent } from './filemanager/filemanager.component';
+import { ClassesComponent } from './classes/classes.component';
 
 @NgModule({
-  declarations: [CalendarComponent, ChatComponent, FilemanagerComponent],
+  declarations: [CalendarComponent, ChatComponent, FilemanagerComponent,ClassesComponent],
   imports: [
     CommonModule,
     FormsModule,

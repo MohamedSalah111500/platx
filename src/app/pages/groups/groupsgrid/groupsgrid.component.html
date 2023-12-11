@@ -4,55 +4,84 @@
     [breadcrumbItems]="breadCrumbItems"
   ></app-page-title>
 
-  <div class="row">
-    @for (stat of statData; track $index) {
-    <div class="col-md-2">
-      <app-stat [title]="stat.title" [value]="stat.value" [icon]="stat.icon"></app-stat>
+  <div class="row mb-4">
+    <div class="col-md-3" *ngFor="let stat of statData; track: $index">
+      <app-stat
+        [title]="stat.title"
+        [value]="stat.value"
+        [icon]="stat.icon"
+      ></app-stat>
     </div>
-    }
   </div>
 
 
-    <div class="row mb-2">
-      <div class="col-sm">
-        <div class="search-box me-2 d-inline-block">
-          <div class="position-relative">
-            <input
-              type="text"
-              class="form-control"
-              autocomplete="off"
-              id="searchTableList"
-              placeholder="Search..."
-            />
-            <i class="bx bx-search-alt search-icon"></i>
-          </div>
-        </div>
+    <div class="row g-3 mb-3">
+      <div class="col-xxl-4 col-lg-6">
+        <input
+          type="search"
+          class="form-control"
+          id="searchInput"
+          placeholder="Search for ..."
+          [(ngModel)]="term"
+          (ngModelChange)="searchJob()"
+        />
       </div>
-      <!-- end col -->
-      <div class="col-sm-auto">
+      <div class="col-xxl-2 col-lg-6">
+        <div id="datepicker1">
+          <input
+            type="text"
+            placeholder="Start from"
+            class="form-control"
+            bsDatepicker
+            [bsConfig]="{ showWeekNumbers: false }"
+          />
+        </div>
+        <!-- input-group -->
+      </div>
+
+      <div class="col-xxl-2 col-lg-4">
+        <div id="datepicker1">
+          <input
+            type="text"
+            placeholder="End to"
+            class="form-control"
+            bsDatepicker
+            [bsConfig]="{ showWeekNumbers: false }"
+          />
+        </div>
+        <!-- input-group -->
+      </div>
+      <div class="col-xxl-2 col-lg-4">
+        <button type="button" class="btn btn-soft-secondary ">
+          <i class="mdi mdi-filter-outline align-middle"></i> Filter
+        </button>
+      </div>
+      <div class="col-xxl-2 col-lg-4">
         <div class="text-sm-end">
           <a
             routerLink="/groups/create"
             class="btn btn-success btn-rounded"
             id="addProject-btn"
-            ><i class="mdi mdi-plus me-1"></i> Add New Group</a
+            ><i class="mdi mdi-plus me-1"></i> Create New Group</a
           >
         </div>
       </div>
-      <!-- end col -->
     </div>
-    <div class="row">
+
+
+
+    <div class="row ">
     @for(grid of groupData;track $index){
     <div class="col-xl-3 col-sm-6">
       <div class="card">
         <div class="card-body">
           <div class="d-flex">
-            <div class="flex-shrink-0 me-4">
+            <div class="flex-shrink-0 me-2">
               <div class="avatar-md">
                 <span
                   class="avatar-title rounded-circle bg-light text-danger font-size-16"
                 >
-                  <img src="{{ grid.image }}" alt height="30" />
+                  <img src="{{ grid.image }}" alt height="25" />
                 </span>
               </div>
             </div>
@@ -63,7 +92,7 @@
                   grid.text
                 }}</a>
               </h5>
-              <p class="text-muted mb-4">{{ grid.subtext }}</p>
+              <p class="text-muted mb-2">{{ grid.subtext }}</p>
               <div class="avatar-group">
                 <div class="avatar-group-item">
                   <a href="javascript: void(0);" class="d-inline-block">
@@ -95,6 +124,11 @@
                   </a>
                 </div>
                 }
+                <div class="avatar-group-item">
+                  <a href="javascript: void(0);" class="rounded-circle avatar-title mx-1">
+                  +25
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -121,13 +155,13 @@
               {{ grid.date }}
             </li>
             <li
-              class="list-inline-item me-3"
-              title="Comments"
-              tooltip="Comments"
-            >
-              <i class="bx bx-comment-dots me-1"></i>
-              {{ grid.comment }}
-            </li>
+            class="list-inline-item me-3"
+            title="Group Time"
+            tooltip="Group Time"
+          >
+            <i class="bx bx-time-five me-1"></i>
+           08:36 am
+          </li>
           </ul>
         </div>
       </div>

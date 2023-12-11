@@ -5,6 +5,7 @@ import { CalendarComponent } from './calendar/calendar.component';
 import { ChatComponent } from './chat/chat.component';
 import { DefaultComponent } from './dashboards/default/default.component';
 import { FilemanagerComponent } from './filemanager/filemanager.component';
+import { ClassesComponent } from './classes/classes.component';
 
 const routes: Routes = [
   // { path: '', redirectTo: 'dashboard' },
@@ -16,6 +17,8 @@ const routes: Routes = [
   { path: 'events', component: CalendarComponent },
   { path: 'groups', loadChildren: () => import('./groups/groups.module').then(m => m.GroupsModule) },
   { path: 'chat', component: ChatComponent },
+  { path: 'classes', component: ClassesComponent },
+
 
 
   { path: 'filemanager', component: FilemanagerComponent },

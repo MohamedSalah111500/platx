@@ -96,7 +96,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
       // Message Push in Chat
       this.chatMessagesData.push({
         align: 'right',
-        name: 'Henry Wells',
+        name: 'Mohamed Salah',
         message,
         time: currentDate.getHours() + ':' + currentDate.getMinutes()
       });

@@ -2,7 +2,7 @@ const projectData = [
     {
         id: 1,
         image: 'assets/images/companies/img-1.png',
-        text: 'New admin Design',
+        text: 'Group No. X',
         subtext: 'It will be as simple as Occidental',
         users: ['assets/images/users/avatar-2.jpg', 'assets/images/users/avatar-1.jpg'],
         status: 'Completed',
@@ -12,7 +12,7 @@ const projectData = [
     {
         id: 2,
         image: 'assets/images/companies/img-2.png',
-        text: 'Brand logo design',
+        text: 'Group No. X',
         subtext: 'To achieve it would be necessary',
         users: ['assets/images/users/avatar-3.jpg'],
         status: 'Pending',
@@ -22,7 +22,7 @@ const projectData = [
     {
         id: 3,
         image: 'assets/images/companies/img-3.png',
-        text: 'New Landing Design',
+        text: 'Group No. X',
         subtext: 'For science, music, sport, etc',
         users: ['assets/images/users/avatar-5.jpg', 'assets/images/users/avatar-4.jpg'],
         status: 'Delay',
@@ -32,7 +32,7 @@ const projectData = [
     {
         id: 4,
         image: 'assets/images/companies/img-4.png',
-        text: 'Redesign - Landing page',
+        text: 'Group No. X',
         subtext: 'If several languages coalesce',
         users: ['assets/images/users/avatar-6.jpg', 'assets/images/users/avatar-4.jpg', 'assets/images/users/avatar-3.jpg'],
         status: 'Completed',
@@ -42,7 +42,7 @@ const projectData = [
     {
         id: 5,
         image: 'assets/images/companies/img-5.png',
-        text: 'Skote Dashboard UI',
+        text: 'Group No. X',
         subtext: 'Separate existence is a myth',
         users: ['assets/images/users/avatar-7.jpg', 'assets/images/users/avatar-8.jpg'],
         status: 'Completed',
@@ -52,7 +52,7 @@ const projectData = [
     {
         id: 6,
         image: 'assets/images/companies/img-6.png',
-        text: 'Blog Template UI',
+        text: 'Group No. X',
         subtext: 'For science, music, sport, etc',
         users: ['assets/images/users/avatar-6.jpg'],
         status: 'Pending',
@@ -62,7 +62,7 @@ const projectData = [
     {
         id: 7,
         image: 'assets/images/companies/img-3.png',
-        text: 'Multipurpose Landing',
+        text: 'Group No. X',
         subtext: 'It will be as simple as Occidental',
         users: ['assets/images/users/avatar-3.jpg'],
         status: 'Delay',
@@ -72,7 +72,7 @@ const projectData = [
     {
         id: 8,
         image: 'assets/images/companies/img-4.png',
-        text: 'App Landing UI',
+        text: 'Group No. X',
         subtext: 'For science, music, sport, etc',
         users: ['assets/images/users/avatar-4.jpg'],
         status: 'Completed',
@@ -82,7 +82,7 @@ const projectData = [
     {
         id: 9,
         image: 'assets/images/companies/img-2.png',
-        text: 'New admin Design',
+        text: 'Group No. X',
         subtext: 'Their most common words.',
         users: ['assets/images/users/avatar-5.jpg'],
         status: 'Completed',
@@ -92,7 +92,7 @@ const projectData = [
     {
         id: 10,
         image: 'assets/images/companies/img-6.png',
-        text: 'Blog Template UI',
+        text: 'Group No. X',
         subtext: 'For science, music, sport, etc',
         users: ['assets/images/users/avatar-6.jpg'],
         status: 'Pending',
@@ -102,7 +102,7 @@ const projectData = [
     {
         id: 11,
         image: 'assets/images/companies/img-3.png',
-        text: 'Multipurpose Landing',
+        text: 'Group No. X',
         subtext: 'It will be as simple as Occidental',
         users: ['assets/images/users/avatar-3.jpg'],
         status: 'Delay',
@@ -112,7 +112,7 @@ const projectData = [
     {
         id: 12,
         image: 'assets/images/companies/img-4.png',
-        text: 'Redesign - Landing page',
+        text: 'Group No. X',
         subtext: 'If several languages coalesce',
         users: ['assets/images/users/avatar-6.jpg', 'assets/images/users/avatar-4.jpg', 'assets/images/users/avatar-3.jpg'],
         status: 'Completed',
