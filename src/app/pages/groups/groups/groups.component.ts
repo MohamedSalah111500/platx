@@ -15,15 +15,15 @@ import { selectData } from "src/app/store/ProjectsData/project-selector";
 import { PageChangedEvent } from "ngx-bootstrap/pagination";
 
 @Component({
-  selector: "app-groupsgrid",
-  templateUrl: "./groupsgrid.component.html",
-  styleUrls: ["./groupsgrid.component.scss"],
+  selector: "app-groups",
+  templateUrl: "./groups.component.html",
+  styleUrls: ["./groups.component.scss"],
 })
 
 /**
  * Projects-grid component
  */
-export class GroupsGridComponent implements OnInit {
+export class GroupsComponent implements OnInit {
   // bread crumb items
   breadCrumbItems: Array<{}>;
   returnedArray: any;

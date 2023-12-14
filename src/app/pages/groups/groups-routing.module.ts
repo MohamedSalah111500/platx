@@ -3,20 +3,15 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { OverviewComponent } from './overview/overview.component';
 import { CreateComponent } from './create/create.component';
-import { GroupsGridComponent } from './groupsgrid/groupsgrid.component';
-import { GroupsListComponent } from './groupslist/groupslist.component';
+import { GroupsComponent } from './groups/groups.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: GroupsGridComponent
+        component: GroupsComponent
     },
     {
-        path: 'list',
-        component: GroupsListComponent
-    },
-    {
-        path: 'overview',
+        path: 'overview/:id',
         component: OverviewComponent
     },
     {

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // routing
 import { GroupsRoutingModule } from './groups-routing.module';
@@ -22,6 +22,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 
 // apexchart
 import { NgApexchartsModule } from 'ng-apexcharts';
@@ -29,9 +30,10 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 // component
 import { OverviewComponent } from './overview/overview.component';
 import { CreateComponent } from './create/create.component';
-import { GroupsGridComponent } from './groupsgrid/groupsgrid.component';
-import { GroupsListComponent } from './groupslist/groupslist.component';
+import { GroupsComponent } from './groups/groups.component';
 import { WidgetModule } from 'src/app/shared/widget/widget.module';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { PickerModule } from '@ctrl/ngx-emoji-mart';
 
 const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
   // Change this to your upload POST address:
@@ -41,7 +43,7 @@ const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
 };
 
 @NgModule({
-  declarations: [GroupsGridComponent, GroupsListComponent, OverviewComponent, CreateComponent],
+  declarations: [GroupsComponent, OverviewComponent, CreateComponent],
   imports: [
     CommonModule,
     GroupsRoutingModule,
@@ -51,11 +53,18 @@ const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
     NgApexchartsModule,
     FormsModule,
     BsDatepickerModule.forRoot(),
+    ReactiveFormsModule ,
     PaginationModule.forRoot(),
     SimplebarAngularModule,
     FlatpickrModule.forRoot(),
+    TabsModule.forRoot(),
     WidgetModule,
-    DropzoneModule],
+    DropzoneModule,
+    CommonModule,
+    ModalModule,
+    PickerModule
+
+  ],
   providers: [{
     provide: DROPZONE_CONFIG,
     useValue: DEFAULT_DROPZONE_CONFIG
