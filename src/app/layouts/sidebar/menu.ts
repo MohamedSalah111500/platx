@@ -34,19 +34,19 @@ export const MENU: MenuItem[] = [
 
   {
     id: 30,
-    label: "Texts ",
+    label: "Tests",
     icon: "bx-envelope",
-    link: "/filemanager",
+    link: "/tests",
   },
   {
     id: 12,
-    label: "Classes ",
+    label: "Courses Content",
     icon: 'bx-task',
-    link: "/classes",
+    link: "/courses-content",
   },
   {
-    id: 12,
-    label: "Cources Content",
+    id: 13,
+    label: "Files Manager",
     icon: "bx-file",
     link: "/filemanager",
   },

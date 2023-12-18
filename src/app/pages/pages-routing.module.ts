@@ -17,11 +17,11 @@ const routes: Routes = [
   { path: 'events', component: CalendarComponent },
   { path: 'groups', loadChildren: () => import('./groups/groups.module').then(m => m.GroupsModule) },
   { path: 'chat', component: ChatComponent },
-  { path: 'classes', component: ClassesComponent },
-
-
-
+  { path: 'courses-content', component: ClassesComponent },
   { path: 'filemanager', component: FilemanagerComponent },
+
+
+
   { path: 'dashboards', loadChildren: () => import('./dashboards/dashboards.module').then(m => m.DashboardsModule) },
   { path: 'ecommerce', loadChildren: () => import('./ecommerce/ecommerce.module').then(m => m.EcommerceModule) },
   { path: 'crypto', loadChildren: () => import('./crypto/crypto.module').then(m => m.CryptoModule) },
