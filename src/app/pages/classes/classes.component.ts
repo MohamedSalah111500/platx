@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 
 @Component({
-  selector: 'app-classes',
-  templateUrl: './classes.component.html',
-  styleUrls: ['./classes.component.scss']
+  selector: "app-classes",
+  templateUrl: "./classes.component.html",
+  styleUrls: ["./classes.component.scss"],
 })
 
 /**
@@ -12,10 +12,13 @@ import { Component, OnInit } from '@angular/core';
 export class ClassesComponent implements OnInit {
   // bread crumb items
   breadCrumbItems: Array<{}>;
-
-  constructor() { }
+  subjectList = [{}, {}, {}, {}, {}, {}];
+  constructor() {}
 
   ngOnInit() {
-    this.breadCrumbItems = [{ label: 'platx' }, { label: 'classes', active: true }];
+    this.breadCrumbItems = [
+      { label: "platx" },
+      { label: "classes", active: true },
+    ];
   }
 }

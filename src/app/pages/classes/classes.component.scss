@@ -1,0 +1,19 @@
+.subject-list {
+  li {
+    cursor: pointer;
+    width: 100%;
+
+    .references {
+      opacity: 0;
+    }
+    &:hover {
+      background-color: aliceblue;
+      .references {
+        opacity: 1;
+      }
+    }
+    & > :first-child {
+      margin-inline-end: 50px;
+    }
+  }
+}

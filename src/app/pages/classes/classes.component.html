@@ -7,7 +7,8 @@
       <div class="card-body">
         <h4 class="card-title mb-5">Subject Progress</h4>
         <div class="">
-          <tabset [justified]="true" class="nav-tabs nav-tabs-custom nav-justified tab-container">
+
+          <tabset [justified]="true" [vertical]="true" class="nav-pills custom-vertical-tab d-block d-md-flex gap-4">
             <tab>
               <ng-template tabHeading class="mb-2">
                 <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
@@ -16,22 +17,22 @@
               <div class="tab-page-content  mt-3">
                 <ul class="verti-timeline list-unstyled">
                   <li class="event-list">
-                    <div class="event-timeline-dot">
-                      <i class="bx bx-right-arrow-circle text-primary"></i>
-                    </div>
                     <div class="d-flex">
-                      <div class="flex-shrink-0 me-3">
-                        <i class="bx bxs-check-circle h4 text-success"></i>
-                      </div>
                       <div class="flex-grow-1">
                           <h5 class="font-size-15"><a href="javascript: void(0);" class="text-dark">Unite One for Grid 1</a></h5>
                             <div class="card border-0 shadow-none mb-0">
-                                <ul class="list-unstyled mb-0">
-                                    <li class="d-flex align-items-center mb-1"> <i class="bx bx-check-circle h5 text-success my-0 me-1"></i> <span >Subject 1</span></li>
-                                    <li class="d-flex align-items-center mb-1"> <i class="bx bx-check-circle h5 text-success my-0 me-1"></i> <span  >Subject 2</span></li>
-                                    <li class="d-flex align-items-center mb-1"> <i class="bx bx-check-circle h5 text-success my-0 me-1"></i> <span  >Subject 3</span></li>
-                                    <li class="d-flex align-items-center mb-1"> <i class="bx bx-check-circle h5 text-success my-0 me-1"></i> <span  >Subject 4</span></li>
-                                    <li class="d-flex align-items-center mb-1"> <i class="bx bx-check-circle h5 text-success my-0 me-1"></i> <span  >Subject 5</span></li>
+                                <ul class="list-unstyled mb-0 subject-list">
+                                    <li class="d-flex align-items-center mb-1" *ngFor="let subject of subjectList;index as i">
+                                      <div>
+                                      <i class="bx bx-book-bookmark h5  my-0 me-1"></i>
+                                      <span>Subject {{i+1}}</span>
+                                    </div>
+                                      <div class="references">
+                                        <i class="mdi mdi-file-document font-size-16 text-primary me-2"></i>
+                                        <i class="mdi mdi-file-pdf font-size-16 me-2 text-danger"></i>
+                                        <i class="mdi mdi-link font-size-16 me-2 text-primary"></i>
+                                      </div>
+                                    </li>
                                 </ul>
                              </div>
                         </div>
@@ -43,19 +44,22 @@
                       <i class="bx bx-right-arrow-circle bx-fade-right text-primary"></i>
                     </div>
                     <div class="d-flex">
-                      <div class="flex-shrink-0 me-3">
-                        <i class="bx bxs-check-circle h4 text-secondary text-opacity-50" ></i>
-                      </div>
                       <div class="flex-grow-1">
                           <h5 class="font-size-15"><a href="javascript: void(0);" class="text-dark">Unite Two</a></h5>
                             <div class="card border-0 shadow-none mb-0">
-                                <ul class="list-unstyled mb-0">
-                                    <li class="d-flex align-items-center mb-1"> <i class="bx bx-check-circle h5 text-success my-0 me-1"></i> <span >Subject 1</span></li>
-                                    <li class="d-flex align-items-center mb-1"> <i class="bx bx-check-circle h5 text-success my-0 me-1"></i> <span  >Subject 2</span></li>
-                                    <li class="d-flex align-items-center opacity-50 mb-1"> <i class="bx bx-check-circle h5 text-secondary my-0 me-1"></i> <span  >Subject 3</span></li>
-                                    <li class="d-flex align-items-center opacity-50 mb-1"> <i class="bx bx-check-circle h5 text-secondary my-0 me-1"></i> <span  >Subject 4</span></li>
-                                    <li class="d-flex align-items-center opacity-50 mb-1"> <i class="bx bx-check-circle h5 text-secondary my-0 me-1"></i> <span  >Subject 5</span></li>
-                                </ul>
+                              <ul class="list-unstyled mb-0 subject-list">
+                                <li class="d-flex align-items-center mb-1" *ngFor="let subject of subjectList;index as i">
+                                  <div>
+                                  <i class="bx bx-book-bookmark h5  my-0 me-1"></i>
+                                  <span>Subject {{i+1}}</span>
+                                </div>
+                                  <div class="references">
+                                    <i class="mdi mdi-file-document font-size-16 text-primary me-2"></i>
+                                    <i class="mdi mdi-file-pdf font-size-16 me-2 text-danger"></i>
+                                    <i class="mdi mdi-link font-size-16 me-2 text-primary"></i>
+                                  </div>
+                                </li>
+                            </ul>
                              </div>
                         </div>
                     </div>
@@ -66,18 +70,21 @@
                       <i class="bx bx-right-arrow-circle text-primary"></i>
                     </div>
                     <div class="d-flex">
-                      <div class="flex-shrink-0 me-3">
-                        <i class="bx bxs-check-circle h4 text-secondary text-opacity-50"></i>
-                      </div>
                       <div class="flex-grow-1">
                           <h5 class="font-size-15"><a href="javascript: void(0);" class="text-dark">Unite Three</a></h5>
                             <div class="card border-0 shadow-none mb-0">
-                                <ul class="list-unstyled mb-0">
-                                    <li class="d-flex align-items-center opacity-50 mb-1"> <i class="bx bx-check-circle h5 text-secondary my-0 me-1"></i> <span >Subject 1</span></li>
-                                    <li class="d-flex align-items-center opacity-50 mb-1"> <i class="bx bx-check-circle h5 text-secondary my-0 me-1"></i> <span  >Subject 2</span></li>
-                                    <li class="d-flex align-items-center opacity-50 mb-1"> <i class="bx bx-check-circle h5 text-secondary my-0 me-1"></i> <span  >Subject 3</span></li>
-                                    <li class="d-flex align-items-center opacity-50 mb-1"> <i class="bx bx-check-circle h5 text-secondary my-0 me-1"></i> <span  >Subject 4</span></li>
-                                    <li class="d-flex align-items-center opacity-50 mb-1"> <i class="bx bx-check-circle h5 text-secondary my-0 me-1"></i> <span  >Subject 5</span></li>
+                                 <ul class="list-unstyled mb-0 subject-list">
+                                    <li class="d-flex align-items-center mb-1" *ngFor="let subject of subjectList;index as i">
+                                      <div>
+                                      <i class="bx bx-book-bookmark h5  my-0 me-1"></i>
+                                      <span>Subject {{i+1}}</span>
+                                    </div>
+                                      <div class="references">
+                                        <i class="mdi mdi-file-document font-size-16 text-primary me-2"></i>
+                                        <i class="mdi mdi-file-pdf font-size-16 me-2 text-danger"></i>
+                                        <i class="mdi mdi-link font-size-16 me-2 text-primary"></i>
+                                      </div>
+                                    </li>
                                 </ul>
                              </div>
                         </div>
@@ -89,18 +96,21 @@
                       <i class="bx bx-right-arrow-circle text-primary"></i>
                     </div>
                     <div class="d-flex">
-                      <div class="flex-shrink-0 me-3">
-                        <i class="bx bxs-check-circle h4 text-secondary text-opacity-50"></i>
-                      </div>
                       <div class="flex-grow-1">
                           <h5 class="font-size-15"><a href="javascript: void(0);" class="text-dark">Unite Four</a></h5>
                             <div class="card border-0 shadow-none mb-0">
-                                <ul class="list-unstyled mb-0">
-                                    <li class="d-flex align-items-center opacity-50 mb-1"> <i class="bx bx-check-circle h5 text-secondary my-0 me-1"></i> <span >Subject 1</span></li>
-                                    <li class="d-flex align-items-center opacity-50 mb-1"> <i class="bx bx-check-circle h5 text-secondary my-0 me-1"></i> <span  >Subject 2</span></li>
-                                    <li class="d-flex align-items-center opacity-50 mb-1"> <i class="bx bx-check-circle h5 text-secondary my-0 me-1"></i> <span  >Subject 3</span></li>
-                                    <li class="d-flex align-items-center opacity-50 mb-1"> <i class="bx bx-check-circle h5 text-secondary my-0 me-1"></i> <span  >Subject 4</span></li>
-                                    <li class="d-flex align-items-center opacity-50 mb-1"> <i class="bx bx-check-circle h5 text-secondary my-0 me-1"></i> <span  >Subject 5</span></li>
+                                 <ul class="list-unstyled mb-0 subject-list">
+                                    <li class="d-flex align-items-center mb-1" *ngFor="let subject of subjectList;index as i">
+                                      <div>
+                                      <i class="bx bx-book-bookmark h5  my-0 me-1"></i>
+                                      <span>Subject {{i+1}}</span>
+                                    </div>
+                                      <div class="references">
+                                        <i class="mdi mdi-file-document font-size-16 text-primary me-2"></i>
+                                        <i class="mdi mdi-file-pdf font-size-16 me-2 text-danger"></i>
+                                        <i class="mdi mdi-link font-size-16 me-2 text-primary"></i>
+                                      </div>
+                                    </li>
                                 </ul>
                              </div>
                         </div>
@@ -112,18 +122,21 @@
                       <i class="bx bx-right-arrow-circle text-primary"></i>
                     </div>
                     <div class="d-flex">
-                      <div class="flex-shrink-0 me-3">
-                        <i class="bx bxs-check-circle h4 text-secondary text-opacity-50"></i>
-                      </div>
                       <div class="flex-grow-1">
                           <h5 class="font-size-15"><a href="javascript: void(0);" class="text-dark">Unite Five</a></h5>
                             <div class="card border-0 shadow-none mb-0">
-                                <ul class="list-unstyled mb-0">
-                                    <li class="d-flex align-items-center opacity-50 mb-1"> <i class="bx bx-check-circle h5 text-secondary my-0 me-1"></i> <span >Subject 1</span></li>
-                                    <li class="d-flex align-items-center opacity-50 mb-1"> <i class="bx bx-check-circle h5 text-secondary my-0 me-1"></i> <span  >Subject 2</span></li>
-                                    <li class="d-flex align-items-center opacity-50 mb-1"> <i class="bx bx-check-circle h5 text-secondary my-0 me-1"></i> <span  >Subject 3</span></li>
-                                    <li class="d-flex align-items-center opacity-50 mb-1"> <i class="bx bx-check-circle h5 text-secondary my-0 me-1"></i> <span  >Subject 4</span></li>
-                                    <li class="d-flex align-items-center opacity-50 mb-1"> <i class="bx bx-check-circle h5 text-secondary my-0 me-1"></i> <span  >Subject 5</span></li>
+                                 <ul class="list-unstyled mb-0 subject-list">
+                                    <li class="d-flex align-items-center mb-1" *ngFor="let subject of subjectList;index as i">
+                                      <div>
+                                      <i class="bx bx-book-bookmark h5  my-0 me-1"></i>
+                                      <span>Subject {{i+1}}</span>
+                                    </div>
+                                      <div class="references">
+                                        <i class="mdi mdi-file-document font-size-16 text-primary me-2"></i>
+                                        <i class="mdi mdi-file-pdf font-size-16 me-2 text-danger"></i>
+                                        <i class="mdi mdi-link font-size-16 me-2 text-primary"></i>
+                                      </div>
+                                    </li>
                                 </ul>
                              </div>
                         </div>
@@ -382,6 +395,7 @@
               </div>
             </tab>
           </tabset>
+
         </div>
 
       </div>

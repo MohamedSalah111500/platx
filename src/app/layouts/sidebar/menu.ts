@@ -40,7 +40,7 @@ export const MENU: MenuItem[] = [
   },
   {
     id: 12,
-    label: "Courses Content",
+    label: "Classes",
     icon: 'bx-task',
     link: "/courses-content",
   },
