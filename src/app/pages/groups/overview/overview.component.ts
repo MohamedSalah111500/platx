@@ -125,7 +125,7 @@ export class OverviewComponent implements OnInit {
 
     //chat
     this.breadCrumbItems = [
-      { label: "Skote" },
+      { label: "platx" },
       { label: "Chat", active: true },
     ];
 
