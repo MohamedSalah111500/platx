@@ -14,6 +14,12 @@ export const MENU: MenuItem[] = [
     link: "/dashboard",
   },
   {
+    id: 14,
+    label: "News",
+    icon: "bx-news",
+    link: "/news",
+  },
+  {
     id: 3,
     label: "MENUITEMS.EVENTS.TEXT",
     icon: "bx-calendar",
@@ -50,6 +56,27 @@ export const MENU: MenuItem[] = [
     icon: "bx-file",
     link: "/filemanager",
   },
+  {
+        id: 14,
+        label: 'Manage',
+        icon: 'bx-shield',
+        subItems: [
+            {
+                id: 14,
+                label: 'Staff',
+                icon: 'bx-user-voice',
+                link: '/contacts/list',
+                parentId: 14
+            },
+            {
+                id: 15,
+                label: 'Students',
+                icon: 'fa-book-reader',
+                link: '/contacts/list',
+                parentId: 14
+            },
+          ]
+  }
   // {
   //     id: 13,
   //     label: 'MENUITEMS.ECOMMERCE.TEXT',
