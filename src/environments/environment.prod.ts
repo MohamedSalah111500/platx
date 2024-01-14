@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
+  apiURL:'https://platxapis.azurewebsites.net/',
   defaultauth: 'fakebackend',
   firebaseConfig: {
     apiKey: '',
