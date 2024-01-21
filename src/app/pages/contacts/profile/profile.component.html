@@ -24,8 +24,8 @@
               <div class="avatar-md profile-user-wid mb-4">
                 <img src="assets/images/users/avatar-1.jpg" alt="" class="img-thumbnail rounded-circle">
               </div>
-              <h5 class="font-size-15 text-truncate">Mohamed Salah</h5>
-              <p class="text-muted mb-0 text-truncate">UI/UX Designer</p>
+              <h5 class="font-size-15 text-truncate">{{user.firstName}} {{user.lastName}}</h5>
+              <p class="text-muted mb-0 text-truncate">{{user.userName}}</p>
             </div>
 
             <div class="col-sm-8">
@@ -63,7 +63,11 @@
           <tbody>
             <tr>
               <th scope="row">Full Name :</th>
-              <td>Mohamed Salah</td>
+              <td>{{user.firstName}} {{user.lastName}}</td>
+            </tr>
+            <tr>
+              <th scope="row">User Name :</th>
+              <td>{{user.userName}}</td>
             </tr>
             <tr>
               <th scope="row">Mobile :</th>
@@ -71,7 +75,7 @@
             </tr>
             <tr>
               <th scope="row">E-mail :</th>
-              <td>cynthiaskote&#64;gmail.com</td>
+              <td>{{user.email}}</td>
             </tr>
             <tr>
               <th scope="row">Location :</th>

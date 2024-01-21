@@ -6,7 +6,7 @@ import {
   UntypedFormGroup,
   Validators,
 } from "@angular/forms";
-import { AuthenticationService } from "../../../core/services/auth.service";
+import { AuthenticationService } from "../services/auth.service";
 import { AuthfakeauthenticationService } from "../../../core/services/authfake.service";
 
 import { Store } from "@ngrx/store";
@@ -63,7 +63,7 @@ export class LoginComponent implements OnInit {
     this.authenticationService.login(userName, password).subscribe(
       (response) => {
         this.toastr.success("Registration successful", "Bootstrap");
-        localStorage.setItem("currentUser", JSON.stringify(response.token));
+        localStorage.setItem("currentUser", JSON.stringify(response));
         this.router.navigate(["/"]);
       },
       (error) => {

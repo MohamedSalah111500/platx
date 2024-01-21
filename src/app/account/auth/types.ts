@@ -12,3 +12,15 @@ export interface ForgetPasswordForm {
 export interface ResetPasswordForm {
   email: FormControl;
 }
+
+export interface LoginAPIResponse {
+  token: string;
+  expiryDateTime: string;
+  userId: string;
+  userName: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  isEmailVerified: boolean;
+  roles: any[];
+}

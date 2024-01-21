@@ -1,0 +1,31 @@
+@if(control){
+<div class="p-3 bg-light bg-opacity-50">
+  <div class="form-floating mb-3">
+    <input
+      type="text"
+      class="form-control"
+      id="floatingnameInput"
+      placeholder="Enter Name"
+      value="Maria Laird"
+    />
+    <label for="floatingnameInput">Question  Title</label>
+  </div>
+  <div class="row align-items-center">
+    <div class="col-md-6">
+      <div class="form-floating">
+        <input
+          type="email"
+          class="form-control"
+          id="floatingemailInput"
+          placeholder="Enter Email address"
+          value="{{control.type}}"
+        />
+        <label for="floatingemailInput">Option 1</label>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <input type="button" value="Add" class="btn btn-success mt-3 mt-lg-0" />
+    </div>
+  </div>
+</div>
+}

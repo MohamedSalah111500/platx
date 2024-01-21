@@ -40,9 +40,9 @@ export const MENU: MenuItem[] = [
 
   {
     id: 30,
-    label: "Tests",
-    icon: "bx-envelope",
-    link: "/tests",
+    label: "Exams",
+    icon: "bx-spreadsheet",
+    link: "/exams",
   },
   {
     id: 12,

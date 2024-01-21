@@ -1,11 +1,12 @@
 import { Injectable } from "@angular/core";
 
-import { getFirebaseBackend } from "../../authUtils";
+import { getFirebaseBackend } from "../../../authUtils";
 import { User } from "src/app/store/Authentication/auth.models";
-import { Observable, from, map } from "rxjs";
+import { Observable, Observer, from, map } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
 import { AUTH_URLS } from "src/app/utiltis/urls";
+import { LoginAPIResponse } from "../types";
 
 @Injectable({ providedIn: "root" })
 export class AuthenticationService {
@@ -17,7 +18,9 @@ export class AuthenticationService {
    * Returns the current user
    */
   public currentUser(): User {
-    return getFirebaseBackend().getAuthenticatedUser();
+    let currentUser: User = JSON.parse(localStorage.getItem("currentUser"));
+    console.log(currentUser);
+    return currentUser;
   }
 
   /**
@@ -25,10 +28,13 @@ export class AuthenticationService {
    * @param email email of user
    * @param password password of user
    */
-  login(userName: string, password: string): Observable<any> {
-    return this.http.post(AUTH_URLS.LOGIN, {
-      userName,
-      password,
+  login(userName: string, password: string): Observable<LoginAPIResponse> {
+    return new Observable((observer: Observer<LoginAPIResponse>) => {
+      this.http
+        .post(AUTH_URLS.LOGIN, { userName, password })
+        .subscribe((responseData: LoginAPIResponse) => {
+          observer.next(responseData);
+        });
     });
   }
 
@@ -54,7 +60,10 @@ export class AuthenticationService {
    * @param email email
    */
   forgetPassword(username: string): Observable<any> {
-    return this.http.post(AUTH_URLS.FORGOT_PASSWORD + `?userName=${username}`,{});
+    return this.http.post(
+      AUTH_URLS.FORGOT_PASSWORD + `?userName=${username}`,
+      {}
+    );
   }
 
   /**

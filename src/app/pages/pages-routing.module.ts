@@ -17,6 +17,7 @@ const routes: Routes = [
   { path: 'news', loadChildren: () => import('./news/news.module').then(m => m.NewsModule) },
   { path: 'events', component: CalendarComponent },
   { path: 'groups', loadChildren: () => import('./groups/groups.module').then(m => m.GroupsModule) },
+  { path: 'exams', loadChildren: () => import('./exams/exams.module').then(m => m.ExamsModule) },
   { path: 'chat', component: ChatComponent },
   { path: 'courses-content', component: ClassesComponent },
   { path: 'filemanager', component: FilemanagerComponent },

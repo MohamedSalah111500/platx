@@ -8,7 +8,7 @@ import {
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 
-import { AuthenticationService } from "../../../core/services/auth.service";
+import { AuthenticationService } from "../services/auth.service";
 import { environment } from "../../../../environments/environment";
 import { ForgetPasswordForm, ResetPasswordForm } from "../types";
 import { ToastrService } from "ngx-toastr";
