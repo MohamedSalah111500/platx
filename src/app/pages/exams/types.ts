@@ -1,3 +1,5 @@
+import { FormArray, FormControl } from "@angular/forms";
+
 export interface IQuestion {
   type: QuestionType;
   icon: string;
@@ -20,9 +22,14 @@ export interface IQuestionChoice {
 }
 
 export interface Questions {
-  id: number;
+  id: string;
   title: string;
   date: string;
   status: string;
   type:string
+}
+
+export interface ChoosesFormGroup {
+  title: FormControl;
+  options:FormArray;
 }

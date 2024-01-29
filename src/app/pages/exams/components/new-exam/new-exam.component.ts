@@ -25,6 +25,7 @@ import { memberList } from "src/app/core/data";
 import { tasks } from "../list/data";
 import { IQuestion, QuestionName, QuestionType, Questions } from "../../types";
 import { QuestionService } from "../../services/question.service";
+import { randId } from "src/app/utiltis/functions";
 
 @Component({
   selector: "new-exam",
@@ -84,12 +85,14 @@ export class NewExamComponent implements OnInit {
     this.store.select(selectData).subscribe((data) => {
       this.memberLists = memberList;
     });
+
+    this.addField('text')
   }
 
   addField(type: string): void {
     // const updatedData = this.taskForm.value;
     this.questions.push({
-      id: 6,
+      id: randId(),
       title: type,
       date: "14 Oct, 2019",
       status: "upcoming",
