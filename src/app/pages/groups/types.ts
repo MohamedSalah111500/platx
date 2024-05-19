@@ -12,7 +12,7 @@ export interface CreateGroupAPIResponse {
   masseage: string;
 }
 
-export interface  CreateGroupAPIPayload {
+export interface CreateGroupAPIPayload {
   description: string;
   icon: string;
   cron: string;
@@ -21,19 +21,16 @@ export interface  CreateGroupAPIPayload {
 }
 
 export type prettify<T> = {
-  [k in keyof T]:T[k];
-}& {}
+  [k in keyof T]: T[k];
+} & {};
 
-
-export interface  CreateGroupAPIPayload {
+export interface CreateGroupAPIPayload {
   description: string;
   icon: string;
   cron: string;
   status: number;
   isActive: boolean;
 }
-
-
 
 export interface GetAllGroupsResponse {
   items: Group[];
@@ -49,4 +46,19 @@ export interface Group {
   status: string;
   isActive: boolean;
   studentsIcons: string[];
+}
+
+export interface GetAllStudentsResponse  {
+  items:Student[];
+  totalCount: number;
+
+}
+
+export interface Student {
+  id: number;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  email: string;
+  profilePhoto: string;
 }

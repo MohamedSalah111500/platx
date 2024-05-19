@@ -5,19 +5,14 @@
     [breadcrumbItems]="breadCrumbItems"
   ></app-page-title>
   <!-- end page title -->
-
   <div class="row">
     <div class="col-xl-3 col-md-6">
       <div class="card jobs-categories">
         <div class="card-body">
-          @for (control of formTypes; track control.type) {
-          <div
-            (click)="addField(control.type)"
-            class="px-3 py-2 rounded bg-light bg-opacity-50 d-block mb-2 c-pointer">
-          <i class="bx bx-message-alt-dots"></i>
-            {{ control.name }}
+          <div *ngFor="let control of availableFields" class="px-3 py-2 rounded bg-light bg-opacity-50 d-block mb-2 c-pointer" (click)="addField(control)" dndDraggable [dragData]="control">
+            <i class="bx bx-message-alt-dots"></i>
+            {{ control.label }}
           </div>
-          }
         </div>
       </div>
     </div>
@@ -25,52 +20,96 @@
     <div class="col-lg-9">
       <div class="card">
         <div class="card-body">
-          <div class="dropdown float-end" dropdown>
-            <a
-              href="javascript: void(0);"
-              class="dropdown-toggle arrow-none"
-              dropdownToggle
-            >
-              <i class="mdi mdi-dots-vertical m-0 text-muted h5"></i>
-            </a>
-            <div class="dropdown-menu dropdown-menu-end" *dropdownMenu>
-              <a class="dropdown-item" href="javascript: void(0);">Edit</a>
-              <a class="dropdown-item" href="javascript: void(0);">Delete</a>
+          <h4 class="card-title mb-4">Exam Fields</h4>
+          <div id="question-block" class="pb-1 task-list" dndDropzone (dndDrop)="onDrop($event)">
+            <div *ngFor="let question of formFields; let i = index" dndDraggable [dragData]="question" [dragIndex]="i">
+              <ng-container>
+                <div class="form-group">
+                  <div class=" edit-btn d-flex justify-content-end align-items-start">
+                    <button  type="button" class="edit-btn btn  btn-label waves-light"
+                    [ngClass]="!question.editMode  ? 'btn-primary' : 'btn-success'" (click)="toggleEditMode(question)">
+                      <i class="mdi  label-icon"
+                      [ngClass]="!edit ? 'mdi-pencil' : 'mdi-check'"
+                      ></i> {{question.editMode ? 'Save': 'Edit'}}
+                    </button>
+                  </div>
+
+
+                  <ng-container *ngIf="question.editMode">
+                    <div class="form-group">
+                      <label>Qustion Text</label>
+                      <ckeditor [editor]="Editor" [(ngModel)]="question.labelText"
+                       data="<p>Content of the editor.</p>"></ckeditor>
+
+                      <div *ngIf="!question.labelText" class="text-danger">Label is required</div>
+                    </div>
+                    <div class="form-group">
+                      <label>Label Image</label>
+                      <input type="file" class="form-control" (change)="onImageUpload(question, $event)">
+                      <img *ngIf="question.labelImage" [src]="question.labelImage" alt="Label Image" class="img-thumbnail mt-2">
+                    </div>
+                    <ng-container [ngSwitch]="question.type">
+                      <div *ngSwitchCase="'single'" class="form-group">
+                        <div *ngFor="let option of question.options; let j = index">
+                          <div class="d-flex align-items-center">
+                            {{ j + 1 }}
+                            <input type="radio" [name]="question.id" [value]="option" class="me-2"> {{ option }}
+                            <input type="checkbox" class="ms-2" (change)="toggleCorrectAnswer(question, option)" [checked]="question.correctAnswers.includes(option)"> Correct
+                            <button type="button" (click)="removeOption(question, j)" class="btn btn-danger mt-3 mt-lg-0" >
+                              <i class="mdi mdi-trash-can d-block font-size-16"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="input-group mt-2">
+                          <input type="text" class="form-control" [(ngModel)]="question.newOption" placeholder="New option">
+                          <button type="button" class="btn btn-secondary" (click)="addOption(question)">Add Option</button>
+                        </div>
+                      </div>
+                      <div *ngSwitchCase="'multiple'" class="form-group">
+                        <div *ngFor="let option of question.options; let j = index">
+                          <div class="d-flex align-items-center">
+                            {{ i + 1 }}.{{ j + 1 }}
+                            <input type="checkbox" [name]="question.id" [value]="option" class="me-2"> {{ option }}
+                            <input type="checkbox" class="ms-2" (change)="toggleCorrectAnswer(question, option)" [checked]="question.correctAnswers.includes(option)"> Correct
+                            <button type="button" class="btn btn-danger btn-sm ms-2" (click)="removeOption(question, j)">Remove</button>
+                          </div>
+                        </div>
+                        <div class="input-group mt-2">
+                          <input type="text" class="form-control" [(ngModel)]="question.newOption" placeholder="New option">
+                          <button type="button" class="btn btn-secondary" (click)="addOption(question)">Add Option</button>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </ng-container>
+                  <ng-container *ngIf="!question.editMode">
+                    <div *ngIf="question.labelImage" class="text-center">
+                      <img [src]="question.labelImage" alt="Label Image" class="question-img img-thumbnail mt-2">
+                    </div>
+                    <div class="d-flex justify-content-start align-items-start">
+                    <div class="font-size-18">{{ i + 1 }}.</div>
+                      <div *ngIf="question.labelText" class="question-block" [innerHtml]='question.labelText'></div>
+                      </div>
+                    <div *ngIf="question.type === 'single' || question.type === 'multiple'" class="mt-2">
+                          <div class="form-check form-check-inline" *ngFor="let option of question.options; let j = index">
+                            <input class="form-check-input" type="radio" name="option" [id]="option" value="option1">
+                            <label class="form-check-label" [for]="option">{{ j + 1 }} - {{ option }}
+                              <span *ngIf="question.correctAnswers.includes(option)" class="badge bg-success ms-2">Correct</span>
+                            </label>
+                          </div>
+                    </div>
+                  </ng-container>
+                  <button type="button" class="btn btn-danger mt-2" (click)="removeField(i)">delete question</button>
+                </div>
+              </ng-container>
             </div>
           </div>
-          <!-- end dropdown -->
-
-          <h4 class="card-title mb-4">Exam Fields</h4>
-          <div
-            id="question-block"
-            class="pb-1 task-list"
-            dndDropzone
-            dndEffectAllowed="move"
-            (dndDrop)="onDrop($event, questions, 'question-block')"
-          >
-            <div class="dndPlaceholder" dndPlaceholderRef></div>
-            @for(question of questions;track $index){
-            <ng-container>
-              <div
-                [dndDraggable]="question"
-                dndEffectAllowed="move"
-                (dndMoved)="onDragged(question, questions)"
-              >
-                <ng-template
-                  [ngTemplateOutlet]="QuestionContent"
-                  [ngTemplateOutletContext]="{ question: question, $index }"
-                >
-                </ng-template>
-              </div>
-            </ng-container>
-            }
-          </div>
+          <button type="button" class="btn btn-primary mt-3" (click)="submitForm()">Submit</button>
         </div>
       </div>
     </div>
-    <!-- end col -->
   </div>
-</div>
+
+
 
 <ng-template #QuestionContent let-question="question" let-i="index">
   <div class="card task-box">

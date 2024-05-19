@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import { DndDropEvent } from "ngx-drag-drop";
+import { CdkDragDrop, transferArrayItem,moveItemInArray } from "@angular/cdk/drag-drop";
 
 import { DatePipe } from "@angular/common";
 import {
@@ -26,6 +27,7 @@ import { tasks } from "../list/data";
 import { IQuestion, QuestionName, QuestionType, Questions } from "../../types";
 import { QuestionService } from "../../services/question.service";
 import { randId } from "src/app/utiltis/functions";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 @Component({
   selector: "new-exam",
@@ -33,31 +35,10 @@ import { randId } from "src/app/utiltis/functions";
   styleUrls: ["new-exam.component.scss"],
 })
 export class NewExamComponent implements OnInit {
-  @Input({ required: true }) name!: QuestionName;
-  @Input({ required: true }) type!: QuestionType;
-  singleInputStructureForm!: FormGroup;
-  @ViewChild("newContactModal", { static: false })
-  newContactModal?: ModalDirective;
-
-  formTypes: IQuestion[] = [
-    { type: "textarea", icon: "fa-regular fa-file-lines", name: "Text Area" },
-    { type: "text", icon: "fa-solid fa-paragraph", name: "Text Input" },
-    { type: "checkbox", icon: "fa-solid fa-square-check", name: "Check Box" },
-    { type: "radio", icon: "fa-regular fa-circle-dot", name: "Radio Button" },
-  ];
-
-  questions: Questions[] = [
-
-  ];
-
-  inprogressTasks: Task[];
-  completedTasks: Task[];
-  memberLists: any;
-  status: any;
-  assigneeMember: any = [];
-
-  // bread crumb items
+  // // bread crumb items
   breadCrumbItems: Array<{}>;
+  public Editor = ClassicEditor;
+
   taskForm!: UntypedFormGroup;
   submitted = false;
 
@@ -67,80 +48,100 @@ export class NewExamComponent implements OnInit {
     private datePipe: DatePipe,
     private fb: FormBuilder,
     private questionService: QuestionService
-  ) {
-
-  }
+  ) {}
 
   ngOnInit() {
-
     this.breadCrumbItems = [
       { label: "Tasks" },
       { label: "Kanban Board", active: true },
     ];
+  }
 
-    /**
-     * fetches data
-     */
-    this.store.dispatch(fetchtasklistData());
-    this.store.select(selectData).subscribe((data) => {
-      this.memberLists = memberList;
+  availableFields = [
+    { type: "single", label: "Single Choice", options: [] },
+    { type: "multiple", label: "Multiple Choice", options: [] },
+  ];
+
+  formFields = [];
+
+  addField(field) {
+    this.formFields.push({
+      ...field,
+      id: Date.now(),
+      label: field.label,
+      options: field.options || [],
+      newOption: "",
+      editMode: false,
+      required: false,
+      labelType: "text", // Can be 'text' or 'text-image'
+      labelText: "",
+      labelImage: null,
+      correctAnswers: [], // Array to store correct answers
     });
-
-    this.addField('text')
   }
 
-  addField(type: string): void {
-    // const updatedData = this.taskForm.value;
-    this.questions.push({
-      id: randId(),
-      title: type,
-      date: "14 Oct, 2019",
-      status: "upcoming",
-      type:type
-    });
+  toggleEditMode(field) {
+    field.editMode = !field.editMode;
+    console.log(field)
   }
 
-  /**
-   * on dragging task
-   * @param item item dragged
-   * @param list list from item dragged
-   */
-  onDragged(item: any, list: any[]) {
-    const index = list.indexOf(item);
-    list.splice(index, 1);
+  editLabelText(field, event) {
+    field.labelText = event.target.value;
   }
 
-  /**
-   * On task drop event
-   */
-  onDrop(event: DndDropEvent, filteredList?: any[], targetStatus?: string) {
-    if (filteredList && event.dropEffect === "move") {
-      let index = event.index;
-
-      if (typeof index === "undefined") {
-        index = filteredList.length;
-      }
-
-      filteredList.splice(index, 0, event.data);
-    }
+  onImageUpload(field, event) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      field.labelImage = reader.result as string;
+    };
+    reader.readAsDataURL(event.target.files[0]);
   }
 
-  // Delete Data
-  delete(event: any) {
-    event.target.closest(".card .task-box")?.remove();
+  addOption(field) {
+    if (!field.newOption || field.newOption.trim() === "") return;
+    field.options.push(field.newOption);
+    field.newOption = "";
   }
 
-  // Select Member
-  selectMember(id: any) {
-    if (this.memberLists[id].checked == true) {
-      this.memberLists[id].checked = false;
-      this.assigneeMember = this.assigneeMember.filter(
-        (item) => item !== this.memberLists[id].profile
-      );
+  toggleCorrectAnswer(field, option) {
+    const index = field.correctAnswers.indexOf(option);
+    if (index > -1) {
+      field.correctAnswers.splice(index, 1);
     } else {
-      this.memberLists[id].checked = true;
-      this.assigneeMember.push(this.memberLists[id].profile);
+      field.correctAnswers.push(option);
     }
   }
 
+  removeField(index) {
+    this.formFields.splice(index, 1);
+  }
+
+  removeOption(field, index) {
+    field.options.splice(index, 1);
+  }
+
+  onDrop(event: DndDropEvent) {
+    if (event.index !== undefined && event.index !== null) {
+      moveItemInArray(this.formFields, event.index, event["dropIndex"]);
+    }
+  }
+
+  submitForm() {
+    const formData = this.formFields.map((field) => ({
+      type: field.type,
+      labelText: field.labelText,
+      labelImage: field.labelImage,
+      options: field.options,
+      correctAnswers: field.correctAnswers,
+      required: field.required,
+    }));
+
+    console.log("Form Data:", formData);
+    alert(JSON.stringify(formData, null, 2));
+  }
 }
+
+// function moveItemInArray(array: any[], fromIndex: number, toIndex: number) {
+//   const [movedItem] = array.splice(fromIndex, 1);
+//   array.splice(toIndex, 0, movedItem);
+// }

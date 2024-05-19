@@ -2,7 +2,7 @@
 // @import '~bootstrap/scss/bootstrap';
 
 /* You can add global styles to this file, and also import other style files */
-@import '~dropzone/dist/min/dropzone.min.css';
+@import "~dropzone/dist/min/dropzone.min.css";
 
 .modal-holder {
   animation-name: example;
@@ -11,14 +11,16 @@
 
 @keyframes example {
   0% {
-    transform: scale(0.5)
+    transform: scale(0.5);
   }
 
   100% {
-    transform: scale(1)
+    transform: scale(1);
   }
 }
-
+.ck-powered-by {
+  display: none !important;
+}
 .carousel-item {
   transition: opacity 0.7s ease !important;
   position: absolute !important;
@@ -34,9 +36,6 @@
 ngx-dropzone {
   border: 2px dashed var(--bs-border-color) !important;
 }
-
-
-
 
 //
 // Dropzone
@@ -87,7 +86,7 @@ ngx-dropzone {
   margin-top: 10px;
 }
 
-dropzone>.dropzone.dz-wrapper .dz-message {
+dropzone > .dropzone.dz-wrapper .dz-message {
   background-color: transparent !important;
   border: none !important;
   overflow: inherit !important;
@@ -100,17 +99,15 @@ dropzone>.dropzone.dz-wrapper .dz-message {
 }
 
 .dz-text {
-  font-size: 1.21875rem
+  font-size: 1.21875rem;
 }
 
-dropzone>.dropzone.dz-wrapper {
+dropzone > .dropzone.dz-wrapper {
   min-height: 76px !important;
   border: none !important;
 }
 
-
 #component-colorpicker {
-
   color-picker {
     .open {
       right: 0px !important;
@@ -127,7 +124,7 @@ dropzone>.dropzone.dz-wrapper {
   }
 }
 
-.switch.switch-small>.switch-pane>span {
+.switch.switch-small > .switch-pane > span {
   font-size: 12px !important;
 }
 
@@ -139,7 +136,6 @@ dropzone>.dropzone.dz-wrapper {
 .slick-dots {
   margin-top: 20px;
   bottom: -40px !important;
-
 
   li.slick-active button:before {
     color: #556ee6 !important;
@@ -165,4 +161,10 @@ dropzone>.dropzone.dz-wrapper {
 
 .ngx-slider .ngx-slider-tick.ngx-slider-selected {
   background-color: #556ee6 !important;
+}
+
+
+.question-block p {
+    margin-bottom: 2px !important;
+
 }

@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { overviewBarChart } from "./data";
 
 import { ChartType } from "./overview.model";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import {
   UntypedFormBuilder,
   UntypedFormGroup,
@@ -24,6 +24,9 @@ import {
   fetchchatdata,
 } from "src/app/store/Chat/chat.action";
 import { selectchatData } from "src/app/store/Chat/chat-selector";
+import { GroupsService } from "../services/groupsService.service";
+import { Student } from "../types";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: "app-overview",
@@ -37,6 +40,9 @@ import { selectchatData } from "src/app/store/Chat/chat-selector";
 export class OverviewComponent implements OnInit {
   // bread crumb items
   breadCrumbItems: Array<{}>;
+  loading: boolean = false;
+  students!: Student[];
+  groupId: string;
 
   overviewBarChart: ChartType;
   statData = [
@@ -94,8 +100,13 @@ export class OverviewComponent implements OnInit {
   constructor(
     private modalService: BsModalService,
     private formBuilder: UntypedFormBuilder,
-    public store: Store
-  ) {}
+    public store: Store,
+    private groupsService: GroupsService,
+    private route: ActivatedRoute
+  ) {
+      this.groupId =this.route.snapshot.params['id'];
+      // You can use the 'id' value as needed
+  }
 
   ngOnInit() {
     this.breadCrumbItems = [
@@ -144,7 +155,45 @@ export class OverviewComponent implements OnInit {
     this.store.select(selectchatData).subscribe((data) => {
       this.chatMessagesData = data;
     });
+
+    this.getGroup(this.groupId);
+    this.getGroupStudents(this.groupId, 1, 10);
   }
+
+  getGroup(id: string) {
+    this.loading = true;
+    this.groupsService.getGroup(id).subscribe(
+      (response) => {
+        // this.student = response;
+        console.log("Registration successful:", response);
+        this.loading = false;
+      },
+      (error) => {
+        let firstErrorMessage =
+          error.error.errors[Object.keys(error.error.errors)[0]];
+        // this.error = firstErrorMessage;
+        this.loading = false;
+      }
+    );
+  }
+
+  getGroupStudents(id: string, pageNumber: number, pageSize: number) {
+    this.loading = true;
+    this.groupsService.getGroupStudents(id, pageNumber, pageSize).subscribe(
+      (response) => {
+        this.students = response.items;
+        console.log("Registration successful:", response);
+        this.loading = false;
+      },
+      (error) => {
+        let firstErrorMessage =
+          error.error.errors[Object.keys(error.error.errors)[0]];
+        // this.error = firstErrorMessage;
+        this.loading = false;
+      }
+    );
+  }
+
   // File Upload
   imageURL: string | undefined;
   fileChange(event: any) {
@@ -228,8 +277,6 @@ export class OverviewComponent implements OnInit {
   }
 
   //chat
-
-
 
   /**
    * Returns form
@@ -367,5 +414,9 @@ export class OverviewComponent implements OnInit {
         }
       }
     });
+  }
+
+  ngOnDestroy() {
+
   }
 }

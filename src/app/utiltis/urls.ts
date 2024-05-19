@@ -14,6 +14,7 @@ export const AUTH_URLS = {
 export const GROUPS_URLS = {
   CREATE: `${environment.apiURL.concat(GROUPS_BASE)}`,
   GET: `${environment.apiURL.concat(GROUPS_BASE)}`,
+  GET_GROUP: (groupId)=>`${environment.apiURL.concat(GROUPS_BASE)}${groupId}`,
   GET_GROUP_STUDENTS: (groupId)=>`${environment.apiURL.concat(GROUPS_BASE)}${groupId}/students`,
   GET_GROUP_STAFF: (groupId)=>`${environment.apiURL.concat(GROUPS_BASE)}${groupId}/staff`,
   GET_GROUP_FILES: (groupId)=>`${environment.apiURL.concat(GROUPS_BASE)}${groupId}/files`,
