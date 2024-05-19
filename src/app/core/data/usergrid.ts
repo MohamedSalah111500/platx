@@ -2,7 +2,7 @@ const userGridData = [
     {
         id: 1,
         name: 'David McHenry',
-        designation: 'UI/UX Designer',
+        designation: 'Software Engineering',
         projects: ['Photoshop', 'illustrator'],
         email: 'david@PlatXcom'
     },
@@ -41,7 +41,7 @@ const userGridData = [
         id: 6,
         image: 'assets/images/users/avatar-5.jpg',
         name: 'Shirley Smith',
-        designation: 'UI/UX Designer',
+        designation: 'Software Engineering',
         projects: ['Photoshop', 'illustrator'],
         email: 'shirley@PlatXcom'
     },
