@@ -26,6 +26,7 @@
               <ng-container>
                 <div class="form-group">
                   <div class=" edit-btn d-flex justify-content-end align-items-start">
+
                     <button  type="button" class="edit-btn btn  btn-label waves-light"
                     [ngClass]="!question.editMode  ? 'btn-primary' : 'btn-success'" (click)="toggleEditMode(question)">
                       <i class="mdi  label-icon"
@@ -38,26 +39,29 @@
                   <ng-container *ngIf="question.editMode">
                     <div class="form-group">
                       <label>Qustion Text</label>
-                      <ckeditor [editor]="Editor" [(ngModel)]="question.labelText"
-                       data="<p>Content of the editor.</p>"></ckeditor>
-
+                      <ckeditor [editor]="Editor" [(ngModel)]="question.labelText" data="<p>Content of the editor.</p>"></ckeditor>
                       <div *ngIf="!question.labelText" class="text-danger">Label is required</div>
                     </div>
                     <div class="form-group">
                       <label>Label Image</label>
                       <input type="file" class="form-control" (change)="onImageUpload(question, $event)">
-                      <img *ngIf="question.labelImage" [src]="question.labelImage" alt="Label Image" class="img-thumbnail mt-2">
+                      <img *ngIf="question.labelImage" [src]="question.labelImage" alt="Label Image" class="question-img img-thumbnail mt-2">
                     </div>
                     <ng-container [ngSwitch]="question.type">
                       <div *ngSwitchCase="'single'" class="form-group">
                         <div *ngFor="let option of question.options; let j = index">
-                          <div class="d-flex align-items-center">
-                            {{ j + 1 }}
-                            <input type="radio" [name]="question.id" [value]="option" class="me-2"> {{ option }}
-                            <input type="checkbox" class="ms-2" (change)="toggleCorrectAnswer(question, option)" [checked]="question.correctAnswers.includes(option)"> Correct
-                            <button type="button" (click)="removeOption(question, j)" class="btn btn-danger mt-3 mt-lg-0" >
-                              <i class="mdi mdi-trash-can d-block font-size-16"></i>
+                          <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                              <p class="mb-0  my-x">{{ j + 1 }} - {{ option }}</p>
+                            </div>
+
+                           <div>
+                            <input type="checkbox" class="ms-2 " (change)="toggleCorrectAnswer(question, option)" [checked]="question.correctAnswers.includes(option)"> Correct
+                            <button type="button"  class="btn btn-light mt-3 mt-lg-0" >
+                              <i class="mdi mdi-trash-can d-block text-danger font-size-16" (click)="removeOption(question, j)"></i>
                             </button>
+                           </div>
+
                           </div>
                         </div>
                         <div class="input-group mt-2">
@@ -83,7 +87,7 @@
                   </ng-container>
                   <ng-container *ngIf="!question.editMode">
                     <div *ngIf="question.labelImage" class="text-center">
-                      <img [src]="question.labelImage" alt="Label Image" class="question-img img-thumbnail mt-2">
+                      <img [src]="question.labelImage" alt="Label Image" class="question-img img-thumbnail mt-2 ">
                     </div>
                     <div class="d-flex justify-content-start align-items-start">
                     <div class="font-size-18">{{ i + 1 }}.</div>
@@ -91,7 +95,7 @@
                       </div>
                     <div *ngIf="question.type === 'single' || question.type === 'multiple'" class="mt-2">
                           <div class="form-check form-check-inline" *ngFor="let option of question.options; let j = index">
-                            <input class="form-check-input" type="radio" name="option" [id]="option" value="option1">
+                            <div class="form-check-input"name="option" [id]="option" value="option1"> </div>
                             <label class="form-check-label" [for]="option">{{ j + 1 }} - {{ option }}
                               <span *ngIf="question.correctAnswers.includes(option)" class="badge bg-success ms-2">Correct</span>
                             </label>
