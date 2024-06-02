@@ -43,6 +43,7 @@ import { ChatComponent } from './chat/chat.component';
 
 import { FilemanagerComponent } from './filemanager/filemanager.component';
 import { ClassesComponent } from './classes/classes.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
   declarations: [CalendarComponent, ChatComponent, FilemanagerComponent,ClassesComponent],
@@ -80,7 +81,8 @@ import { ClassesComponent } from './classes/classes.component';
     AlertModule.forRoot(),
     SimplebarAngularModule,
     LightboxModule,
-    PickerModule
+    PickerModule,
+    NgSelectModule
   ],
 })
 export class PagesModule { }
