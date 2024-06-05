@@ -9,8 +9,7 @@ import { Component, OnInit } from "@angular/core";
 export class AppComponent implements OnInit {
 
   userData = {
-    token:
-      "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjZkZDJmZDRjLTUzM2ItNGU4MC04ZDgxLTA4ZGMyMmFlYTdlYSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6InNheWVkMTIzQGdtYWlsLmNvbSIsImV4cCI6MTcwNjc0MjI0OH0.eekIlH2UNFfyUYTEqzugWXQcDkcGqRSWbaF_3Fd0VFU",
+    // token:"Basic MTExNzk4ODU6NjAtZGF5ZnJlZXRyaWFs",
     expiryDateTime: "2024-01-31T23:04:08Z",
     userId: "6dd2fd4c-533b-4e80-8d81-08dc22aea7ea",
     userName: "sayed123",
