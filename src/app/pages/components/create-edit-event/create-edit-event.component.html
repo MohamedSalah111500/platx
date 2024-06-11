@@ -5,13 +5,16 @@
 <div class="modal-body">
   <form [formGroup]="formData">
     <div class="mb-3">
-      <label for="title" class="form-label">Title</label>
+      <label for="title" class="form-label">Event Name</label>
       <input
         type="text"
         id="title"
         class="form-control"
         formControlName="title"
       />
+      <div *ngIf="submitted && form.title.errors" class="invalid-feedback">
+        Event name must be between 3 and 70 characters.
+      </div>
     </div>
     <div class="mb-3">
       <label for="category" class="form-label">Category</label>
@@ -20,7 +23,6 @@
         bindLabel="name"
         bindValue="value"
         formControlName="category"
-        [ngClass]="{ 'is-invalid': submitted && form.category.errors }"
       ></ng-select>
     </div>
     <div class="mb-3">
@@ -31,8 +33,10 @@
         bindValue="id"
         formControlName="groupIds"
         multiple="true"
-        [ngClass]="{ 'is-invalid': submitted && form.groupIds.errors }"
       ></ng-select>
+      <div *ngIf="submitted && form.groupIds.errors" class="invalid-feedback">
+        Please select at least one group.
+      </div>
     </div>
     <div class="mb-3">
       <label for="studentIds" class="form-label">Students</label>
@@ -42,7 +46,6 @@
         bindValue="id"
         formControlName="studentIds"
         multiple="true"
-        [ngClass]="{ 'is-invalid': submitted && form.studentIds.errors }"
       ></ng-select>
     </div>
     <div class="mb-3">
@@ -53,21 +56,19 @@
         bindValue="id"
         formControlName="staffIds"
         multiple="true"
-        [ngClass]="{ 'is-invalid': submitted && form.staffIds.errors }"
       ></ng-select>
     </div>
     <div class="mb-3">
-      <label for="repeat" class="form-label">Repeat</label>
+      <label for="repeat" class="form-label">Frequency</label>
       <ng-select
         [items]="repeatFrequency"
         bindLabel="name"
         bindValue="id"
         formControlName="repeat"
-        [ngClass]="{ 'is-invalid': submitted && form.repeat.errors }"
       ></ng-select>
     </div>
-    <div class="mb-3">
-      <label for="dateFrom" class="form-label">Date From</label>
+    <!-- <div *ngIf="form.repeat.value === 0" class="mb-3">
+      <label for="dateFrom" class="form-label">Date</label>
       <input
         type="date"
         id="dateFrom"
@@ -75,28 +76,83 @@
         formControlName="dateFrom"
       />
     </div>
-    <div class="mb-3">
-      <label for="dateTo" class="form-label">Date To</label>
+    <div *ngIf="form.repeat.value !== 0" class="mb-3">
+      <label for="dateFrom" class="form-label">Start Date</label>
+      <input
+        type="date"
+        id="dateFrom"
+        class="form-control"
+        formControlName="dateFrom"
+      />
+    </div> -->
+    <div *ngIf="form.repeat.value !== 0" class="mb-3">
+      <label for="dateTo" class="form-label">End Date</label>
       <input
         type="date"
         id="dateTo"
         class="form-control"
         formControlName="dateTo"
       />
+      <div *ngIf="form.dateTo.errors?.max" class="invalid-feedback">
+        End date cannot be more than 1 year from today.
+      </div>
     </div>
-    <div class="d-flex">
-      <span class=" justify-content-end">
-
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="saveEvent()"
-        >
-          {{ editEvent ? 'Save Changes' : 'Create Event' }}
-        </button>
-      </span>
-      <span class="  justify-content-start">
-
+    <div class="mb-3">
+      <label for="eventStartTime" class="form-label">Event Start Time</label>
+      <input
+        type="time"
+        id="eventStartTime"
+        class="form-control"
+        formControlName="eventStartTime"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="eventDuration" class="form-label">Event Duration (hours)</label>
+      <input
+        type="number"
+        id="eventDuration"
+        class="form-control"
+        formControlName="eventDuration"
+        step="0.01"
+        min="0.15"
+        max="24"
+      />
+      <div *ngIf="submitted && form.eventDuration.errors" class="invalid-feedback">
+        Duration must be between 0.15 and 24 hours.
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <textarea
+        id="description"
+        class="form-control"
+        formControlName="description"
+        rows="3"
+      ></textarea>
+      <div *ngIf="form.description.errors?.maxlength" class="invalid-feedback">
+        Description cannot exceed 1000 characters.
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="locationLink" class="form-label">Location Link</label>
+      <input
+        type="url"
+        id="locationLink"
+        class="form-control"
+        formControlName="locationLink"
+      />
+      <div *ngIf="submitted && form.locationLink.errors?.pattern" class="invalid-feedback">
+        Please enter a valid URL.
+      </div>
+    </div>
+    <div class="d-flex justify-content-between">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="saveEvent()"
+      >
+        {{ editEvent ? 'Save Changes' : 'Create Event' }}
+      </button>
       <button
         *ngIf="editEvent"
         type="button"
@@ -105,7 +161,6 @@
       >
         Delete Event
       </button>
-      </span>
     </div>
   </form>
 </div>

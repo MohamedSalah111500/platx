@@ -41,19 +41,22 @@ export class CreateEditEventComponent implements OnInit {
 
   ngOnInit(): void {
     this.formData = this.formBuilder.group({
-      title: ["", [Validators.required]],
+      title: ["", [Validators.required, Validators.minLength(3), Validators.maxLength(70)]],
       category: [null],
-      groupIds: [[]],
+      groupIds: [[], [Validators.required]],
       studentIds: [[]],
       staffIds: [[]],
       repeat: [0, [Validators.required]],
-      dateFrom: ["", [Validators.required]],
-      dateTo: ["", [Validators.required]],
+      dateTo: ["", [this.dateToValidator()]],
+      description: ["", [Validators.maxLength(1000)]],
+      WeekDays: ["", [Validators.maxLength(1000)]],
+      locationLink: ["", [Validators.pattern(/https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/)]],
+      eventStartTime: ["", [Validators.required]],
+      eventDuration: ["", [Validators.required, Validators.min(0.15), Validators.max(24)]],
     });
 
     if (this.editEvent) {
-      console.log(this.editEvent , this.editEvent._instance.range.start);
-      const editEventStart = this.formatDate(this.editEvent.start);
+      // const editEventStart = this.formatDate(this.editEvent.start);
       const editEventEnd = this.formatDate(this.editEvent.end);
       this.formData.patchValue({
         title: this.editEvent.title,
@@ -62,8 +65,12 @@ export class CreateEditEventComponent implements OnInit {
         studentIds: this.editEvent.extendedProps.studentIds,
         staffIds: this.editEvent.extendedProps.staffIds,
         repeat: this.editEvent.extendedProps.repeat,
-        dateFrom: editEventStart,
         dateTo: editEventEnd,
+        description: this.editEvent.extendedProps.description,
+        WeekDays: this.editEvent.extendedProps.WeekDays,
+        locationLink: this.editEvent.extendedProps.locationLink,
+        eventStartTime: this.editEvent.extendedProps.eventStartTime,
+        eventDuration: this.editEvent.extendedProps.eventDuration,
       });
     }
   }
@@ -71,6 +78,7 @@ export class CreateEditEventComponent implements OnInit {
   get form() {
     return this.formData.controls;
   }
+
   private formatDate(date: Date): string {
     const d = new Date(date);
     const month = ("0" + (d.getMonth() + 1)).slice(-2);
@@ -78,38 +86,54 @@ export class CreateEditEventComponent implements OnInit {
     const year = d.getFullYear();
     return [year, month, day].join("-");
   }
+
+  private dateToValidator() {
+    return (control) => {
+      const dateTo = new Date(control.value);
+      const maxDate = new Date();
+      maxDate.setFullYear(maxDate.getFullYear() + 1);
+      return dateTo <= maxDate ? null : { max: true };
+    };
+  }
+
   saveEvent() {
-    console.log(this.formData);
-    
+    this.submitted = true;
+
     if (this.formData.valid) {
-      const title = this.formData.get("title").value;
-      const className = this.formData.get("category").value;
-      const groupIds = this.formData.get("groupIds").value;
-      const studentIds = this.formData.get("studentIds").value;
-      const staffIds = this.formData.get("staffIds").value;
-      const repeat = this.formData.get("repeat").value;
-      const dateFrom = this.formData.get("dateFrom").value;
-      const dateTo = this.formData.get("dateTo").value;
+      const eventData = this.formData.value;
 
       if (this.editEvent) {
-        console.log(this.editEvent);
-        
-        this.editEvent.setProp("title", title);
-        this.editEvent.setProp("classNames", className);
-        this.editEvent.setStart(dateFrom);
-        this.editEvent.setEnd(dateTo);
-        this.editEvent.setExtendedProp("groupIds", groupIds);
-        this.editEvent.setExtendedProp("studentIds", studentIds);
-        this.editEvent.setExtendedProp("staffIds", staffIds);
-        this.editEvent.setExtendedProp("repeat", repeat);
+        this.editEvent.setProp("title", eventData.title);
+        this.editEvent.setProp("classNames", [eventData.category]);
+        // this.editEvent.setStart(eventData.dateFrom);
+        this.editEvent.setEnd(eventData.dateTo);
+        this.editEvent.setExtendedProp("groupIds", eventData.groupIds);
+        this.editEvent.setExtendedProp("studentIds", eventData.studentIds);
+        this.editEvent.setExtendedProp("staffIds", eventData.staffIds);
+        this.editEvent.setExtendedProp("repeat", eventData.repeat);
+        this.editEvent.setExtendedProp("description", eventData.description);
+        this.editEvent.setExtendedProp("WeekDays", eventData.WeekDays);
+        this.editEvent.setExtendedProp("locationLink", eventData.locationLink);
+        this.editEvent.setExtendedProp("eventStartTime", eventData.eventStartTime);
+        this.editEvent.setExtendedProp("eventDuration", eventData.eventDuration);
       } else {
         this.newEventDate.view.calendar.addEvent({
           id: createEventId(),
-          title,
-          start: dateFrom,
-          end: dateTo,
-          className: className + " " + "text-white",
-          extendedProps: { groupIds, studentIds, repeat, staffIds }
+          title: eventData.title,
+          start: new Date(),
+          end: eventData.dateTo,
+          className: eventData.category + " " + "text-white",
+          extendedProps: {
+            groupIds: eventData.groupIds,
+            studentIds: eventData.studentIds,
+            staffIds: eventData.staffIds,
+            repeat: eventData.repeat,
+            description: eventData.description,
+            WeekDays: eventData.WeekDays,
+            locationLink: eventData.locationLink,
+            eventStartTime: eventData.eventStartTime,
+            eventDuration: eventData.eventDuration,
+          },
         });
       }
 
@@ -117,9 +141,9 @@ export class CreateEditEventComponent implements OnInit {
       this.resetForm();
       this.modalRef.hide();
       this.eventSaved.emit();
+    } else {
+      this.formData.markAllAsTouched();
     }
-    else this.formData.markAllAsTouched()
-    this.submitted = true;
   }
 
   confirmDelete() {
@@ -149,14 +173,20 @@ export class CreateEditEventComponent implements OnInit {
   private resetForm() {
     this.formData.reset({
       title: "",
-      category: "",
+      category: null,
       groupIds: [],
       studentIds: [],
       staffIds: [],
       repeat: 0,
-      dateFrom: "",
+      // dateFrom: "",
       dateTo: "",
+      description: "",
+      WeekDays:null,
+      locationLink: "",
+      eventStartTime: "",
+      eventDuration: "",
     });
+    this.submitted = false;
   }
 
   private position() {
