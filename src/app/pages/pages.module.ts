@@ -44,9 +44,10 @@ import { ChatComponent } from './chat/chat.component';
 import { FilemanagerComponent } from './filemanager/filemanager.component';
 import { ClassesComponent } from './classes/classes.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { CreateEditEventComponent } from './components/create-edit-event/create-edit-event.component';
 
 @NgModule({
-  declarations: [CalendarComponent, ChatComponent, FilemanagerComponent,ClassesComponent],
+  declarations: [CalendarComponent, ChatComponent, FilemanagerComponent,ClassesComponent, CreateEditEventComponent],
   imports: [
     CommonModule,
     FormsModule,

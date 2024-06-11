@@ -16,173 +16,22 @@
   </div>
 </div>
 
-<!-- Add New Event MODAL -->
-<ng-template #modalShow let-modal>
-  <div class="modal-header">
-    <h5 class="modal-title" id="modal-title">Add New Event</h5>
-    <button type="button" class="btn-close" (click)="closeEventModal()"></button>
-  </div>
-  <div class="modal-body p-4">
-    <form (ngSubmit)="saveEvent()" [formGroup]="formData">
-      <div class="row">
-        <div class="col-12">
-          <div class="mb-3">
-            <label class="control-label">Event Name</label>
-            <input class="form-control" placeholder="Insert Event Name" type="text" name="title" formControlName="title" [ngClass]="{'is-invalid': submitted && form.title.errors}" />
-            <div *ngIf="submitted && form.title.errors" class="invalid-feedback">
-              <span *ngIf="form.title.errors.required">This value is required.</span>
-            </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="mb-3">
-            <label class="control-label">Category</label>
-            <select class="form-control" name="category" formControlName="category" [ngClass]="{'is-invalid': submitted && form.category.errors }">
-              <option *ngFor="let option of category" [value]="option.value">{{ option.name }}</option>
-            </select>
-            <div *ngIf="submitted && form.category.errors" class="invalid-feedback">
-              <div *ngIf="form.category.errors.required">This value is required</div>
-            </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="mb-3">
-            <label class="control-label">Groups</label>
-            <ng-select [items]="groups" bindLabel="name" bindValue="id"  [multiple]="true" formControlName="groupIds" [ngClass]="{'is-invalid': submitted && form.groupIds.errors}"></ng-select>
-            
-            <div *ngIf="submitted && form.groupIds.errors" class="invalid-feedback">
-              <div *ngIf="form.groupIds.errors.required">This value is required</div>
-            </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="mb-3">
-            <label class="control-label">Students</label>
-            <ng-select [items]="students" bindLabel="name" bindValue="id" [multiple]="true" formControlName="studentIds" [ngClass]="{'is-invalid': submitted && form.studentIds.errors}"></ng-select>
-            <div *ngIf="submitted && form.studentIds.errors" class="invalid-feedback">
-              <div *ngIf="form.studentIds.errors.required">This value is required</div>
-            </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="mb-3">
-            <label class="control-label">Staff</label>
-            <ng-select [items]="staff" bindLabel="name" bindValue="id" formControlName="staffIds" [multiple]="true"></ng-select>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="mb-3">
-            <label class="control-label">Repeat</label>
-            <ng-select [items]="repeatFrequency" bindLabel="name" bindValue="id" formControlName="repeat" [ngClass]="{'is-invalid': submitted && form.repeat.errors}"></ng-select>
-            <div *ngIf="submitted && form.repeat.errors" class="invalid-feedback">
-              <div *ngIf="form.repeat.errors.required">This value is required</div>
-            </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="mb-3">
-            <label class="control-label">Date From</label>
-            <input class="form-control" type="date" formControlName="dateFrom" [ngClass]="{'is-invalid': submitted && form.dateFrom.errors}" />
-            <div *ngIf="submitted && form.dateFrom.errors" class="invalid-feedback">
-              <div *ngIf="form.dateFrom.errors.required">This value is required</div>
-            </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="mb-3">
-            <label class="control-label">Date To</label>
-            <input class="form-control" type="date" formControlName="dateTo" [ngClass]="{'is-invalid': submitted && form.dateTo.errors}" />
-            <div *ngIf="submitted && form.dateTo.errors" class="invalid-feedback">
-              <div *ngIf="form.dateTo.errors.required">This value is required</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="text-end mt-2">
-        <button type="button" class="btn btn-light me-1" (click)="closeEventModal()">
-          Close
-        </button>
-        <button type="submit" class="btn btn-success" id="btn-save-event">
-          Save
-        </button>
-      </div>
-    </form>
-  </div>
+<!-- Add this where you need the modal to be displayed -->
+<ng-template #modalShow>
+  <app-create-edit-event
+    [modalRef]="modalRef"
+    [newEventDate]="newEventDate"
+    [category]="category"
+    (eventSaved)="handleEvents(currentEvents)"
+  ></app-create-edit-event>
 </ng-template>
-<!-- end modal-->
 
-<!-- Edit event modal -->
-<ng-template #editmodalShow let-modal>
-  <div class="modal-header">
-    <h5 class="modal-title">Edit Event</h5>
-    <button type="button" class="btn-close" aria-hidden="true" (click)="modalRef?.hide()"></button>
-  </div>
-  <div class="modal-body p-4">
-    <form [formGroup]="formEditData" (ngSubmit)="editEventSave()">
-      <div class="row">
-        <div class="col-12">
-          <div class="mb-3">
-            <label class="control-label">Event name</label>
-            <input class="form-control" placeholder="Insert Event Name" type="text" name="editTitle" formControlName="editTitle">
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <div class="mb-3">
-            <label class="control-label">Event category</label>
-            <select class="form-control" name="ecategory" formControlName="editCategory" required>
-              <option *ngFor="let option of category" [value]="option.value">{{ option.name }}</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="mb-3">
-            <label class="control-label">Groups</label>
-            <ng-select [items]="groups" bindLabel="name" bindValue="id" [multiple]="true" formControlName="editGroupIds"></ng-select>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="mb-3">
-            <label class="control-label">Students</label>
-            <ng-select [items]="students" bindLabel="name" bindValue="id" [multiple]="true" formControlName="editStudentIds"></ng-select>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="mb-3">
-            <label class="control-label">Staff</label>
-            <ng-select [items]="staff" bindLabel="name" bindValue="id" [multiple]="true" formControlName="editStaffIds"></ng-select>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="mb-3">
-            <label class="control-label">Repeat</label>
-            <ng-select [items]="repeatFrequency" bindLabel="name" bindValue="id" formControlName="editRepeat"></ng-select>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="mb-3">
-            <label class="control-label">Date From</label>
-            <input class="form-control" type="date" formControlName="editDateFrom" />
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="mb-3">
-            <label class="control-label">Date To</label>
-            <input class="form-control" type="date" formControlName="editDateTo" />
-          </div>
-        </div>
-      </div>
-      <div class="row mt-2">
-        <div class="col-6">
-          <button type="button" class="btn btn-danger delete-event ms-1" (click)="confirm()">Delete</button>
-        </div>
-        <div class="col-6 text-end">
-          <button type="button" class="btn btn-light" (click)="modalRef?.hide()">Close</button>
-          <button type="submit" class="btn btn-success ms-1">Save</button>
-        </div>
-      </div>
-    </form>
-  </div>
+<ng-template #editmodalShow>
+  <app-create-edit-event
+    [modalRef]="modalRef"
+    [editEvent]="editEvent"
+    [category]="category"
+    (eventSaved)="handleEvents(currentEvents)"
+  ></app-create-edit-event>
 </ng-template>
+

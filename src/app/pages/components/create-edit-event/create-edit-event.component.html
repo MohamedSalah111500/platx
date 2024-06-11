@@ -1,0 +1,111 @@
+<div class="modal-header">
+  <h5 class="modal-title">{{ editEvent ? 'Edit Event' : 'Create Event' }}</h5>
+  <button type="button" class="btn-close" (click)="closeModal()"></button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="formData">
+    <div class="mb-3">
+      <label for="title" class="form-label">Title</label>
+      <input
+        type="text"
+        id="title"
+        class="form-control"
+        formControlName="title"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="category" class="form-label">Category</label>
+      <ng-select
+        [items]="category"
+        bindLabel="name"
+        bindValue="value"
+        formControlName="category"
+        [ngClass]="{ 'is-invalid': submitted && form.category.errors }"
+      ></ng-select>
+    </div>
+    <div class="mb-3">
+      <label for="groupIds" class="form-label">Groups</label>
+      <ng-select
+        [items]="groups"
+        bindLabel="name"
+        bindValue="id"
+        formControlName="groupIds"
+        multiple="true"
+        [ngClass]="{ 'is-invalid': submitted && form.groupIds.errors }"
+      ></ng-select>
+    </div>
+    <div class="mb-3">
+      <label for="studentIds" class="form-label">Students</label>
+      <ng-select
+        [items]="students"
+        bindLabel="name"
+        bindValue="id"
+        formControlName="studentIds"
+        multiple="true"
+        [ngClass]="{ 'is-invalid': submitted && form.studentIds.errors }"
+      ></ng-select>
+    </div>
+    <div class="mb-3">
+      <label for="staffIds" class="form-label">Staff</label>
+      <ng-select
+        [items]="staff"
+        bindLabel="name"
+        bindValue="id"
+        formControlName="staffIds"
+        multiple="true"
+        [ngClass]="{ 'is-invalid': submitted && form.staffIds.errors }"
+      ></ng-select>
+    </div>
+    <div class="mb-3">
+      <label for="repeat" class="form-label">Repeat</label>
+      <ng-select
+        [items]="repeatFrequency"
+        bindLabel="name"
+        bindValue="id"
+        formControlName="repeat"
+        [ngClass]="{ 'is-invalid': submitted && form.repeat.errors }"
+      ></ng-select>
+    </div>
+    <div class="mb-3">
+      <label for="dateFrom" class="form-label">Date From</label>
+      <input
+        type="date"
+        id="dateFrom"
+        class="form-control"
+        formControlName="dateFrom"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="dateTo" class="form-label">Date To</label>
+      <input
+        type="date"
+        id="dateTo"
+        class="form-control"
+        formControlName="dateTo"
+      />
+    </div>
+    <div class="d-flex">
+      <span class=" justify-content-end">
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="saveEvent()"
+        >
+          {{ editEvent ? 'Save Changes' : 'Create Event' }}
+        </button>
+      </span>
+      <span class="  justify-content-start">
+
+      <button
+        *ngIf="editEvent"
+        type="button"
+        class="btn btn-danger"
+        (click)="confirmDelete()"
+      >
+        Delete Event
+      </button>
+      </span>
+    </div>
+  </form>
+</div>
