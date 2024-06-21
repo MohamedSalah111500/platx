@@ -1,6 +1,4 @@
 import { Injectable } from "@angular/core";
-
-import { getFirebaseBackend } from "../../../authUtils";
 import { User } from "src/app/store/Authentication/auth.models";
 import { Observable, Observer, from, map } from "rxjs";
 import { HttpClient } from "@angular/common/http";

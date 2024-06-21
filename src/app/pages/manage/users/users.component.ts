@@ -9,15 +9,12 @@ import { selectData } from 'src/app/store/UserList/userlist-selector';
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 
 @Component({
-  selector: 'app-userlist',
-  templateUrl: './userlist.component.html',
-  styleUrls: ['./userlist.component.scss'],
+  selector: 'app-users',
+  templateUrl: './users.component.html',
+  styleUrls: ['./users.component.scss'],
 })
 
-/**
- * Contacts user-list component
- */
-export class UserlistComponent implements OnInit {
+export class UsersComponent implements OnInit {
   // bread crumb items
   breadCrumbItems: Array<{}>;
   term: any

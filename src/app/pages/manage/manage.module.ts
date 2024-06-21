@@ -10,16 +10,19 @@ import { NgSelectModule } from '@ng-select/ng-select';
 
 import { WidgetModule } from '../../shared/widget/widget.module';
 import { UIModule } from '../../shared/ui/ui.module';
-import { ContactsRoutingModule } from './contacts-routing.module';
+import { ContactsRoutingModule } from './manage-routing.module';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { UsergridComponent } from './usergrid/usergrid.component';
-import { UserlistComponent } from './userlist/userlist.component';
+import { UsersComponent } from './users/users.component';
 import { ProfileComponent } from './profile/profile.component';
+import { StaffComponent } from './staff/staff.component';
+import { StudentsComponent } from './students/students.component';
+import { RolesComponent } from './roles/roles.component';
 
 @NgModule({
-  declarations: [UsergridComponent, UserlistComponent, ProfileComponent],
+  declarations: [UsergridComponent, UsersComponent, ProfileComponent,StaffComponent,StudentsComponent,RolesComponent],
   imports: [
     CommonModule,
     ContactsRoutingModule,
@@ -27,7 +30,7 @@ import { ProfileComponent } from './profile/profile.component';
     UIModule,
     NgSelectModule,
     NgApexchartsModule,
-    FormsModule, 
+    FormsModule,
     ReactiveFormsModule ,
     TooltipModule.forRoot(),
     PaginationModule.forRoot(),
@@ -35,4 +38,4 @@ import { ProfileComponent } from './profile/profile.component';
     ModalModule
   ]
 })
-export class ContactsModule { }
+export class ManageModule { }

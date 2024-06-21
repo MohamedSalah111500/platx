@@ -47,7 +47,7 @@ export const MENU: MenuItem[] = [
   {
     id: 12,
     label: "Classes",
-    icon: 'bx-task',
+    icon: "bx-task",
     link: "/courses-content",
   },
   {
@@ -57,26 +57,33 @@ export const MENU: MenuItem[] = [
     link: "/filemanager",
   },
   {
+    id: 14,
+    label: "Manage",
+    icon: "bx-shield",
+    subItems: [
+      {
         id: 14,
-        label: 'Manage',
-        icon: 'bx-shield',
-        subItems: [
-            {
-                id: 14,
-                label: 'Staff',
-                icon: 'bx-user-voice',
-                link: '/contacts/list',
-                parentId: 14
-            },
-            {
-                id: 15,
-                label: 'Students',
-                icon: 'fa-book-reader',
-                link: '/contacts/list',
-                parentId: 14
-            },
-          ]
-  }
+        label: "Staff",
+        icon: "bx-user-voice",
+        link: "/manage/staff",
+        parentId: 14,
+      },
+      {
+        id: 15,
+        label: "Students",
+        icon: "bx-user-voice",
+        link: "/manage/students",
+        parentId: 14,
+      },
+      {
+        id: 16,
+        label: "Roles",
+        icon: "bx-user-voice",
+        link: "/manage/roles",
+        parentId: 14,
+      },
+    ],
+  },
   // {
   //     id: 13,
   //     label: 'MENUITEMS.ECOMMERCE.TEXT',

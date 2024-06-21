@@ -28,7 +28,7 @@ import { EmailModule } from './email/email.module';
 import { InvoicesModule } from './invoices/invoices.module';
 import { GroupsModule } from './groups/groups.module';
 import { TasksModule } from './tasks/tasks.module';
-import { ContactsModule } from './contacts/contacts.module';
+import { ManageModule } from './manage/manage.module';
 import { NewsModule } from "./news/news.module";
 import { UtilityModule } from './utility/utility.module';
 import { UiModule } from './ui/ui.module';
@@ -63,7 +63,7 @@ import { ClassesComponent } from './classes/classes.component';
     GroupsModule,
     UIModule,
     TasksModule,
-    ContactsModule,
+    ManageModule,
     NewsModule,
     UtilityModule,
     UiModule,
