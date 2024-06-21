@@ -18,5 +18,12 @@ export const GROUPS_URLS = {
   GET_GROUP_STUDENTS: (groupId)=>`${environment.apiURL.concat(GROUPS_BASE)}${groupId}/students`,
   GET_GROUP_STAFF: (groupId)=>`${environment.apiURL.concat(GROUPS_BASE)}${groupId}/staff`,
   GET_GROUP_FILES: (groupId)=>`${environment.apiURL.concat(GROUPS_BASE)}${groupId}/files`,
+};
 
+export const ROLES_URLS = {
+  GET_ALL: (pageNumber: number, pageSize: number) => `/api/Roles?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+  GET_BY_ID: (id: number) => `/api/Roles/${id}`,
+  CREATE: `/api/Roles`,
+  UPDATE: (id: number) => `/api/Roles/${id}`,
+  DELETE: (id: number) => `/api/Roles/${id}`,
 };

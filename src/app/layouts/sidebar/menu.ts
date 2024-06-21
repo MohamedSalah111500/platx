@@ -59,26 +59,26 @@ export const MENU: MenuItem[] = [
   {
     id: 14,
     label: "Manage",
-    icon: "bx-shield",
+    icon: "bx-cog",
     subItems: [
       {
         id: 14,
         label: "Staff",
-        icon: "bx-user-voice",
+        icon: "bx-group",
         link: "/manage/staff",
         parentId: 14,
       },
       {
         id: 15,
         label: "Students",
-        icon: "bx-user-voice",
+        icon: "bx-user-pin",
         link: "/manage/students",
         parentId: 14,
       },
       {
         id: 16,
         label: "Roles",
-        icon: "bx-user-voice",
+        icon: "bx-list-check",
         link: "/manage/roles",
         parentId: 14,
       },

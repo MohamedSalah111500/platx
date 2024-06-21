@@ -1,16 +1,10 @@
-import { Component, OnInit, QueryList, ViewChildren } from "@angular/core";
+import { Component, OnInit} from "@angular/core";
 import { Observable } from "rxjs";
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 import {
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  FormArray,
-  Validators,
-} from "@angular/forms";
+  UntypedFormBuilder} from "@angular/forms";
 
 import { Store } from "@ngrx/store";
-import { fetchprojectData } from "src/app/store/ProjectsData/project.actions";
-import { selectData } from "src/app/store/ProjectsData/project-selector";
 import { PageChangedEvent } from "ngx-bootstrap/pagination";
 import { GroupsService } from "../services/groupsService.service";
 import { Group } from "../types";
@@ -119,7 +113,6 @@ export class GroupsComponent implements OnInit {
   // fiter job
   searchJob() {
     if (this.term) {
-      console.log(this.term)
       this.groups = this.lists.filter((data: Group) => {
         return data.description.toLowerCase().includes(this.term.toLowerCase());
       });
