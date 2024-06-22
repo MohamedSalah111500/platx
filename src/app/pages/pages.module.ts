@@ -29,7 +29,7 @@ import { InvoicesModule } from './invoices/invoices.module';
 import { GroupsModule } from './groups/groups.module';
 import { TasksModule } from './tasks/tasks.module';
 import { ContactsModule } from './contacts/contacts.module';
-import { BlogModule } from "./blog/blog.module";
+import { NewsModule } from "./news/news.module";
 import { UtilityModule } from './utility/utility.module';
 import { UiModule } from './ui/ui.module';
 import { FormModule } from './form/form.module';
@@ -43,9 +43,13 @@ import { ChatComponent } from './chat/chat.component';
 
 import { FilemanagerComponent } from './filemanager/filemanager.component';
 import { ClassesComponent } from './classes/classes.component';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { CreateEditEventComponent } from './components/create-edit-event/create-edit-event.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 
 @NgModule({
-  declarations: [CalendarComponent, ChatComponent, FilemanagerComponent,ClassesComponent],
+  declarations: [CalendarComponent, ChatComponent, FilemanagerComponent,ClassesComponent, CreateEditEventComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -64,7 +68,7 @@ import { ClassesComponent } from './classes/classes.component';
     UIModule,
     TasksModule,
     ContactsModule,
-    BlogModule,
+    NewsModule,
     UtilityModule,
     UiModule,
     FormModule,
@@ -80,7 +84,11 @@ import { ClassesComponent } from './classes/classes.component';
     AlertModule.forRoot(),
     SimplebarAngularModule,
     LightboxModule,
-    PickerModule
+    PickerModule,
+    NgSelectModule,
+    BsDatepickerModule.forRoot(),
+    TimepickerModule.forRoot(),
+    
   ],
 })
 export class PagesModule { }

@@ -8,7 +8,7 @@
               <div class="col-7">
                 <div class="text-primary p-4">
                   <h5 class="text-primary">Free Register</h5>
-                  <p>Get your free Skote account now.</p>
+                  <p>Get your free platx account now.</p>
                 </div>
               </div>
               <div class="col-5 align-self-end">
@@ -37,8 +37,28 @@
                 <alert type="danger" [dismissible]="false">{{ error }}</alert>
                 }
                 <div class="mb-3">
-                  <label for="username" class="form-label">Username</label>
+                  <label for="firstName" class="form-label">First Name</label>
+                  <input type="text" formControlName="firstName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" id="firstName" placeholder="Enter First Name" />
+                  @if(submitted && f.firstName.errors){
+                  <div class="invalid-feedback">
+                    @if(f.firstName.errors.required){
+                    <div>First Name is required</div>}
+                  </div>}
+                </div>
 
+
+                <div class="mb-3">
+                  <label for="lastName" class="form-label">Last Name</label>
+                  <input type="text" formControlName="lastName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" id="lastName" placeholder="Enter lastName" />
+                  @if(submitted && f.lastName.errors){
+                  <div class="invalid-feedback">
+                    @if(f.lastName.errors.required){
+                    <div>Last Name is required</div>}
+                  </div>}
+                </div>
+
+                <div class="mb-3">
+                  <label for="username" class="form-label">Username</label>
                   <input type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" id="username" placeholder="Enter username" />
                   @if(submitted && f.username.errors){
                   <div class="invalid-feedback">
@@ -96,7 +116,7 @@
                   </ul>
                 </div>
                 <div class="mt-4 text-center">
-                  <p class="mb-0">By registering you agree to the Skote <a href="javascript: void(0);" class="text-primary">Terms of
+                  <p class="mb-0">By registering you agree to the platx <a href="javascript: void(0);" class="text-primary">Terms of
                       Use</a></p>
                 </div>
               </form>
@@ -108,7 +128,7 @@
         <div class="mt-5 text-center">
           <p>Already have an account ? <a routerLink="/auth/login" class="fw-medium text-primary"> Login</a>
           </p>
-          <p>© {{year}} PlatX Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesbrand</p>
+          <p>© {{year}} PlatX  <i class="mdi mdi-heart text-danger"></i></p>
         </div>
       </div> <!-- end col -->
     </div>

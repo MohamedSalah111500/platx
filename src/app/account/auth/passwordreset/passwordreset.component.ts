@@ -1,62 +1,94 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, AfterViewInit } from "@angular/core";
+import {
+  FormControl,
+  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
 
-import { AuthenticationService } from '../../../core/services/auth.service';
-import { environment } from '../../../../environments/environment';
+import { AuthenticationService } from "../services/auth.service";
+import { environment } from "../../../../environments/environment";
+import { ForgetPasswordForm, ResetPasswordForm } from "../types";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
-  selector: 'app-passwordreset',
-  templateUrl: './passwordreset.component.html',
-  styleUrls: ['./passwordreset.component.scss']
+  selector: "app-passwordreset",
+  templateUrl: "./passwordreset.component.html",
+  styleUrls: ["./passwordreset.component.scss"],
 })
 
 /**
  * Reset-password component
  */
 export class PasswordresetComponent implements OnInit, AfterViewInit {
-
-  resetForm: UntypedFormGroup;
   submitted: any = false;
-  error: any = '';
-  success: any = '';
+  error: any = "";
+  success: any = "";
   loading: any = false;
 
   // set the currenr year
   year: number = new Date().getFullYear();
 
+  resetPasswordForm: FormGroup<ResetPasswordForm> = new FormGroup<ResetPasswordForm>({
+    email: new FormControl("", [Validators.required, Validators.email]),
+  });
+
+  forgetPasswordForm: FormGroup<ForgetPasswordForm> = new FormGroup<ForgetPasswordForm>({
+    userName: new FormControl("", [Validators.required]),
+  });
   // tslint:disable-next-line: max-line-length
-  constructor(private formBuilder: UntypedFormBuilder, private route: ActivatedRoute, private router: Router, private authenticationService: AuthenticationService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private authenticationService: AuthenticationService,
+    public toastr: ToastrService
+  ) {}
 
-  ngOnInit() {
+  ngOnInit() {}
 
-    this.resetForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-    });
-  }
-
-  ngAfterViewInit() {
-  }
+  ngAfterViewInit() {}
 
   // convenience getter for easy access to form fields
-  get f() { return this.resetForm.controls; }
 
   /**
    * On submit form
    */
   onSubmit() {
-    this.success = '';
+    this.success = "";
     this.submitted = true;
 
     // stop here if form is invalid
-    if (this.resetForm.invalid) {
+    if (this.forgetPasswordForm.invalid) {
       return;
     }
-    if (environment.defaultauth === 'firebase') {
-      this.authenticationService.resetPassword(this.f.email.value)
-        .catch(error => {
-          this.error = error ? error : '';
-        });
-    }
+
+    const userName = this.forgetPasswordForm.controls.userName.value;
+    this.authenticationService.forgetPassword(userName).subscribe(
+      (response) => {
+        console.log(response);
+        this.toastr.success("Rest Password successful", "Bootstrap");
+      },
+      (error) => {
+        let firstErrorMessage =
+          error?.error?.errors[Object.keys(error.error.errors)[0]];
+        this.error = firstErrorMessage;
+      }
+    );
+
+    // const email = this.resetPasswordForm.controls.email.value;
+
+    // Login Api
+    // this.authenticationService.resetPassword(email).subscribe(
+    //   (response) => {
+    //     console.log(response)
+    //     this.toastr.success("Rest Password successful", "Bootstrap");
+    //   },
+    //   (error) => {
+    //     let firstErrorMessage = error?.error?.errors[Object.keys(error.error.errors)[0]];
+    //     this.error = firstErrorMessage;
+    //   }
+    // );
   }
 }

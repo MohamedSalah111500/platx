@@ -59,7 +59,21 @@ const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
     ColorPickerModule,
     BsDatepickerModule.forRoot(),
     FlatpickrModule.forRoot(),
-    DropzoneModule
+    DropzoneModule,
+  ],
+  exports:[
+    UIModule,
+    CKEditorModule,
+    NgStepperModule,
+    CdkStepperModule,
+    NgxMaskDirective,
+    NgxMaskPipe,
+    NgSelectModule,
+    UiSwitchModule,
+    ColorPickerModule,
+    BsDatepickerModule,
+    FlatpickrModule,
+    DropzoneModule,
   ],
   providers: [provideNgxMask(),
   {

@@ -1,18 +1,14 @@
 <div class="container-fluid">
+  <form  [formGroup]="createGroupForm">
     <div class="row">
         <div class="col-lg-8">
             <div class="card">
                 <div class="card-body">
                     <input type="hidden" class="form-control" id="formAction" name="formAction" value="add">
                     <input type="hidden" class="form-control" id="project-id-input">
+<!--
                     <div class="mb-3">
-                        <label for="projectname-input" class="form-label">Project Name</label>
-
-                        <input id="projectname-input" name="projectname-input" type="text" class="form-control" placeholder="Enter project name..." required>
-                        <div class="invalid-feedback">Please enter a project name.</div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Project Image</label>
+                        <label class="form-label">Group Image</label>
 
                         <div class="text-center">
                             <div class="position-relative d-inline-block">
@@ -33,13 +29,40 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="mb-3">
-                        <label for="projectdesc-input" class="form-label">Project Description</label>
-                        <textarea class="form-control" id="projectdesc-input" rows="3" placeholder="Enter project description..." required></textarea>
-                        <div class="invalid-feedback">Please enter a project description.</div>
-                    </div>
-                    <div class="mb-3 position-relative">
+                      <label for="description" class="form-label">Group Name</label>
+                      <input id="description" formControlName="description" name="description" type="text" class="form-control" placeholder="Enter Group name..." required
+                      [ngClass]="{ 'is-invalid': submitted && createGroupForm.controls.description.errors }"
+                      >
+
+                      @if(submitted && createGroupForm.controls.description.errors){
+                        <div class="invalid-feedback">
+                          @if(createGroupForm.controls.description.errors.required){
+                          <div>Please enter a Group name.</div>
+                          }
+                        </div>
+                        }
+                  </div>
+                  <div class="mb-3">
+                    <label for="icon" class="form-label">Group Icon</label>
+                    <input id="icon" formControlName="icon" name="icon" type="text" class="form-control" placeholder="Enter Group Icon..."
+                    [ngClass]="{ 'is-invalid': submitted && createGroupForm.controls.icon.errors }"
+                    required>
+                    @if(submitted && createGroupForm.controls.icon.errors){
+                      <div class="invalid-feedback">
+                        @if(createGroupForm.controls.icon.errors.required){
+                        <div>Please enter a Group Icon.</div>
+                        }
+                      </div>
+                      }
+                </div>
+                    <!-- <div class="mb-3">
+                        <label for="projectdesc-input" class="form-label">Group Description</label>
+                        <textarea class="form-control" id="projectdesc-input" rows="3" placeholder="Enter Group description..." required></textarea>
+                        <div class="invalid-feedback">Please enter a Group description.</div>
+                    </div> -->
+                    <!-- <div class="mb-3 position-relative">
                         <label for="task-assign-input" class="form-label">Assigned To</label>
                         @if(assignList){
                         <div class="avatar-group justify-content-center" id="assignee-member">
@@ -69,8 +92,8 @@
                                 </ngx-simplebar>
                             </div>
                         </div>
-                    </div>
-                    <div>
+                    </div> -->
+                    <!-- <div>
                         <label class="form-label">Attached Files</label>
 
                         <dropzone class="dropzone" [config]="dropzoneConfig" [message]="'Drop files here or click to upload.'" (success)="onUploadSuccess($event)">
@@ -79,7 +102,6 @@
                         <ul class="list-unstyled mb-0" id="dropzone-preview">
                             @for(file of uploadedFiles;track $index){
                             <li class="mt-2" id="dropzone-preview-list">
-                                <!-- This is used as the file preview template -->
                                 <div class="border rounded">
                                     <div class="d-flex p-2">
                                         <div class="flex-shrink-0 me-3">
@@ -109,8 +131,7 @@
                                 </div>
                             </li>}
                         </ul>}
-                        <!-- end dropzon-preview -->
-                    </div>
+                    </div> -->
                 </div>
                 <!-- end card body -->
             </div>
@@ -130,7 +151,7 @@
                             <option value="Inprogress" selected>Inprogress</option>
                             <option value="Delay">Delay</option>
                         </select>
-                        <div class="invalid-feedback">Please select project status.</div>
+                        <div class="invalid-feedback">Please select Group status.</div>
                     </div>
 
                     <div>
@@ -161,8 +182,9 @@
 
     <div class="col-lg-8">
         <div class="text-end mb-4">
-            <button type="submit" class="btn btn-primary">Create Project</button>
+            <button type="submit" (click)="onSubmit()" class="btn btn-primary">Create Group</button>
         </div>
     </div>
+  </form>
     <!-- end row -->
 </div>

@@ -4,7 +4,7 @@ const CandidateList = [
         type: 'Full Time',
         profile: 'assets/images/users/avatar-1.jpg',
         name: 'Steven Franklin',
-        position: 'UI/UX Designer',
+        position: 'Software Engineering',
         location: 'Louisiana',
         price: 38,
         tags: ['Bootstrap', 'HTML', 'CSS'],

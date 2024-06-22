@@ -1,0 +1,8 @@
+<div class="form-elements">
+  @for (element of formElements; track element.type) {
+  <button type="button" class="single-element" (click)="emmitOpen(element.type,element.name)">
+    <i [class]="element.icon"></i>
+    {{ element.name }}
+  </button>
+  }
+</div>
