@@ -3,7 +3,7 @@ import { FormControl } from "@angular/forms";
 export interface CreateEventForm {
 
   title: FormControl;
-  category: FormControl;
+//   category: FormControl;
   groupIds: FormControl;
   studentIds: FormControl;
   staffIds: FormControl;
@@ -15,4 +15,7 @@ export interface CreateEventForm {
   Onlinemeetinglink	: FormControl;
   eventStartTime: FormControl;
   eventDuration: FormControl;
+  hasReminder: FormControl;
+  reminderTime: FormControl;
+  extraNoteintheReminder: FormControl;
 }

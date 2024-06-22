@@ -59,10 +59,11 @@ export class CreateEditEventComponent implements OnInit {
   submitted = false;
   minDate: Date;
   maxDate: Date;
+  editMode: boolean = false;
   constructor() {
     this.minDate = new Date();
     this.maxDate = new Date();
-    this.minDate.setDate(this.minDate.getDate() );
+    this.minDate.setDate(this.minDate.getDate());
     this.maxDate.setDate(this.maxDate.getDate() + 7);
   }
 
@@ -73,7 +74,7 @@ export class CreateEditEventComponent implements OnInit {
         Validators.minLength(3),
         Validators.maxLength(70),
       ]),
-      category: new FormControl(null),
+      // category: new FormControl(null),
       groupIds: new FormControl([], [Validators.required]),
       studentIds: new FormControl([]),
       staffIds: new FormControl([]),
@@ -91,9 +92,9 @@ export class CreateEditEventComponent implements OnInit {
         Validators.min(0.15),
         Validators.max(24),
       ]),
-      //       Has Reminder
-      // Reminder Time
-      // Extra Note in the Reminder
+      hasReminder: new FormControl(false),
+      reminderTime: new FormControl(null),
+      extraNoteintheReminder: new FormControl(null),
     });
 
     if (this.editEvent) {
@@ -101,7 +102,7 @@ export class CreateEditEventComponent implements OnInit {
       const editEventEnd = this.formatDate(this.editEvent.end);
       this.formData.patchValue({
         title: this.editEvent.title,
-        category: this.editEvent.classNames[0],
+        // category: this.editEvent.classNames[0],
         groupIds: this.editEvent.extendedProps.groupIds,
         studentIds: this.editEvent.extendedProps.studentIds,
         staffIds: this.editEvent.extendedProps.staffIds,
@@ -113,8 +114,17 @@ export class CreateEditEventComponent implements OnInit {
         Onlinemeetinglink: this.editEvent.extendedProps.Onlinemeetinglink,
         eventStartTime: this.editEvent.extendedProps.eventStartTime,
         eventDuration: this.editEvent.extendedProps.eventDuration,
+        hasReminder: this.editEvent.extendedProps.hasReminder,
+        reminderTime: this.editEvent.extendedProps.reminderTime,
+        extraNoteintheReminder:
+          this.editEvent.extendedProps.extraNoteintheReminder,
       });
-      this.formData.controls.repeat.disable();
+      // this.formData.controls.repeat.disable();
+      if (!this.editMode) this.formData.disable();
+      else {
+        this.formData.enable();
+        this.formData.controls.repeat.disable();
+      }
     }
   }
 
@@ -141,14 +151,13 @@ export class CreateEditEventComponent implements OnInit {
 
   saveEvent() {
     // this.submitted = true;
-    console.log(this.formData);
 
     if (this.formData.valid) {
       const eventData = this.formData.value;
 
       if (this.editEvent) {
         this.editEvent.setProp("title", eventData.title);
-        this.editEvent.setProp("classNames", [eventData.category]);
+        // this.editEvent.setProp("classNames", [eventData.category]);
         // this.editEvent.setStart(eventData.dateFrom);
         this.editEvent.setEnd(eventData.dateTo);
         this.editEvent.setExtendedProp("groupIds", eventData.groupIds);
@@ -170,13 +179,19 @@ export class CreateEditEventComponent implements OnInit {
           "eventDuration",
           eventData.eventDuration
         );
+        this.editEvent.setExtendedProp("hasReminder", eventData.hasReminder);
+        this.editEvent.setExtendedProp("reminderTime", eventData.reminderTime);
+        this.editEvent.setExtendedProp(
+          "extraNoteintheReminder",
+          eventData.extraNoteintheReminder
+        );
       } else {
         this.newEventDate.view.calendar.addEvent({
           id: createEventId(),
           title: eventData.title,
           start: new Date(),
           end: eventData.dateTo,
-          className: eventData.category + " " + "text-white",
+          className: "text-white", //eventData.category + " " +
           extendedProps: {
             groupIds: eventData.groupIds,
             studentIds: eventData.studentIds,
@@ -188,9 +203,14 @@ export class CreateEditEventComponent implements OnInit {
             Onlinemeetinglink: eventData.Onlinemeetinglink,
             eventStartTime: eventData.eventStartTime,
             eventDuration: eventData.eventDuration,
+            hasReminder: eventData.hasReminder,
+            reminderTime: eventData.reminderTime,
+            extraNoteintheReminder: eventData.extraNoteintheReminder,
           },
         });
-      }
+        
+        }
+      console.log(eventData);
 
       this.position();
       this.resetForm();
@@ -228,7 +248,7 @@ export class CreateEditEventComponent implements OnInit {
   private resetForm() {
     this.formData.reset({
       title: "",
-      category: null,
+      // category: null,
       groupIds: [],
       studentIds: [],
       staffIds: [],
@@ -239,9 +259,11 @@ export class CreateEditEventComponent implements OnInit {
       WeekDays: null,
       locationLink: "",
       Onlinemeetinglink: "",
-
       eventStartTime: "",
       eventDuration: "",
+      hasReminder: "",
+      reminderTime: "",
+      extraNoteintheReminder: "",
     });
     // this.submitted = false;
   }
@@ -263,6 +285,14 @@ export class CreateEditEventComponent implements OnInit {
       this.formData.controls.dateTo.removeValidators([]);
     } else
       this.formData.controls.dateTo.addValidators([this.dateToValidator()]);
+  }
+  toggleEditMode() {
+    this.editMode = !this.editMode;
+    if (!this.editMode) this.formData.disable();
+    else {
+      this.formData.enable();
+      this.formData.controls.repeat.disable();
+    }
   }
 }
 

@@ -87,7 +87,8 @@ import { TimepickerModule } from 'ngx-bootstrap/timepicker';
     PickerModule,
     NgSelectModule,
     BsDatepickerModule.forRoot(),
-    TimepickerModule.forRoot()
+    TimepickerModule.forRoot(),
+    
   ],
 })
 export class PagesModule { }

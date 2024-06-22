@@ -2,7 +2,18 @@
   <h5 class="modal-title">
     {{ editEvent ? "Edit Event" : "Create Event" }}
   </h5>
-  <button type="button" class="btn-close" (click)="closeModal()"></button>
+  <button type="button" class="btn-close me-3" (click)="closeModal()"></button>
+  @if(editEvent){
+
+  <button
+    type="button"
+    class="edit-btn btn waves-light"
+    [ngClass]="editMode ? 'btn-primary' : 'btn-success'"
+    (click)="toggleEditMode()"
+  >
+    {{ editMode ? "View" : "Edit" }}
+  </button>
+  }
 </div>
 <div class="modal-body">
   <form [formGroup]="formData">
@@ -18,11 +29,16 @@
           class="form-control"
           formControlName="title"
         />
-        <div *ngIf=" formData.controls.title.dirty && formData.controls.title.errors" class="text-danger">
+        <div
+          *ngIf="
+            formData.controls.title.dirty && formData.controls.title.errors
+          "
+          class="text-danger"
+        >
           Event name must be between 3 and 70 characters.
         </div>
       </div>
-      <div class="mb-3">
+      <!-- <div class="mb-3">
         <label for="category" class="form-label"
           >Category
           <span class="text-danger">*</span>
@@ -33,7 +49,7 @@
           bindValue="value"
           formControlName="category"
         ></ng-select>
-      </div>
+      </div> -->
       <div class="col-4">
         <div class="mb-3">
           <label for="groupIds" class="form-label"
@@ -48,7 +64,10 @@
             multiple="true"
           ></ng-select>
           <div
-            *ngIf=" formData.controls.groupIds.dirty && formData.controls.groupIds.errors"
+            *ngIf="
+              formData.controls.groupIds.dirty &&
+              formData.controls.groupIds.errors
+            "
             class="text-danger"
           >
             Please select at least one group.
@@ -96,7 +115,6 @@
           bindValue="id"
           formControlName="repeat"
           (change)="onRepeatFrequencyChange($event)"
-
         ></ng-select>
       </div>
       <div class="mb-3">
@@ -114,7 +132,6 @@
           id="WeekDays"
           [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
           [minDate]="minDate"
-
         />
         <ng-select
           *ngIf="formData.controls.repeat.value == 1"
@@ -135,28 +152,12 @@
         ></ng-select>
       </div>
 
-      <!-- <div *ngIf="formData.controls.repeat.value === 0" class="mb-3">
-      <label for="dateFrom" class="form-label">Date</label>
-      <input
-        type="date"
-        id="dateFrom"
-        class="form-control"
-        formControlName="dateFrom"
-      />
-    </div>
-    <div *ngIf="formData.controls.repeat.value !== 0" class="mb-3">
-      <label for="dateFrom" class="form-label">Start Date</label>
-      <input
-        type="date"
-        id="dateFrom"
-        class="form-control"
-        formControlName="dateFrom"
-      />
-    </div> -->
       <div *ngIf="formData.controls.repeat.value !== 0" class="mb-3">
         <label for="dateTo" class="form-label"
           >End Date
-          <span class="text-danger" *ngIf="formData.controls.repeat.value !== 0">*</span>
+          <span class="text-danger" *ngIf="formData.controls.repeat.value !== 0"
+            >*</span
+          >
         </label>
 
         <input
@@ -167,9 +168,14 @@
           id="dateTo"
           [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
           [maxDate]="minDate"
-          
         />
-        <div *ngIf=" formData.controls.dateTo.dirty && formData.controls.dateTo.errors?.max" class="text-danger">
+        <div
+          *ngIf="
+            formData.controls.dateTo.dirty &&
+            formData.controls.dateTo.errors?.max
+          "
+          class="text-danger"
+        >
           End date cannot be more than 1 year from today.
         </div>
       </div>
@@ -194,17 +200,20 @@
           id="eventDuration"
           class="form-control"
           formControlName="eventDuration"
-          step="0.15"
-          min="0.15"
-          max="24"
         />
-      <div
-        *ngIf=" formData.controls.eventDuration.dirty && formData.controls.eventDuration.errors?.max"
-        class="text-danger"
-      >
-        Duration must be between 0.15 and 24 hours.
-      </div>
+        <!-- step="0.15"
+          min="0.15"
+          max="24" -->
+        <div
+          *ngIf="
+            formData.controls.eventDuration.dirty &&
+            formData.controls.eventDuration.errors?.max
+          "
+          class="text-danger"
+        >
+          Duration must be between 0.15 and 24 hours.
         </div>
+      </div>
       <div class="mb-3">
         <label for="description" class="form-label">Description</label>
         <textarea
@@ -229,7 +238,7 @@
           formControlName="locationLink"
         />
         <div
-          *ngIf=" formData.controls.locationLink.errors?.pattern"
+          *ngIf="formData.controls.locationLink.errors?.pattern"
           class="text-danger"
         >
           Please enter a valid URL.
@@ -246,12 +255,49 @@
           formControlName="Onlinemeetinglink"
         />
         <div
-          *ngIf=" formData.controls.Onlinemeetinglink.errors?.pattern"
+          *ngIf="formData.controls.Onlinemeetinglink.errors?.pattern"
           class="text-danger"
         >
           Please enter a valid URL.
         </div>
       </div>
+      <!-- hasReminder: eventData.hasReminder,
+      reminderTime: eventData.reminderTime,
+      extraNoteintheReminder: eventData.extraNoteintheReminder, -->
+
+      <div class="mb-3">
+        <span class="form-label me-3">Has Reminder</span>
+        <ui-switch
+          color="#556ee6"
+          id="hasReminder"
+          uncheckedLabel="off"
+          checkedLabel="on"
+          size="small"
+          class="me-1"
+          formControlName="hasReminder"
+        ></ui-switch>
+      </div>
+      @if (formData.controls.hasReminder.value== true) {
+
+      <div class="mb-3">
+        <label for="extraNoteintheReminder" class="form-label"
+          >Extra Note in the Reminder</label
+        >
+        <textarea
+          id="extraNoteintheReminder"
+          class="form-control"
+          formControlName="extraNoteintheReminder"
+          rows="3"
+        ></textarea>
+        <div
+          *ngIf="formData.controls.extraNoteintheReminder.errors?.maxlength"
+          class="text-danger"
+        >
+          Extra Note cannot exceed 1000 characters.
+        </div>
+      </div>
+      }
+
       <div class="d-flex justify-content-between">
         <div class="d-flex justify-content-start">
           <button
@@ -264,14 +310,18 @@
           </button>
         </div>
         <div class="d-flex justify-content-end">
+          @if(editMode){
+
           <button
             type="button"
             class="btn btn-primary"
             (click)="saveEvent()"
-            >
-            <!-- [disabled]="formData.invalid" -->
+            [disabled]="formData.invalid"
+          >
+            <!--  -->
             {{ editEvent ? "Save Changes" : "Create Event" }}
           </button>
+          }
         </div>
       </div>
     </div>
