@@ -1,13 +1,20 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { UntypedFormBuilder, Validators, UntypedFormGroup } from '@angular/forms';
-import { BsModalRef } from 'ngx-bootstrap/modal';
-import Swal from 'sweetalert2';
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import {
+  UntypedFormBuilder,
+  Validators,
+  UntypedFormGroup,
+  FormControl,
+  FormGroup,
+} from "@angular/forms";
+import { BsModalRef } from "ngx-bootstrap/modal";
+import Swal from "sweetalert2";
 import { category, calendarEvents, createEventId } from "../../calendar/data";
+import { CreateEventForm } from "./types";
 
 @Component({
-  selector: 'app-create-edit-event',
-  templateUrl: './create-edit-event.component.html',
-  styleUrls: ['./create-edit-event.component.css']
+  selector: "app-create-edit-event",
+  templateUrl: "./create-edit-event.component.html",
+  styleUrls: ["./create-edit-event.component.scss"],
 })
 export class CreateEditEventComponent implements OnInit {
   @Input() modalRef?: BsModalRef;
@@ -31,28 +38,62 @@ export class CreateEditEventComponent implements OnInit {
     { id: 1, name: "Weekly" },
     { id: 2, name: "Monthly" },
   ];
+  weekdays = [
+    { id: 0, name: "Saturday" },
+    { id: 1, name: "Sunday" },
+    { id: 2, name: "Monday" },
+    { id: 3, name: "Tuesday" },
+    { id: 4, name: "Wednesday" },
+    { id: 5, name: "Thursday" },
+    { id: 6, name: "Friday" },
+  ];
+
+  daysOfMonth = Array.from({ length: 31 }, (_, i) => ({
+    id: i + 1,
+    name: (i + 1).toString(),
+  }));
 
   @Output() eventSaved = new EventEmitter<void>();
 
-  formData: UntypedFormGroup;
+  formData: FormGroup<CreateEventForm>;
   submitted = false;
-
-  constructor(private formBuilder: UntypedFormBuilder) {}
+  minDate: Date;
+  maxDate: Date;
+  constructor() {
+    this.minDate = new Date();
+    this.maxDate = new Date();
+    this.minDate.setDate(this.minDate.getDate() );
+    this.maxDate.setDate(this.maxDate.getDate() + 7);
+  }
 
   ngOnInit(): void {
-    this.formData = this.formBuilder.group({
-      title: ["", [Validators.required, Validators.minLength(3), Validators.maxLength(70)]],
-      category: [null],
-      groupIds: [[], [Validators.required]],
-      studentIds: [[]],
-      staffIds: [[]],
-      repeat: [0, [Validators.required]],
-      dateTo: ["", [this.dateToValidator()]],
-      description: ["", [Validators.maxLength(1000)]],
-      WeekDays: ["", [Validators.maxLength(1000)]],
-      locationLink: ["", [Validators.pattern(/https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/)]],
-      eventStartTime: ["", [Validators.required]],
-      eventDuration: ["", [Validators.required, Validators.min(0.15), Validators.max(24)]],
+    this.formData = new FormGroup<CreateEventForm>({
+      title: new FormControl("", [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(70),
+      ]),
+      category: new FormControl(null),
+      groupIds: new FormControl([], [Validators.required]),
+      studentIds: new FormControl([]),
+      staffIds: new FormControl([]),
+      repeat: new FormControl(0, [Validators.required]),
+      dateTo: new FormControl(""),
+      description: new FormControl("", [Validators.maxLength(1000)]),
+      WeekDays: new FormControl(new Date(), [Validators.required]),
+      locationLink: new FormControl("", [
+        Validators.pattern(/https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/),
+      ]),
+      Onlinemeetinglink: new FormControl(null),
+      eventStartTime: new FormControl("", [Validators.required]),
+      eventDuration: new FormControl("", [
+        Validators.required,
+        Validators.min(0.15),
+        Validators.max(24),
+      ]),
+      //       Has Reminder
+      // Reminder Time
+      // Extra Note in the Reminder
     });
 
     if (this.editEvent) {
@@ -69,9 +110,11 @@ export class CreateEditEventComponent implements OnInit {
         description: this.editEvent.extendedProps.description,
         WeekDays: this.editEvent.extendedProps.WeekDays,
         locationLink: this.editEvent.extendedProps.locationLink,
+        Onlinemeetinglink: this.editEvent.extendedProps.Onlinemeetinglink,
         eventStartTime: this.editEvent.extendedProps.eventStartTime,
         eventDuration: this.editEvent.extendedProps.eventDuration,
       });
+      this.formData.controls.repeat.disable();
     }
   }
 
@@ -97,7 +140,8 @@ export class CreateEditEventComponent implements OnInit {
   }
 
   saveEvent() {
-    this.submitted = true;
+    // this.submitted = true;
+    console.log(this.formData);
 
     if (this.formData.valid) {
       const eventData = this.formData.value;
@@ -114,8 +158,18 @@ export class CreateEditEventComponent implements OnInit {
         this.editEvent.setExtendedProp("description", eventData.description);
         this.editEvent.setExtendedProp("WeekDays", eventData.WeekDays);
         this.editEvent.setExtendedProp("locationLink", eventData.locationLink);
-        this.editEvent.setExtendedProp("eventStartTime", eventData.eventStartTime);
-        this.editEvent.setExtendedProp("eventDuration", eventData.eventDuration);
+        this.editEvent.setExtendedProp(
+          "Onlinemeetinglink",
+          eventData.Onlinemeetinglink
+        );
+        this.editEvent.setExtendedProp(
+          "eventStartTime",
+          eventData.eventStartTime
+        );
+        this.editEvent.setExtendedProp(
+          "eventDuration",
+          eventData.eventDuration
+        );
       } else {
         this.newEventDate.view.calendar.addEvent({
           id: createEventId(),
@@ -131,6 +185,7 @@ export class CreateEditEventComponent implements OnInit {
             description: eventData.description,
             WeekDays: eventData.WeekDays,
             locationLink: eventData.locationLink,
+            Onlinemeetinglink: eventData.Onlinemeetinglink,
             eventStartTime: eventData.eventStartTime,
             eventDuration: eventData.eventDuration,
           },
@@ -154,7 +209,7 @@ export class CreateEditEventComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: "#34c38f",
       cancelButtonColor: "#f46a6a",
-      confirmButtonText: "Yes, delete it!"
+      confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.value) {
         this.editEvent.remove();
@@ -181,12 +236,14 @@ export class CreateEditEventComponent implements OnInit {
       // dateFrom: "",
       dateTo: "",
       description: "",
-      WeekDays:null,
+      WeekDays: null,
       locationLink: "",
+      Onlinemeetinglink: "",
+
       eventStartTime: "",
       eventDuration: "",
     });
-    this.submitted = false;
+    // this.submitted = false;
   }
 
   private position() {
@@ -198,4 +255,15 @@ export class CreateEditEventComponent implements OnInit {
       timer: 1000,
     });
   }
+
+  onRepeatFrequencyChange(event: any) {
+    console.log("Selected item:", event);
+    this.formData.controls.WeekDays.reset();
+    if (event.id == 0) {
+      this.formData.controls.dateTo.removeValidators([]);
+    } else
+      this.formData.controls.dateTo.addValidators([this.dateToValidator()]);
+  }
 }
+
+// [disabled]="formData.invalid"
