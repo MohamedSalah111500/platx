@@ -21,7 +21,7 @@ export const GROUPS_URLS = {
 };
 
 export const ROLES_URLS = {
-  GET_ALL: (pageNumber: number, pageSize: number) => `/api/Roles?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+  GET_ALL: (pageNumber: number, pageSize: number) => `/api/Roles?page=${pageNumber}&size=${pageSize}`,
   GET_BY_ID: (id: number) => `/api/Roles/${id}`,
   CREATE: `/api/Roles`,
   UPDATE: (id: number) => `/api/Roles/${id}`,

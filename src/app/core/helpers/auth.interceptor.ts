@@ -29,7 +29,7 @@ export class AuthInterceptor implements HttpInterceptor {
       authReq = req.clone({
         setHeaders: {
           "Accept-Language": "en-US,en;q=0.9,ar;q=0.8",
-          Authorization: "Basic MTExNzk4ODU6NjAtZGF5ZnJlZXRyaWFs",
+          Authorization: token,
           Referer:
             "http://platx2024-001-site1.ctempurl.com/swagger/index.html",
           "User-Agent":

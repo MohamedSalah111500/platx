@@ -24,6 +24,7 @@ import { selectData } from "src/app/store/UserList/userlist-selector";
 import { PageChangedEvent } from "ngx-bootstrap/pagination";
 import { ManageService } from "../services/manageService.service";
 import { Role, RoleForm } from "../types";
+import { SpinnerService } from "src/app/shared/ui/spinner/spinner.service";
 
 @Component({
   selector: "app-roles",
@@ -52,9 +53,9 @@ export class RolesComponent implements OnInit {
 
   // -------------------
   loading: boolean = false;
-  totalCount: number = 0;
   list: Role[];
 
+  totalCount: number = 0;
   page: number = 1;
   pageSize: number = 8;
 
@@ -67,7 +68,8 @@ export class RolesComponent implements OnInit {
     private modalService: BsModalService,
     private formBuilder: UntypedFormBuilder,
     public store: Store,
-    private manageService: ManageService
+    private manageService: ManageService,
+    private spinnerService: SpinnerService
   ) {}
 
   ngOnInit() {
@@ -77,11 +79,11 @@ export class RolesComponent implements OnInit {
     ];
 
     this.getAllData(this.page, this.pageSize);
-
   }
 
   getAllData(pageNumber: number, pageSize: number) {
     this.loading = true;
+    this.spinnerService.show();
     this.manageService.getAllRoles(pageNumber, pageSize).subscribe(
       (response) => {
         this.list = response.items;
@@ -89,14 +91,18 @@ export class RolesComponent implements OnInit {
         this.totalCount = response.totalCount;
 
         console.log(response.items);
+
         this.loading = false;
         document.getElementById("elmLoader")?.classList.add("d-none");
+        this.spinnerService.hide();
       },
       (error) => {
         let firstErrorMessage =
           error.error.errors[Object.keys(error.error.errors)[0]];
         // this.error = firstErrorMessage;
         this.loading = false;
+        this.spinnerService.hide();
+
       }
     );
   }
@@ -141,13 +147,13 @@ export class RolesComponent implements OnInit {
   }
 
   // fiter job
-  searchJob() {
+  search() {
     if (this.term) {
-      this.contactsList = this.returnedArray.filter((data: any) => {
+      this.list = this.returnedArray.filter((data: any) => {
         return data.name.toLowerCase().includes(this.term.toLowerCase());
       });
     } else {
-      this.contactsList = this.returnedArray;
+      this.list = this.returnedArray;
     }
   }
 
@@ -166,9 +172,8 @@ export class RolesComponent implements OnInit {
 
   // pagechanged
   pageChanged(event: PageChangedEvent): void {
-    const startItem = (event.page - 1) * event.itemsPerPage;
-    this.endItem = event.page * event.itemsPerPage;
-    this.contactsList = this.returnedArray.slice(startItem, this.endItem);
+    this.getAllData(event.page, event.itemsPerPage);
+    this.page = event.page
   }
 
   // Delete User
