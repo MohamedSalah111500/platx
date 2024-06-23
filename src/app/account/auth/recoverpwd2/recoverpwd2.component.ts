@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { AuthenticationService } from '../../../core/services/auth.service';
+import { AuthenticationService } from '../services/auth.service';
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -44,10 +44,10 @@ export class Recoverpwd2Component implements OnInit {
       return;
     }
     if (environment.defaultauth === 'firebase') {
-      this.authenticationService.resetPassword(this.f.email.value)
-        .catch(error => {
-          this.error = error ? error : '';
-        });
+      // this.authenticationService.resetPassword(this.f.email.value)
+      //   .catch(error => {
+      //     this.error = error ? error : '';
+      //   });
     }
   }
   // swiper config

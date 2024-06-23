@@ -14,6 +14,12 @@ export const MENU: MenuItem[] = [
     link: "/dashboard",
   },
   {
+    id: 14,
+    label: "News",
+    icon: "bx-news",
+    link: "/news",
+  },
+  {
     id: 3,
     label: "MENUITEMS.EVENTS.TEXT",
     icon: "bx-calendar",
@@ -34,14 +40,14 @@ export const MENU: MenuItem[] = [
 
   {
     id: 30,
-    label: "Tests",
-    icon: "bx-envelope",
-    link: "/tests",
+    label: "Exams",
+    icon: "bx-spreadsheet",
+    link: "/exams",
   },
   {
     id: 12,
     label: "Classes",
-    icon: 'bx-task',
+    icon: "bx-task",
     link: "/courses-content",
   },
   {
@@ -49,6 +55,34 @@ export const MENU: MenuItem[] = [
     label: "Files Manager",
     icon: "bx-file",
     link: "/filemanager",
+  },
+  {
+    id: 14,
+    label: "Manage",
+    icon: "bx-cog",
+    subItems: [
+      {
+        id: 14,
+        label: "Staff",
+        icon: "bx-group",
+        link: "/manage/staff",
+        parentId: 14,
+      },
+      {
+        id: 15,
+        label: "Students",
+        icon: "bx-user-pin",
+        link: "/manage/students",
+        parentId: 14,
+      },
+      {
+        id: 16,
+        label: "Roles",
+        icon: "bx-list-check",
+        link: "/manage/roles",
+        parentId: 14,
+      },
+    ],
   },
   // {
   //     id: 13,

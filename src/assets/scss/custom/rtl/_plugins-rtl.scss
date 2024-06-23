@@ -1,4 +1,4 @@
-// 
+//
 // plugins-rtl.scss
 //
 
@@ -180,7 +180,7 @@ aw-wizard-navigation-bar.horizontal.large-empty-symbols ul.steps-indicator li:no
 }
 
 
-// X-ediatable 
+// X-ediatable
 
 .editable-buttons {
   margin-left: 0;
@@ -217,6 +217,7 @@ aw-wizard-navigation-bar.horizontal.large-empty-symbols ul.steps-indicator li:no
   left: auto !important;
 }
 
+
 /* =============
    Form wizard
 ============= */
@@ -229,14 +230,13 @@ aw-wizard-navigation-bar.horizontal.large-empty-symbols ul.steps-indicator li:no
       }
     }
   }
-  
+
   aw-wizard-navigation-bar.horizontal.large-empty-symbols ul.steps-indicator li:not(:last-child):before {
     left: -68px;
   }
-  
+
   .kycwizard {
     aw-wizard-navigation-bar.horizontal.large-empty-symbols ul.steps-indicator li:not(:last-child):before {
       left: -102px;
     }
   }
-  

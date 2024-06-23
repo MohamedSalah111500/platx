@@ -1,0 +1,68 @@
+@if(true){
+<div class="p-3 bg-light bg-opacity-50 edit-content">
+  <button  type="button" class="edit-btn btn  btn-label waves-light"
+  [ngClass]="!edit ? 'btn-primary' : 'btn-success'" (click)="editControl()">
+    <i class="mdi  label-icon"
+    [ngClass]="!edit ? 'mdi-pencil' : 'mdi-check'"
+    ></i> {{edit ? 'Save': 'Edit'}}
+  </button>
+  @if(!edit){
+
+  <div class="view" >
+    <h3  class="d-block mb-3">{{ dynamicForm.value.title || 'set title' }}</h3>
+      <div class="form-check form-check-inline" *ngFor="let option of dynamicForm.value.options ; let i = index">
+        @if(option.label){
+        <p>{{$index}}</p>
+          <input type="radio" [name]="dynamicForm.value.title"   id="{{option.label + i}}" class="form-check-input">
+          <label for="{{option.label + i}}" class="form-check-label">{{option.label}}</label>
+        }
+        </div>
+  </div>
+  } @if(edit){
+
+    <form [formGroup]="dynamicForm" (ngSubmit)="onSubmit()">
+
+  <div class="form-floating mb-3">
+    <input
+      formControlName="title"
+      type="text"
+      class="form-control"
+      id="floatingnameInput"
+      placeholder="Enter Name"
+      value="Maria Laird"
+    />
+    <!-- <ckeditor   formControlName="title" [editor]="Editor" data="<p>Content of the editor.</p>"></ckeditor> -->
+    <label for="floatingnameInput">Question Title</label>
+  </div>
+  <div formArrayName="options">
+    <div *ngFor="let option of options.controls; let i = index" [formGroup]="option">
+
+  <div class="row align-items-center">
+        <div class="col-md-6">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="add option label"
+              [id]="'option' + i"
+              [value]="option.label"
+              formControlName="label"
+            />
+            <label [for]="'option' + i">Option {{i + 1}}</label>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <button type="button" (click)="removeOption(i)" class="btn btn-danger mt-3 mt-lg-0" >
+            <i class="mdi mdi-trash-can d-block font-size-16"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <input type="button" (click)="addOption()" value="Add Option" class="btn btn-success mt-3 mt-lg-0" />
+
+</form>
+  }
+</div>
+}

@@ -14,11 +14,14 @@ const routes: Routes = [
     component: DefaultComponent
   },
   { path: 'dashboard', component: DefaultComponent },
+  { path: 'news', loadChildren: () => import('./news/news.module').then(m => m.NewsModule) },
   { path: 'events', component: CalendarComponent },
   { path: 'groups', loadChildren: () => import('./groups/groups.module').then(m => m.GroupsModule) },
+  { path: 'exams', loadChildren: () => import('./exams/exams.module').then(m => m.ExamsModule) },
   { path: 'chat', component: ChatComponent },
   { path: 'courses-content', component: ClassesComponent },
   { path: 'filemanager', component: FilemanagerComponent },
+  { path: 'manage', loadChildren: () => import('./manage/manage.module').then(m => m.ManageModule) },
 
 
 
@@ -28,8 +31,6 @@ const routes: Routes = [
   { path: 'email', loadChildren: () => import('./email/email.module').then(m => m.EmailModule) },
   { path: 'invoices', loadChildren: () => import('./invoices/invoices.module').then(m => m.InvoicesModule) },
   { path: 'tasks', loadChildren: () => import('./tasks/tasks.module').then(m => m.TasksModule) },
-  { path: 'contacts', loadChildren: () => import('./contacts/contacts.module').then(m => m.ContactsModule) },
-  { path: 'blog', loadChildren: () => import('./blog/blog.module').then(m => m.BlogModule) },
   { path: 'pages', loadChildren: () => import('./utility/utility.module').then(m => m.UtilityModule) },
   { path: 'ui', loadChildren: () => import('./ui/ui.module').then(m => m.UiModule) },
   { path: 'form', loadChildren: () => import('./form/form.module').then(m => m.FormModule) },

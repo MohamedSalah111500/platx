@@ -9,8 +9,9 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 import { PagetitleComponent } from './pagetitle/pagetitle.component';
 import { LoaderComponent } from './loader/loader.component';
+import { SpinnerComponent } from './spinner/spinner.component';
 @NgModule({
-  declarations: [PagetitleComponent,  LoaderComponent],
+  declarations: [PagetitleComponent,  LoaderComponent, SpinnerComponent],
   imports: [
     CommonModule,
     FormsModule,

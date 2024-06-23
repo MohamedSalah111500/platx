@@ -42,6 +42,7 @@
             <li>
               @if(hasItems(subitem)){
               <a class="side-nav-link-a-ref has-arrow" href="javascript:void(0);" [attr.data-parent]="subitem.parentId">
+
                 {{ subitem.label | translate}}
               </a>
               <ul class="sub-menu mm-collapse" aria-expanded="false">
@@ -55,7 +56,10 @@
               </ul>}
               @else{
               <a routerLink="{{subitem.link}}" class="side-nav-link-ref" [attr.data-parent]="subitem.parentId" routerLinkActive="active">
-                {{ subitem.label | translate}}
+                @if(subitem.icon){
+                  <i class="bx {{subitem.icon}}"></i>
+                  }
+                 {{ subitem.label | translate}}
                 @if(subitem.badge){
                 <span class="badge rounded-pill bg-{{subitem.badge.variant}} float-end">{{subitem.badge.text |
                   translate}}</span>
