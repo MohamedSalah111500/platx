@@ -51,6 +51,7 @@ import { tasklistEffects } from './store/Tasks/tasks.effect';
 import { OrdersEffects } from './store/Crypto/crypto.effects';
 import { CustomerEffects } from './store/customer/customer.effects';
 import { MailEffects } from './store/Email/email.effects';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { AuthInterceptor } from './core/helpers/auth.interceptor';
 
 if (environment.defaultauth === 'firebase') {
@@ -114,6 +115,7 @@ export function createTranslateLoader(http: HttpClient): any {
       CustomerEffects,
       MailEffects
     ]),
+
   ],
   bootstrap: [AppComponent],
   providers: [
