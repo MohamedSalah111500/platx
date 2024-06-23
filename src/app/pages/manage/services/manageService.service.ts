@@ -27,7 +27,6 @@ export class ManageService {
         .subscribe(
           (responseData: GetAllRolesResponse) => {
             observer.next(responseData);
-            observer.complete();
           },
           (error) => {
             observer.error(error);
@@ -41,7 +40,6 @@ export class ManageService {
       this.http.get<Role>(ROLES_URLS.GET_BY_ID(id)).subscribe(
         (responseData: Role) => {
           observer.next(responseData);
-          observer.complete();
         },
         (error) => {
           observer.error(error);
@@ -55,7 +53,6 @@ export class ManageService {
       this.http.post<Role>(ROLES_URLS.CREATE, payload).subscribe(
         (responseData: Role) => {
           observer.next(responseData);
-          observer.complete();
         },
         (error) => {
           observer.error(error);
@@ -69,7 +66,6 @@ export class ManageService {
       this.http.put<Role>(ROLES_URLS.UPDATE(id), payload).subscribe(
         (responseData: Role) => {
           observer.next(responseData);
-          observer.complete();
         },
         (error) => {
           observer.error(error);
@@ -83,7 +79,6 @@ export class ManageService {
       this.http.delete<void>(ROLES_URLS.DELETE(id)).subscribe(
         () => {
           observer.next();
-          observer.complete();
         },
         (error) => {
           observer.error(error);

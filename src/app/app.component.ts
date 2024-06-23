@@ -1,12 +1,15 @@
 import { Component, OnInit } from "@angular/core";
+import { SpinnerService } from "./shared/ui/spinner/spinner.service";
 
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"],
 })
-
 export class AppComponent implements OnInit {
+  isSpinnerVisible = false;
+
+  constructor(private spinnerService: SpinnerService) {}
 
   userData = {
     // token:"Basic MTExNzk4ODU6NjAtZGF5ZnJlZXRyaWFs",
@@ -22,5 +25,8 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     localStorage.setItem("currentUser", JSON.stringify(this.userData));
+    this.spinnerService.visibility$.subscribe((isVisible) => {
+      this.isSpinnerVisible = isVisible;
+    });
   }
 }
