@@ -3,20 +3,12 @@
 import { Component } from "@angular/core";
 
 @Component({
-  selector: "app-spinner",
-  template: `<div *ngIf="isVisible" class="backdrop">
-    <div class="spinner"></div>
+  selector: "platx-general-spinner",
+  template: `<div  class="general-backdrop">
+    <div class="general-spinner"></div>
   </div>`,
   styleUrls: ["./spinner.component.css"],
 })
 export class SpinnerComponent {
-  public isVisible = false;
 
-  show() {
-    this.isVisible = true;
-  }
-
-  hide() {
-    this.isVisible = false;
-  }
 }

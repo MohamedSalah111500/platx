@@ -19,6 +19,6 @@ import { SpinnerComponent } from './spinner/spinner.component';
     TimepickerModule.forRoot(),
     BsDropdownModule.forRoot()
   ],
-  exports: [PagetitleComponent, LoaderComponent]
+  exports: [PagetitleComponent, LoaderComponent,SpinnerComponent]
 })
 export class UIModule { }
