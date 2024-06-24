@@ -1,14 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
-import {
-  UntypedFormBuilder,
-  Validators,
-  UntypedFormGroup,
-  FormControl,
-  FormGroup,
-} from "@angular/forms";
+import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import Swal from "sweetalert2";
-import { category, calendarEvents, createEventId } from "../../calendar/data";
+import { createEventId } from "../../calendar/data";
 import { CreateEventForm } from "./types";
 
 @Component({
@@ -21,6 +15,7 @@ export class CreateEditEventComponent implements OnInit {
   @Input() newEventDate: any;
   @Input() editEvent: any;
   @Input() category: any[];
+
   groups = [
     { id: 1, name: "Group 1" },
     { id: 2, name: "Group 2" },
@@ -39,13 +34,13 @@ export class CreateEditEventComponent implements OnInit {
     { id: 2, name: "Monthly" },
   ];
   weekdays = [
-    { id: 0, name: "Saturday" },
-    { id: 1, name: "Sunday" },
-    { id: 2, name: "Monday" },
-    { id: 3, name: "Tuesday" },
-    { id: 4, name: "Wednesday" },
-    { id: 5, name: "Thursday" },
-    { id: 6, name: "Friday" },
+    { id: 0, name: "Sunday" },
+    { id: 1, name: "Monday" },
+    { id: 2, name: "Tuesday" },
+    { id: 3, name: "Wednesday" },
+    { id: 4, name: "Thursday" },
+    { id: 5, name: "Friday" },
+    { id: 6, name: "Saturday" },
   ];
 
   daysOfMonth = Array.from({ length: 31 }, (_, i) => ({
@@ -55,173 +50,227 @@ export class CreateEditEventComponent implements OnInit {
 
   @Output() eventSaved = new EventEmitter<void>();
 
-  formData: FormGroup<CreateEventForm>;
+  formData: FormGroup;
   submitted = false;
   minDate: Date;
   maxDate: Date;
-  editMode: boolean = false;
+  editMode = false;
+  minTime: string;
+
   constructor() {
     this.minDate = new Date();
     this.maxDate = new Date();
     this.minDate.setDate(this.minDate.getDate());
     this.maxDate.setDate(this.maxDate.getDate() + 7);
+    this.minTime = new Date().toTimeString().substring(0, 5);
   }
 
   ngOnInit(): void {
-    this.formData = new FormGroup<CreateEventForm>({
-      title: new FormControl("", [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(70),
-      ]),
-      // category: new FormControl(null),
-      groupIds: new FormControl([], [Validators.required]),
-      studentIds: new FormControl([]),
-      staffIds: new FormControl([]),
-      repeat: new FormControl(0, [Validators.required]),
-      dateTo: new FormControl(""),
-      description: new FormControl("", [Validators.maxLength(1000)]),
-      WeekDays: new FormControl(new Date(), [Validators.required]),
-      locationLink: new FormControl("", [
-        Validators.pattern(/https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/),
-      ]),
-      Onlinemeetinglink: new FormControl(null),
-      eventStartTime: new FormControl("", [Validators.required]),
-      eventDuration: new FormControl("", [
-        Validators.required,
-        Validators.min(0.15),
-        Validators.max(24),
-      ]),
-      hasReminder: new FormControl(false),
-      reminderTime: new FormControl(null),
-      extraNoteintheReminder: new FormControl(null),
+    this.formData = new FormGroup({
+        title: new FormControl("", [
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(70),
+        ]),
+        groupIds: new FormControl([], [Validators.required]),
+        studentIds: new FormControl([]),
+        staffIds: new FormControl([]),
+        repeat: new FormControl(0, [Validators.required]),
+        dateTo: new FormControl(""),
+        description: new FormControl("", [Validators.maxLength(1000)]),
+        WeekDays: new FormControl(new Date(), [Validators.required]),
+        locationLink: new FormControl("", [
+            Validators.pattern(/https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/),
+        ]),
+        Onlinemeetinglink: new FormControl(null),
+        eventStartTime: new FormControl("", [Validators.required]),
+        eventDuration: new FormControl("", [
+            Validators.required,
+            Validators.min(0.15),
+            Validators.max(24),
+        ]),
+        hasReminder: new FormControl(false),
+        reminderTime: new FormControl(null),
+        extraNoteintheReminder: new FormControl(null),
     });
 
     if (this.editEvent) {
-      // const editEventStart = this.formatDate(this.editEvent.start);
-      const editEventEnd = this.formatDate(this.editEvent.end);
-      this.formData.patchValue({
-        title: this.editEvent.title,
-        // category: this.editEvent.classNames[0],
-        groupIds: this.editEvent.extendedProps.groupIds,
-        studentIds: this.editEvent.extendedProps.studentIds,
-        staffIds: this.editEvent.extendedProps.staffIds,
-        repeat: this.editEvent.extendedProps.repeat,
-        dateTo: editEventEnd,
-        description: this.editEvent.extendedProps.description,
-        WeekDays: this.editEvent.extendedProps.WeekDays,
-        locationLink: this.editEvent.extendedProps.locationLink,
-        Onlinemeetinglink: this.editEvent.extendedProps.Onlinemeetinglink,
-        eventStartTime: this.editEvent.extendedProps.eventStartTime,
-        eventDuration: this.editEvent.extendedProps.eventDuration,
-        hasReminder: this.editEvent.extendedProps.hasReminder,
-        reminderTime: this.editEvent.extendedProps.reminderTime,
-        extraNoteintheReminder:
-          this.editEvent.extendedProps.extraNoteintheReminder,
-      });
-      // this.formData.controls.repeat.disable();
-      if (!this.editMode) this.formData.disable();
-      else {
-        this.formData.enable();
-        this.formData.controls.repeat.disable();
+        const editEventEnd = this.editEvent.end ? this.formatDate(this.editEvent.end) : null;
+
+        this.formData.patchValue({
+            title: this.editEvent.title,
+            groupIds: this.editEvent.extendedProps.groupIds,
+            studentIds: this.editEvent.extendedProps.studentIds,
+            staffIds: this.editEvent.extendedProps.staffIds,
+            repeat: this.editEvent.extendedProps.repeat,
+            dateTo: editEventEnd,
+            description: this.editEvent.extendedProps.description,
+            WeekDays: this.editEvent.extendedProps.repeat ==0?  new Date(this.editEvent.start) : this.editEvent.extendedProps.WeekDays,
+            locationLink: this.editEvent.extendedProps.locationLink,
+            Onlinemeetinglink: this.editEvent.extendedProps.Onlinemeetinglink,
+            eventStartTime: this.editEvent.extendedProps.eventStartTime,
+            eventDuration: this.editEvent.extendedProps.eventDuration,
+            hasReminder: this.editEvent.extendedProps.hasReminder,
+            reminderTime: this.editEvent.extendedProps.reminderTime,
+            extraNoteintheReminder: this.editEvent.extendedProps.extraNoteintheReminder,
+        });
+
+        this.editMode = true;
+    }
+    
+}
+
+private findEventById(calendarApi: any, eventId: string): any {
+  console.log(calendarApi , eventId);
+  
+  // Assuming calendarApi is an instance of FullCalendar's Calendar API
+  const event = calendarApi.getEventById(eventId);
+  return event ? event : null;
+}
+
+
+saveEvent(): void {
+  this.submitted = true;
+
+  if (this.formData.valid) {
+    const formData = this.formData.value;
+
+    // Extract the date from WeekDays and the time from eventStartTime
+    const weekDayDate = new Date(formData.WeekDays);
+    const [startHour, startMinute] = formData.eventStartTime.split(':').map(Number);
+    const startTime = new Date(
+      weekDayDate.getFullYear(),
+      weekDayDate.getMonth(),
+      weekDayDate.getDate(),
+      startHour,
+      startMinute
+    );
+    const endTime = new Date(startTime.getTime() + formData.eventDuration * 3600000);
+
+    // Determine which calendar API to use based on edit mode or new event
+    let calendarApi;
+    if (this.newEventDate && this.newEventDate.view && this.newEventDate.view.calendar) {
+      // Adding a new event or editing with newEventDate available
+      calendarApi = this.newEventDate.view.calendar;
+    } else if (this.editEvent && this.editEvent.id) {
+      // Editing an existing event with editEvent provided
+      calendarApi = this.editEvent; // Adjust based on your calendar library structure
+    } else {
+      console.error('No valid calendar API found for saving event.');
+      return;
+    }
+
+    // If editing an existing event, find and remove it
+    if (this.editEvent && this.editEvent.id) {
+      const existingEvent = this.findEventById(calendarApi, this.editEvent.id);
+      if (existingEvent) {
+        existingEvent.remove();
+      } else {
+        console.error(`Event with id ${this.editEvent.id} not found in calendar.`);
+        // Handle not found scenario, if needed
       }
     }
+
+    // Add the new or updated event(s)
+    if (formData.repeat === 0) {
+      // Once
+      this.createSingleEvent(formData, startTime, endTime, calendarApi);
+    } else if (formData.repeat === 1) {
+      // Weekly
+      this.createRepeatedEvents(formData, startTime, endTime, calendarApi, "weeks", 1);
+    } else if (formData.repeat === 2) {
+      // Monthly
+      this.createRepeatedEvents(formData, startTime, endTime, calendarApi, "months", 1);
+    }
+
+    // Reset form and close modal
+    this.resetForm();
+    this.modalRef?.hide();
+    this.eventSaved.emit();
+  } else {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Please fill out all required fields correctly!",
+    });
   }
+}
 
-  get form() {
-    return this.formData.controls;
-  }
 
-  private formatDate(date: Date): string {
-    const d = new Date(date);
-    const month = ("0" + (d.getMonth() + 1)).slice(-2);
-    const day = ("0" + d.getDate()).slice(-2);
-    const year = d.getFullYear();
-    return [year, month, day].join("-");
-  }
+private createSingleEvent(formData: any, startTime: Date, endTime: Date, calendarApi: any): void {
+  const event = {
+    id: this.editEvent ? this.editEvent.id : createEventId(), // Use existing ID if editing, or create new ID
+    title: formData.title,
+    start: startTime,
+    end: endTime,
+    extendedProps: {
+      groupIds: formData.groupIds,
+      studentIds: formData.studentIds,
+      staffIds: formData.staffIds,
+      repeat: formData.repeat,
+      description: formData.description,
+      WeekDays: formData.WeekDays,
+      locationLink: formData.locationLink,
+      Onlinemeetinglink: formData.Onlinemeetinglink,
+      eventStartTime: formData.eventStartTime,
+      eventDuration: formData.eventDuration,
+      hasReminder: formData.hasReminder,
+      reminderTime: formData.reminderTime,
+      extraNoteintheReminder: formData.extraNoteintheReminder,
+    },
+    classNames: ["text-white"],
+  };
 
-  private dateToValidator() {
-    return (control) => {
-      const dateTo = new Date(control.value);
-      const maxDate = new Date();
-      maxDate.setFullYear(maxDate.getFullYear() + 1);
-      return dateTo <= maxDate ? null : { max: true };
-    };
-  }
+  calendarApi.addEvent(event);
+}
 
-  saveEvent() {
-    // this.submitted = true;
+private createRepeatedEvents(formData: any, startTime: Date, endTime: Date, calendarApi: any, unit: string, increment: number): void {
+  const dateTo = new Date(formData.dateTo); // End of repetition period
 
-    if (this.formData.valid) {
-      const eventData = this.formData.value;
+  if (formData.repeat === 1) { // Weekly
+    const selectedWeekdays = formData.WeekDays; // Assume this is an array of weekdays (0 = Sunday, 1 = Monday, etc.)
+    const startWeekday = startTime.getDay();
 
-      if (this.editEvent) {
-        this.editEvent.setProp("title", eventData.title);
-        // this.editEvent.setProp("classNames", [eventData.category]);
-        // this.editEvent.setStart(eventData.dateFrom);
-        this.editEvent.setEnd(eventData.dateTo);
-        this.editEvent.setExtendedProp("groupIds", eventData.groupIds);
-        this.editEvent.setExtendedProp("studentIds", eventData.studentIds);
-        this.editEvent.setExtendedProp("staffIds", eventData.staffIds);
-        this.editEvent.setExtendedProp("repeat", eventData.repeat);
-        this.editEvent.setExtendedProp("description", eventData.description);
-        this.editEvent.setExtendedProp("WeekDays", eventData.WeekDays);
-        this.editEvent.setExtendedProp("locationLink", eventData.locationLink);
-        this.editEvent.setExtendedProp(
-          "Onlinemeetinglink",
-          eventData.Onlinemeetinglink
-        );
-        this.editEvent.setExtendedProp(
-          "eventStartTime",
-          eventData.eventStartTime
-        );
-        this.editEvent.setExtendedProp(
-          "eventDuration",
-          eventData.eventDuration
-        );
-        this.editEvent.setExtendedProp("hasReminder", eventData.hasReminder);
-        this.editEvent.setExtendedProp("reminderTime", eventData.reminderTime);
-        this.editEvent.setExtendedProp(
-          "extraNoteintheReminder",
-          eventData.extraNoteintheReminder
-        );
-      } else {
-        this.newEventDate.view.calendar.addEvent({
-          id: createEventId(),
-          title: eventData.title,
-          start: new Date(),
-          end: eventData.dateTo,
-          className: "text-white", //eventData.category + " " +
-          extendedProps: {
-            groupIds: eventData.groupIds,
-            studentIds: eventData.studentIds,
-            staffIds: eventData.staffIds,
-            repeat: eventData.repeat,
-            description: eventData.description,
-            WeekDays: eventData.WeekDays,
-            locationLink: eventData.locationLink,
-            Onlinemeetinglink: eventData.Onlinemeetinglink,
-            eventStartTime: eventData.eventStartTime,
-            eventDuration: eventData.eventDuration,
-            hasReminder: eventData.hasReminder,
-            reminderTime: eventData.reminderTime,
-            extraNoteintheReminder: eventData.extraNoteintheReminder,
-          },
-        });
-        
-        }
-      console.log(eventData);
+    for (const weekday of selectedWeekdays) {
+      const daysUntilNextWeekday = (weekday + 7 - startWeekday) % 7;
+      let currentDate = new Date(startTime);
 
-      this.position();
-      this.resetForm();
-      this.modalRef.hide();
-      this.eventSaved.emit();
-    } else {
-      this.formData.markAllAsTouched();
+      currentDate.setDate(startTime.getDate() + daysUntilNextWeekday);
+      currentDate.setHours(startTime.getHours(), startTime.getMinutes());
+
+      while (currentDate <= dateTo) {
+        this.createSingleEvent(formData, currentDate, new Date(currentDate.getTime() + formData.eventDuration * 3600000), calendarApi);
+
+        // Increment date by one week
+        currentDate.setDate(currentDate.getDate() + 7);
+      }
+    }
+  } else if (formData.repeat === 2) { // Monthly
+    const selectedDayOfMonth = formData.WeekDays; // Assume this is a single day of the month (1 to 31)
+    let currentDate = new Date(startTime);
+    currentDate.setHours(startTime.getHours(), startTime.getMinutes());
+
+    while (currentDate <= dateTo) {
+      let tempDate = new Date(currentDate);
+
+      // Calculate the correct day of the month
+      const daysInMonth = new Date(tempDate.getFullYear(), tempDate.getMonth() + 1, 0).getDate();
+      tempDate.setDate(Math.min(selectedDayOfMonth, daysInMonth));
+
+      if (tempDate >= currentDate && tempDate <= dateTo) {
+        this.createSingleEvent(formData, tempDate, new Date(tempDate.getTime() + formData.eventDuration * 3600000), calendarApi);
+      }
+
+      // Increment date by one month
+      currentDate.setMonth(currentDate.getMonth() + 1);
     }
   }
+}
 
-  confirmDelete() {
+
+
+
+  confirmDelete(): void {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -232,68 +281,83 @@ export class CreateEditEventComponent implements OnInit {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.value) {
-        this.editEvent.remove();
-        this.modalRef.hide();
+        if (this.editEvent) {
+          this.editEvent.remove();
+        }
+        this.modalRef?.hide();
         Swal.fire("Deleted!", "Event has been deleted.", "success");
         this.eventSaved.emit();
       }
     });
   }
 
-  closeModal() {
-    this.resetForm();
-    this.modalRef.hide();
+  position(): void {
+    setTimeout(() => {
+      const allEvents = document.querySelectorAll(
+        "td.fc-daygrid-day:not(.fc-day-other)"
+      );
+      allEvents.forEach((el) => {
+        el.classList.remove("last-month");
+        el.classList.remove("next-month");
+      });
+      const lastMonthElements = document.querySelectorAll(
+        "td.fc-daygrid-day.fc-day-other:not(.fc-day-next)"
+      );
+      const nextMonthElements = document.querySelectorAll(
+        "td.fc-daygrid-day.fc-day-next"
+      );
+      lastMonthElements.forEach((el) => {
+        el.classList.add("last-month");
+      });
+      nextMonthElements.forEach((el) => {
+        el.classList.add("next-month");
+      });
+    }, 0);
   }
 
-  private resetForm() {
-    this.formData.reset({
-      title: "",
-      // category: null,
-      groupIds: [],
-      studentIds: [],
-      staffIds: [],
-      repeat: 0,
-      // dateFrom: "",
-      dateTo: "",
-      description: "",
-      WeekDays: null,
-      locationLink: "",
-      Onlinemeetinglink: "",
-      eventStartTime: "",
-      eventDuration: "",
-      hasReminder: "",
-      reminderTime: "",
-      extraNoteintheReminder: "",
-    });
-    // this.submitted = false;
+  resetForm(): void {
+    this.submitted = false;
+    this.formData.reset();
   }
 
-  private position() {
-    Swal.fire({
-      position: "center",
-      icon: "success",
-      title: "Event has been saved",
-      showConfirmButton: false,
-      timer: 1000,
-    });
-  }
-
-  onRepeatFrequencyChange(event: any) {
-    console.log("Selected item:", event);
+  onRepeatFrequencyChange(event: any): void {
     this.formData.controls.WeekDays.reset();
-    if (event.id == 0) {
-      this.formData.controls.dateTo.removeValidators([]);
-    } else
-      this.formData.controls.dateTo.addValidators([this.dateToValidator()]);
+
+    if (event.id === 0) {
+      this.formData.controls.dateTo.clearValidators();
+    } else {
+      this.formData.controls.dateTo.setValidators([this.dateToValidator()]);
+    }
+
+    this.formData.controls.dateTo.updateValueAndValidity();
   }
-  toggleEditMode() {
+
+  private formatDate(date: Date): string {
+    return date ? date.toISOString().slice(0, 10) : '';
+}
+
+
+  private dateToValidator(): any {
+    return (control: FormControl): { [key: string]: boolean } | null => {
+      const dateTo = new Date(control.value);
+      const maxDate = new Date();
+      maxDate.setFullYear(maxDate.getFullYear() + 1);
+      return dateTo <= maxDate ? null : { max: true };
+    };
+  }
+
+  closeModal(): void {
+    this.resetForm();
+    this.modalRef?.hide();
+  }
+
+  toggleEditMode(): void {
     this.editMode = !this.editMode;
-    if (!this.editMode) this.formData.disable();
-    else {
+    if (!this.editMode) {
+      this.formData.disable();
+    } else {
       this.formData.enable();
       this.formData.controls.repeat.disable();
     }
   }
 }
-
-// [disabled]="formData.invalid"

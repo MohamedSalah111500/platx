@@ -31,6 +31,8 @@ export class CalendarComponent implements OnInit {
 
   currentEvents: EventApi[] = [];
 
+  constructor(private modalService: BsModalService) {}
+
   ngOnInit(): void {
     this.breadCrumbItems = [
       { label: "platx" },
@@ -50,7 +52,7 @@ export class CalendarComponent implements OnInit {
     this.calendarOptions = {
       plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
       headerToolbar: {
-        left: "dayGridMonth,dayGridWeek,dayGridDay",
+        left: "dayGridMonth,timeGridWeek,timeGridDay", //dayGridWeek,dayGridDay,
         center: "title",
         right: "prevYear,prev,next,nextYear",
       },
@@ -72,7 +74,7 @@ export class CalendarComponent implements OnInit {
         hour12: true,
       },
       validRange: {
-      //  start: todayStr, // Disable all dates before today
+        start: todayStr, // Disable all dates before today
       },
     };
   }
@@ -85,8 +87,6 @@ export class CalendarComponent implements OnInit {
   handleEvents(events: EventApi[]) {
     this.currentEvents = events;
   }
-
-  constructor(private modalService: BsModalService) {}
 
   openModal(event?: any) {
     this.newEventDate = event;
@@ -101,7 +101,9 @@ export class CalendarComponent implements OnInit {
   dropList(event: CdkDragDrop<string[]>): void {
     moveItemInArray(this.listItems, event.previousIndex, event.currentIndex);
   }
+
   listItems = ["Event 1", "Event 2", "Event 3"];
+
   handleDrop(event: any): void {
     this.calendarEvents.push({
       title: event.item.data,

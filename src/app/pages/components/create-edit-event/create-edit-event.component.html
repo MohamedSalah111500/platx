@@ -38,18 +38,7 @@
           Event name must be between 3 and 70 characters.
         </div>
       </div>
-      <!-- <div class="mb-3">
-        <label for="category" class="form-label"
-          >Category
-          <span class="text-danger">*</span>
-        </label>
-        <ng-select
-          [items]="category"
-          bindLabel="name"
-          bindValue="value"
-          formControlName="category"
-        ></ng-select>
-      </div> -->
+ 
       <div class="col-4">
         <div class="mb-3">
           <label for="groupIds" class="form-label"
@@ -104,116 +93,146 @@
           ></ng-select>
         </div>
       </div>
-      <div class="mb-3">
-        <label for="repeat" class="form-label"
-          >Frequency
-          <span class="text-danger">*</span>
-        </label>
-        <ng-select
-          [items]="repeatFrequency"
-          bindLabel="name"
-          bindValue="id"
-          formControlName="repeat"
-          (change)="onRepeatFrequencyChange($event)"
-        ></ng-select>
-      </div>
-      <div class="mb-3">
-        <label for="WeekDays" class="form-label"
-          >Week Days
-          <span class="text-danger">*</span>
-        </label>
-
-        <input
-          *ngIf="formData.controls.repeat.value == 0"
-          class="form-control"
-          #datepickerYMD="bsDatepicker"
-          bsDatepicker
-          formControlName="WeekDays"
-          id="WeekDays"
-          [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
-          [minDate]="minDate"
-        />
-        <ng-select
-          *ngIf="formData.controls.repeat.value == 1"
-          [items]="weekdays"
-          bindLabel="name"
-          bindValue="id"
-          id="WeekDays"
-          formControlName="WeekDays"
-          multiple="true"
-        ></ng-select>
-        <ng-select
-          *ngIf="formData.controls.repeat.value == 2"
-          [items]="daysOfMonth"
-          bindLabel="name"
-          bindValue="id"
-          id="WeekDays"
-          formControlName="WeekDays"
-        ></ng-select>
-      </div>
-
-      <div *ngIf="formData.controls.repeat.value !== 0" class="mb-3">
-        <label for="dateTo" class="form-label"
-          >End Date
-          <span class="text-danger" *ngIf="formData.controls.repeat.value !== 0"
-            >*</span
-          >
-        </label>
-
-        <input
-          class="form-control"
-          #datepickerYMD="bsDatepicker"
-          bsDatepicker
-          formControlName="dateTo"
-          id="dateTo"
-          [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
-          [maxDate]="minDate"
-        />
-        <div
-          *ngIf="
-            formData.controls.dateTo.dirty &&
-            formData.controls.dateTo.errors?.max
-          "
-          class="text-danger"
-        >
-          End date cannot be more than 1 year from today.
+      <div class="col-4">
+        <div class="mb-3">
+          <label for="repeat" class="form-label"
+            >Frequency
+            <span class="text-danger">*</span>
+          </label>
+          <ng-select
+            [items]="repeatFrequency"
+            bindLabel="name"
+            bindValue="id"
+            formControlName="repeat"
+            (change)="onRepeatFrequencyChange($event)"
+          ></ng-select>
         </div>
       </div>
-      <div class="mb-3">
-        <label for="eventStartTime" class="form-label"
-          >Event Start Time
-          <span class="text-danger">*</span>
-        </label>
 
-        <timepicker
-          id="eventStartTime"
-          [formControlName]="'eventStartTime'"
-        ></timepicker>
+      <div class="col-4">
+        <div class="mb-3">
+          <label for="WeekDays" class="form-label"
+            >Week Days
+            <span class="text-danger">*</span>
+          </label>
+
+          <input
+            *ngIf="formData.controls.repeat.value == 0"
+            class="form-control"
+            #datepickerYMD="bsDatepicker"
+            bsDatepicker
+            formControlName="WeekDays"
+            id="WeekDays"
+            [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
+            [minDate]="minDate"
+          />
+          <ng-select
+            *ngIf="formData.controls.repeat.value == 1"
+            [items]="weekdays"
+            bindLabel="name"
+            bindValue="id"
+            id="WeekDays"
+            formControlName="WeekDays"
+            multiple="true"
+          ></ng-select>
+          <ng-select
+            *ngIf="formData.controls.repeat.value == 2"
+            [items]="daysOfMonth"
+            bindLabel="name"
+            bindValue="id"
+            id="WeekDays"
+            formControlName="WeekDays"
+          ></ng-select>
+        </div>
       </div>
-      <div class="mb-3">
-        <label for="eventDuration" class="form-label"
-          >Event Duration (hours)
-          <span class="text-danger">*</span>
-        </label>
-        <input
-          type="number"
-          id="eventDuration"
-          class="form-control"
-          formControlName="eventDuration"
-        />
-        <!-- step="0.15"
+
+      <div class="col-4">
+        <div *ngIf="formData.controls.repeat.value !== 0" class="mb-3">
+          <label for="dateTo" class="form-label"
+            >End Date
+            <span
+              class="text-danger"
+              *ngIf="formData.controls.repeat.value !== 0"
+              >*</span
+            >
+          </label>
+
+          <input
+            class="form-control"
+            #datepickerYMD="bsDatepicker"
+            bsDatepicker
+            formControlName="dateTo"
+            id="dateTo"
+            [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
+            [minDate]="minDate"
+          />
+          <div
+            *ngIf="
+              formData.controls.dateTo.dirty &&
+              formData.controls.dateTo.errors?.max
+            "
+            class="text-danger"
+          >
+            End date cannot be more than 1 year from today.
+          </div>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="mb-3">
+          <label for="eventStartTime" class="form-label"
+            >Event Start Time
+            <span class="text-danger">*</span>
+          </label>
+
+          <!-- <timepicker
+            id="eventStartTime"
+            [formControlName]="'eventStartTime'"
+          ></timepicker> -->
+          <div class="input-group" id="eventStartTime">
+            <input
+              class="form-control flatpickr-input"
+              type="text"
+              mwlFlatpickr
+              [formControlName]="'eventStartTime'"
+              [noCalendar]="true"
+              [enableTime]="true"
+              [dateFormat]="'H:i'"
+              [minTime]="minTime"
+            />
+            <span class="input-group-text"
+              ><i class="mdi mdi-clock-outline"></i
+            ></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-4">
+        <div class="mb-3">
+          <label for="eventDuration" class="form-label"
+            >Event Duration (hours)
+            <span class="text-danger">*</span>
+          </label>
+          <input
+            type="number"
+            id="eventDuration"
+            class="form-control"
+            formControlName="eventDuration"
+          />
+          <!-- step="0.15"
           min="0.15"
           max="24" -->
-        <div
-          *ngIf="
-            formData.controls.eventDuration.dirty &&
-            formData.controls.eventDuration.errors?.max
-          "
-          class="text-danger"
-        >
-          Duration must be between 0.15 and 24 hours.
+          <div
+            *ngIf="
+              formData.controls.eventDuration.dirty &&
+              formData.controls.eventDuration.errors?.max
+            "
+            class="text-danger"
+          >
+            Duration must be between 0.15 and 24 hours.
+          </div>
         </div>
       </div>
+
       <div class="mb-3">
         <label for="description" class="form-label">Description</label>
         <textarea
@@ -229,38 +248,44 @@
           Description cannot exceed 1000 characters.
         </div>
       </div>
-      <div class="mb-3">
-        <label for="locationLink" class="form-label">Location Link</label>
-        <input
-          type="url"
-          id="locationLink"
-          class="form-control"
-          formControlName="locationLink"
-        />
-        <div
-          *ngIf="formData.controls.locationLink.errors?.pattern"
-          class="text-danger"
-        >
-          Please enter a valid URL.
+      <div class="col-6">
+        <div class="mb-3">
+          <label for="locationLink" class="form-label">Location Link</label>
+          <input
+            type="url"
+            id="locationLink"
+            class="form-control"
+            formControlName="locationLink"
+          />
+          <div
+            *ngIf="formData.controls.locationLink.errors?.pattern"
+            class="text-danger"
+          >
+            Please enter a valid URL.
+          </div>
         </div>
       </div>
-      <div class="mb-3">
-        <label for="Onlinemeetinglink" class="form-label"
-          >Online Meeting Link</label
-        >
-        <input
-          type="url"
-          id="Onlinemeetinglink"
-          class="form-control"
-          formControlName="Onlinemeetinglink"
-        />
-        <div
-          *ngIf="formData.controls.Onlinemeetinglink.errors?.pattern"
-          class="text-danger"
-        >
-          Please enter a valid URL.
+
+      <div class="col-6">
+        <div class="mb-3">
+          <label for="Onlinemeetinglink" class="form-label"
+            >Online Meeting Link</label
+          >
+          <input
+            type="url"
+            id="Onlinemeetinglink"
+            class="form-control"
+            formControlName="Onlinemeetinglink"
+          />
+          <div
+            *ngIf="formData.controls.Onlinemeetinglink.errors?.pattern"
+            class="text-danger"
+          >
+            Please enter a valid URL.
+          </div>
         </div>
       </div>
+
       <!-- hasReminder: eventData.hasReminder,
       reminderTime: eventData.reminderTime,
       extraNoteintheReminder: eventData.extraNoteintheReminder, -->
