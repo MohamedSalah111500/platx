@@ -7,7 +7,7 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class SpinnerService {
-  private visibilitySubject = new BehaviorSubject<boolean>(false);
+  private visibilitySubject = new BehaviorSubject<boolean>(true);
   visibility$ = this.visibilitySubject.asObservable();
 
   show() {

@@ -6,6 +6,7 @@ import {
   ModalDirective,
 } from "ngx-bootstrap/modal";
 import {
+  FormBuilder,
   FormControl,
   FormGroup,
   UntypedFormBuilder,
@@ -16,15 +17,11 @@ import {
 import { Store } from "@ngrx/store";
 import {
   adduserlist,
-  deleteuserlist,
-  fetchuserlistData,
   updateuserlist,
 } from "src/app/store/UserList/userlist.action";
-import { selectData } from "src/app/store/UserList/userlist-selector";
 import { PageChangedEvent } from "ngx-bootstrap/pagination";
 import { ManageService } from "../services/manageService.service";
 import { Role, RoleForm } from "../types";
-import { SpinnerService } from "src/app/shared/ui/spinner/spinner.service";
 
 @Component({
   selector: "app-roles",
@@ -58,32 +55,29 @@ export class RolesComponent implements OnInit {
   totalCount: number = 0;
   page: number = 1;
   pageSize: number = 8;
-
-  roleForm: FormGroup<RoleForm> = new FormGroup<RoleForm>({
-    id: new FormControl<number>(0, []),
-    name: new FormControl<string>("", [Validators.required]),
-  });
+  roleForm: FormGroup<RoleForm>;
 
   constructor(
     private modalService: BsModalService,
-    private formBuilder: UntypedFormBuilder,
+    private fb: FormBuilder,
     public store: Store,
-    private manageService: ManageService,
-    private spinnerService: SpinnerService
-  ) {}
+    private manageService: ManageService
+  ) {
+    this.roleForm = this.fb.group<RoleForm>({
+      id: new FormControl(null),
+      name: new FormControl("", [Validators.required, Validators.minLength(3)]),
+    });
+  }
 
   ngOnInit() {
     this.breadCrumbItems = [
       { label: "Manage" },
       { label: "Roles", active: true },
     ];
-
     this.getAllData(this.page, this.pageSize);
   }
 
   getAllData(pageNumber: number, pageSize: number) {
-    this.loading = true;
-    this.spinnerService.show();
     this.manageService.getAllRoles(pageNumber, pageSize).subscribe(
       (response) => {
         this.list = response.items;
@@ -91,24 +85,16 @@ export class RolesComponent implements OnInit {
         this.totalCount = response.totalCount;
 
         console.log(response.items);
-
-        this.loading = false;
-        document.getElementById("elmLoader")?.classList.add("d-none");
-        this.spinnerService.hide();
       },
-      (error) => {
-        let firstErrorMessage =
-          error.error.errors[Object.keys(error.error.errors)[0]];
-        // this.error = firstErrorMessage;
-        this.loading = false;
-        this.spinnerService.hide();
-
-      }
+      (error) => {}
     );
   }
 
   create(): void {
+    console.log(" this.roleForm.controls.name.errors['required']",  this.roleForm.controls.name.errors);
+    this.submitted = true;
     if (this.roleForm.valid) {
+
       const payload = { name: this.roleForm.controls.name.value };
       this.manageService.createRole(payload).subscribe(
         (response) => {
@@ -173,7 +159,7 @@ export class RolesComponent implements OnInit {
   // pagechanged
   pageChanged(event: PageChangedEvent): void {
     this.getAllData(event.page, event.itemsPerPage);
-    this.page = event.page
+    this.page = event.page;
   }
 
   // Delete User

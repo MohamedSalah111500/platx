@@ -52,6 +52,7 @@ import { OrdersEffects } from './store/Crypto/crypto.effects';
 import { CustomerEffects } from './store/customer/customer.effects';
 import { MailEffects } from './store/Email/email.effects';
 import { AuthInterceptor } from './core/helpers/auth.interceptor';
+import { UIModule } from './shared/ui/ui.module';
 
 if (environment.defaultauth === 'firebase') {
   initFirebaseBackend(environment.firebaseConfig);
@@ -84,6 +85,7 @@ export function createTranslateLoader(http: HttpClient): any {
     }),
     LayoutsModule,
     AppRoutingModule,
+    UIModule,
     ExtrapagesModule,
     AccordionModule.forRoot(),
     TabsModule.forRoot(),
@@ -112,7 +114,8 @@ export function createTranslateLoader(http: HttpClient): any {
       tasklistEffects,
       OrdersEffects,
       CustomerEffects,
-      MailEffects
+      MailEffects,
+
     ]),
   ],
   bootstrap: [AppComponent],

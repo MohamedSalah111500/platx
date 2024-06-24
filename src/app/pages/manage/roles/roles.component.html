@@ -55,8 +55,7 @@
               </thead>
 
               <tbody>
-                @if(!loading){
-                @for (item of list; track item; let i = $index) {
+                @if(!loading){ @for (item of list; track item; let i = $index) {
                 <tr>
                   <td>
                     <p class="avatar-xs">
@@ -134,7 +133,6 @@
                 </tr>
                 } }
               </tbody>
-
             </table>
           </div>
           <div class="row">
@@ -199,7 +197,20 @@
                   formControlName="name"
                   required
                 />
-                <div class="invalid-feedback">Please enter a name.</div>
+                <div class="errors">
+                  <div
+                    *ngIf="
+                      submitted && roleForm.controls.name?.errors?.required"
+                    class="p-2">
+                    <div class="error">this field is required</div>
+                  </div>
+                  <div
+                    *ngIf="
+                      submitted && roleForm.controls.name?.errors?.minlength"
+                    class="p-2">
+                    <div class="error">min length is 3</div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -231,11 +242,6 @@
   <!-- end modal-dialog -->
 </div>
 <!-- end newContactModal -->
-<div id="elmLoader" class="text-center">
-  <div class="spinner-border text-primary avatar-sm" role="status">
-    <span class="visually-hidden">Loading...</span>
-  </div>
-</div>
 
 <!-- removeItemModal -->
 <div
