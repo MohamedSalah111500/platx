@@ -2,6 +2,7 @@ import { environment } from "src/environments/environment";
 
 const AUTH_BASE = "api/Auth/";
 const GROUPS_BASE = "api/Groups/";
+const STUDENT_BASE = "api/Students";
 
 
 export const AUTH_URLS = {
@@ -26,4 +27,12 @@ export const ROLES_URLS = {
   CREATE: `/api/Roles`,
   UPDATE: (id: number) => `/api/Roles/${id}`,
   DELETE: (id: number) => `/api/Roles/${id}`,
+};
+
+export const STUDENTS_URLS = {
+  CREATE: `${environment.apiURL.concat(STUDENT_BASE)}`,
+  GET_ALL: `${environment.apiURL.concat(STUDENT_BASE)}`,
+  GET_BY_ID: (id: string) => `${environment.apiURL.concat(STUDENT_BASE)}/${id}`,
+  UPDATE: (id: string) => `${environment.apiURL.concat(STUDENT_BASE)}/${id}`,
+  DELETE: (id: string) => `${environment.apiURL.concat(STUDENT_BASE)}/${id}`
 };

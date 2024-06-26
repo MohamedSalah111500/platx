@@ -103,14 +103,15 @@
 
 <!-- Modal -->
 <div bsModal #newContactModal="bs-modal" class="modal fade" id="newContactModal" tabindex="-1" aria-labelledby="newContactModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="newContactModalLabel">Add Contact</h5>
         <button type="button" class="btn-close" (click)="newContactModal.hide()"></button>
       </div>
       <div class="modal-body">
-        <form (ngSubmit)="saveUser()" [formGroup]="createContactForm" autocomplete="off" class="needs-validation createContact-form" id="createContact-form" novalidate>
+
+       <form (ngSubmit)="create()" [formGroup]="studentForm" autocomplete="off" class="needs-validation createContact-form" id="createContact-form" novalidate>
           <div class="row">
             <div class="col-lg-12">
               <input type="hidden" class="form-control" id="userid-input">
@@ -133,36 +134,92 @@
                   </div>
                 </div>
               </div>
-              <div class="mb-3">
-                <label for="username-input" class="form-label">User Name</label>
-                <input type="text" id="username-input" class="form-control" placeholder="Enter name" formControlName="name" required />
-                <div class="invalid-feedback">Please enter a name.</div>
-              </div>
-              <div class="mb-3">
-                <label for="designation-input" class="form-label">Designation</label>
-                <input type="text" id="designation-input" class="form-control" placeholder="Enter Designation" formControlName="position" required />
-                <div class="invalid-feedback">Please enter a designation.</div>
-              </div>
-              <div class="mb-3">
-                <label for="email-input" class="form-label">Email</label>
-                <input type="email" id="email-input" class="form-control" placeholder="Enter email" formControlName="email" required />
-                <div class="invalid-feedback">Please enter email.</div>
-              </div>
-              <div class="mb-3">
-                <label for="tag-input" class="form-label">Tags</label>
-                <select class="select2 form-control select2-multiple" id="tag-input" multiple="multiple" formControlName="tags" data-placeholder="Choose ...">
-                  <option value="Photoshop">Photoshop</option>
-                  <option value="illustrator">illustrator</option>
-                  <option value="Html">Html</option>
-                  <option value="Css">Css</option>
-                  <option value="Javascript">Javascript</option>
-                  <option value="Php">Php</option>
-                  <option value="Java">Java</option>
-                  <option value="Ruby">Ruby</option>
-                  <option value="Python">Python</option>
-                </select>
-              </div>
             </div>
+              <!-- ////////////// -->
+              <div class="col-lg-6 mb-3">
+                <label for="firstName" class="form-label">First Name</label>
+                <input type="text" id="firstName" class="form-control" placeholder="Enter First Name" formControlName="firstName" [ngClass]="{'is-invalid': submitted && studentForm.controls.firstName.invalid}" required />
+                <div *ngIf="submitted && studentForm.controls.firstName.invalid" class="invalid-feedback">
+                  <small *ngIf="studentForm.controls.firstName.errors.required">Please enter a first name.</small>
+                </div>
+              </div>
+
+              <div class="col-lg-6 mb-3">
+                <label for="lastName" class="form-label">Last Name</label>
+                <input type="text" id="lastName" class="form-control" placeholder="Enter Last Name" formControlName="lastName" [ngClass]="{'is-invalid': submitted && studentForm.controls.lastName.invalid}" required />
+                <div *ngIf="submitted && studentForm.controls.lastName.invalid" class="invalid-feedback">
+                  <small *ngIf="studentForm.controls.lastName.errors.required">Please enter a last name.</small>
+                </div>
+              </div>
+
+              <div class="col-lg-8 mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" class="form-control" placeholder="Enter Email" formControlName="email" [ngClass]="{'is-invalid': submitted && studentForm.controls.email.invalid}" required />
+                <div *ngIf="submitted && studentForm.controls.email.invalid" class="invalid-feedback">
+                  <small *ngIf="studentForm.controls.email.errors.required">Please enter an email address.</small>
+                  <small *ngIf="studentForm.controls.email.errors.email">Invalid email format.</small>
+                </div>
+              </div>
+
+              <div class="col-lg-4 mb-3">
+                <label for="dateOfBirth" class="form-label">Date of Birth</label>
+                <input type="date" id="dateOfBirth" class="form-control" placeholder="Enter Date of Birth" formControlName="dateOfBirth" [ngClass]="{'is-invalid': submitted && studentForm.controls.dateOfBirth.invalid}" required />
+                <div *ngIf="submitted && studentForm.controls.dateOfBirth.invalid" class="invalid-feedback">
+                  <small *ngIf="studentForm.controls.dateOfBirth.errors.required">Please enter a date of birth.</small>
+                </div>
+              </div>
+              <div class="col-lg-12 mb-3">
+                <label for="address" class="form-label">Address</label>
+                <input type="text" id="address" class="form-control" placeholder="Enter Address" formControlName="address" [ngClass]="{'is-invalid': submitted && studentForm.controls.address.invalid}" required />
+                <div *ngIf="submitted && studentForm.controls.address.invalid" class="invalid-feedback">
+                  <small *ngIf="studentForm.controls.address.errors.required">Please enter an address.</small>
+                </div>
+              </div>
+
+
+
+
+              <div class="col-lg-6 mb-3">
+                <label for="phoneNumber" class="form-label">Phone Number</label>
+                <input type="text" id="phoneNumber" class="form-control" placeholder="Enter Phone Number" formControlName="phoneNumber" [ngClass]="{'is-invalid': submitted && studentForm.controls.phoneNumber.invalid}" required />
+                <div *ngIf="submitted && studentForm.controls.phoneNumber.invalid" class="invalid-feedback">
+                  <small *ngIf="studentForm.controls.phoneNumber.errors.required">Please enter a phone number.</small>
+                </div>
+              </div>
+
+              <div class="col-lg-6 mb-3">
+                <label for="emergencyContact" class="form-label">Emergency Contact</label>
+                <input type="text" id="emergencyContact" class="form-control" placeholder="Enter Emergency Contact" formControlName="emergencyContact" [ngClass]="{'is-invalid': submitted && studentForm.controls.emergencyContact.invalid}" required />
+                <div *ngIf="submitted && studentForm.controls.emergencyContact.invalid" class="invalid-feedback">
+                  <small *ngIf="studentForm.controls.emergencyContact.errors.required">Please enter an emergency contact.</small>
+                </div>
+              </div>
+
+              <div class="col-lg-6 mb-3">
+                <label for="grades" class="form-label">Grades</label>
+                <input type="text" id="grades" class="form-control" placeholder="Enter Grades" formControlName="grades" [ngClass]="{'is-invalid': submitted && studentForm.controls.grades.invalid}" required />
+                <div *ngIf="submitted && studentForm.controls.grades.invalid" class="invalid-feedback">
+                  <small *ngIf="studentForm.controls.grades.errors.required">Please enter grades.</small>
+                </div>
+              </div>
+              <div class="col-lg-6 mb-3">
+                <label for="enrollment" class="form-label">Enrollment Date</label>
+                <input type="date" id="enrollment" class="form-control" placeholder="Enter Enrollment Date" formControlName="enrollment" [ngClass]="{'is-invalid': submitted && studentForm.controls.enrollment.invalid}" required />
+                <div *ngIf="submitted && studentForm.controls.enrollment.invalid" class="invalid-feedback">
+                  <small *ngIf="studentForm.controls.enrollment.errors.required">Please enter an enrollment date.</small>
+                </div>
+              </div>
+              <!-- <div class="col-lg-6 mb-3">
+                <label for="userId" class="form-label">User ID</label>
+                <input type="text" id="userId" class="form-control" placeholder="Enter User ID" formControlName="userId" [ngClass]="{'is-invalid': submitted && studentForm.controls.userId.invalid}" required />
+                <div *ngIf="submitted && studentForm.controls.userId.invalid" class="invalid-feedback">
+                  <small *ngIf="studentForm.controls.userId.errors.required">Please enter a user ID.</small>
+                </div>
+              </div> -->
+
+
+              <!-- ////////////// -->
+
 
             <div class="col-lg-12">
               <div class="text-end">

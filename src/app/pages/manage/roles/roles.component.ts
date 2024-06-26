@@ -91,10 +91,8 @@ export class RolesComponent implements OnInit {
   }
 
   create(): void {
-    console.log(" this.roleForm.controls.name.errors['required']",  this.roleForm.controls.name.errors);
     this.submitted = true;
     if (this.roleForm.valid) {
-
       const payload = { name: this.roleForm.controls.name.value };
       this.manageService.createRole(payload).subscribe(
         (response) => {
@@ -108,8 +106,7 @@ export class RolesComponent implements OnInit {
       );
     }
   }
-  // Save User
-  saveUser() {
+  save() {
     if (this.createContactForm.valid) {
       if (this.createContactForm.get("id")?.value) {
         const updatedData = this.createContactForm.value;
@@ -132,7 +129,6 @@ export class RolesComponent implements OnInit {
     }, 1000);
   }
 
-  // fiter job
   search() {
     if (this.term) {
       this.list = this.returnedArray.filter((data: any) => {
@@ -143,7 +139,6 @@ export class RolesComponent implements OnInit {
     }
   }
 
-  // Edit User
   edit(item: any) {
     this.submitted = false;
     this.newContactModal?.show();

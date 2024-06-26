@@ -27,3 +27,17 @@ export interface RoleForm {
   id?: FormControl<number>;
   name: FormControl<string>;
 }
+
+export interface Student {
+  firstName: string;
+  lastName: string;
+  email: string;
+  dateOfBirth: string;
+  enrollment: string;
+  address: string;
+  phoneNumber: string;
+  emergencyContact: string;
+  grades: string;
+  userId: string;
+  profileImage: string;
+}
