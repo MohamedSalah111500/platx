@@ -15,18 +15,13 @@ import { ToastrService } from "ngx-toastr";
 export class ErrorInterceptor implements HttpInterceptor {
   constructor(
     private authenticationService: AuthenticationService,
-    private spinnerService: SpinnerService,
     public toastr: ToastrService
   ) {}
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    const isSpecificApiRequest = request.url.includes("/api");
 
-    if (isSpecificApiRequest) {
-      this.spinnerService.show();
-    }
 
     return next.handle(request).pipe(
       catchError((err) => {
@@ -38,7 +33,6 @@ export class ErrorInterceptor implements HttpInterceptor {
           location.reload();
         }
         const error = err.error.message || err.statusText;
-        this.spinnerService.hide();
         this.toastr.error(error, "Error");
         return throwError(err);
       })

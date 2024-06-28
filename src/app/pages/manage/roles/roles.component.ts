@@ -97,6 +97,7 @@ export class RolesComponent implements OnInit {
       this.manageService.createRole(payload).subscribe(
         (response) => {
           console.log("Role created:", response);
+          this.modalService.hide()
           // Handle success response
         },
         (error) => {

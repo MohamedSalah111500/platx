@@ -22,7 +22,7 @@ import {
 } from "src/app/store/UserList/userlist.action";
 import { selectData } from "src/app/store/UserList/userlist-selector";
 import { PageChangedEvent } from "ngx-bootstrap/pagination";
-import { Student } from "../types";
+import { GetAllStudentsResponse, Student } from "../types";
 import { ManageService } from "../services/manageService.service";
 
 @Component({
@@ -47,11 +47,57 @@ export class StudentsComponent implements OnInit {
   removeItemModal?: ModalDirective;
   deleteId: any;
   returnedArray: any;
-
+  mockRes: GetAllStudentsResponse = {
+    items: [
+      {
+        firstName: "Mohamed",
+        lastName: "salah",
+        email: "user@example.com",
+        dateOfBirth: "2024-06-28T15:45:27.695Z",
+        enrollment: "2024-06-28T15:45:27.695Z",
+        address: "string",
+        phoneNumber: "string",
+        emergencyContact: "string",
+        grades: "string",
+        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        profileImage: "http://localhost:4200/assets/images/users/avatar-1.jpg",
+      },
+      {
+        firstName: "Ali",
+        lastName: "hassan",
+        email: "user@example.com",
+        dateOfBirth: "2024-06-28T15:45:27.695Z",
+        enrollment: "2024-06-28T15:45:27.695Z",
+        address: "string",
+        phoneNumber: "string",
+        emergencyContact: "string",
+        grades: "string",
+        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        profileImage: "string",
+      },
+      {
+        firstName: "string",
+        lastName: "string",
+        email: "user@example.com",
+        dateOfBirth: "2024-06-28T15:45:27.695Z",
+        enrollment: "2024-06-28T15:45:27.695Z",
+        address: "string",
+        phoneNumber: "string",
+        emergencyContact: "string",
+        grades: "string",
+        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        profileImage: "http://localhost:4200/assets/images/users/avatar-1.jpg",
+      },
+    ],
+    totalCount: 5,
+  };
+  groups = [
+    { id: 1, name: "Group 1" },
+    { id: 2, name: "Group 2" },
+  ];
   // -------------------
   loading: boolean = false;
   list: Student[];
-
   totalCount: number = 0;
   page: number = 1;
   pageSize: number = 8;
@@ -62,8 +108,9 @@ export class StudentsComponent implements OnInit {
     private modalService: BsModalService,
     private fb: FormBuilder,
     public store: Store,
-    private studentsService:ManageService
-    ) {}
+    private studentsService: ManageService,
+    private manageService: ManageService
+  ) {}
 
   ngOnInit() {
     this.breadCrumbItems = [
@@ -81,9 +128,12 @@ export class StudentsComponent implements OnInit {
       phoneNumber: ["", Validators.required],
       emergencyContact: ["", Validators.required],
       grades: ["", Validators.required],
+      group: ["", Validators.required],
       userId: [""],
       profileImage: [""],
     });
+
+    this.getAllData(this.page, this.pageSize)
   }
 
   // File Upload
@@ -102,6 +152,23 @@ export class StudentsComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
+  getAllData(pageNumber: number, pageSize: number) {
+    this.manageService.getAllStudents(pageNumber, pageSize).subscribe(
+      (response) => {
+        // this.list = response.items;
+        this.list = this.mockRes.items;
+        this.returnedArray = [...this.list];
+        // this.totalCount = response.totalCount;
+        this.totalCount = this.mockRes.totalCount;
+        console.log(response.items);
+      },
+      (error) => {
+        this.list = this.mockRes.items;
+        this.returnedArray = [...this.list];
+        this.totalCount = this.mockRes.totalCount;
+      }
+    );
+  }
 
   // Save User
   saveUser() {
@@ -143,7 +210,7 @@ export class StudentsComponent implements OnInit {
     this.submitted = false;
     this.newContactModal?.show();
     var modelTitle = document.querySelector(".modal-title") as HTMLAreaElement;
-    modelTitle.innerHTML = "Edit Profile";
+    modelTitle.innerHTML = "Edit";
     var updateBtn = document.getElementById(
       "addContact-btn"
     ) as HTMLAreaElement;
@@ -174,10 +241,10 @@ export class StudentsComponent implements OnInit {
     if (this.studentForm.valid) {
       this.studentsService.createStudent(this.studentForm.value).subscribe(
         (response) => {
-          console.log('Student created:', response);
+          console.log("Student created:", response);
         },
         (error) => {
-          console.error('Error creating student:', error);
+          console.error("Error creating student:", error);
         }
       );
     }

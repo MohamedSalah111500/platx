@@ -4,13 +4,21 @@ import { Observable, of, throwError } from 'rxjs';
 import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
 import { CandidateList, JobApplydata, JobGriddata, JobListdata, chatData, chatMessagesData, customersData, emailData, listData, orders, ordersData, projectData, recentFiles, tasks, userGridData, userList } from '../data';
 import { cartData } from '../data';
+import { SpinnerService } from 'src/app/shared/ui/spinner/spinner.service';
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
 
-    constructor() { }
+    constructor(private spinnerService: SpinnerService,
+      ) { }
+
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+
+      const isSpecificApiRequest = request.url.includes("/api");
+      if (isSpecificApiRequest) {
+        this.spinnerService.show();
+      }
         // array in local storage for registered users
         // tslint:disable-next-line: max-line-length
         const users: any[] = JSON.parse(localStorage.getItem('users')!) || [{ username: 'admin', email: 'admin@themesbrand.com', password: '123456' }];
@@ -396,13 +404,15 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     return throwError({ status: 401, error: { message: 'No Data Found' } });
                 }
             }
-            // pass through any requests not handled above
-            return next.handle(request);
 
+            // pass through any requests not handled above
+setTimeout(()=> this.spinnerService.hide(),1000)
+            return next.handle(request);
         }))
 
             // tslint:disable-next-line: max-line-length
             // call materialize and dematerialize to ensure delay even if an error is thrown (https://github.com/Reactive-Extensions/RxJS/issues/648)
+
             .pipe(materialize())
             .pipe(delay(500))
             .pipe(dematerialize());

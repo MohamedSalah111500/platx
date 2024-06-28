@@ -9,6 +9,7 @@ import {
   CreateRoleRequest,
   UpdateRoleRequest,
   Student,
+  GetAllStudentsResponse,
 } from "../types";
 import { ROLES_URLS, STUDENTS_URLS } from "src/app/utiltis/urls";
 import { pagination } from "src/app/utiltis/functions";
@@ -25,7 +26,7 @@ export class ManageService {
   ): Observable<GetAllRolesResponse> {
     return new Observable((observer: Observer<GetAllRolesResponse>) => {
       this.http
-        .get<GetAllRolesResponse>(ROLES_URLS.GET_ALL(pageNumber, pageSize))
+        .get<GetAllRolesResponse>((pagination(ROLES_URLS.GET_ALL,pageNumber, pageSize)))
         .subscribe(
           (responseData: GetAllRolesResponse) => {
             observer.next(responseData);
@@ -102,11 +103,11 @@ export class ManageService {
     });
   }
 
-  getAllStudents(pageNumber: number, pageSize: number): Observable<Student[]> {
-    return new Observable((observer: Observer<Student[]>) => {
+  getAllStudents(pageNumber: number, pageSize: number): Observable<GetAllStudentsResponse> {
+    return new Observable((observer: Observer<GetAllStudentsResponse>) => {
       this.http
         .get(pagination(STUDENTS_URLS.GET_ALL, pageNumber, pageSize))
-        .subscribe((responseData: Student[]) => {
+        .subscribe((responseData: GetAllStudentsResponse) => {
           observer.next(responseData);
         },(error) => observer.error(error));
     });

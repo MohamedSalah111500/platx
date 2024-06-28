@@ -15,7 +15,7 @@ const TOKEN_HEADER_KEY = "Authorization"; // for Node.js Express back-end
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private token: TokenStorageService,private spinnerService:SpinnerService) {}
+  constructor(private token: TokenStorageService) {}
 
   intercept(
     req: HttpRequest<any>,
@@ -23,7 +23,6 @@ export class AuthInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     let authReq = req;
     // const token = this.token.getToken();
-    this.spinnerService.show()
     const token = "Basic MTExNzk4ODU6NjAtZGF5ZnJlZXRyaWFs";
     if (token != null) {
       // for Spring Boot back-end
@@ -40,7 +39,6 @@ export class AuthInterceptor implements HttpInterceptor {
         }
       });
     }
-    this.spinnerService.hide()
     return next.handle(authReq);
   }
 }

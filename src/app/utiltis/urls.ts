@@ -2,6 +2,7 @@ import { environment } from "src/environments/environment";
 
 const AUTH_BASE = "api/Auth/";
 const GROUPS_BASE = "api/Groups/";
+const ROLES_BASE = "api/Roles";
 const STUDENT_BASE = "api/Students";
 
 
@@ -22,11 +23,11 @@ export const GROUPS_URLS = {
 };
 
 export const ROLES_URLS = {
-  GET_ALL: (pageNumber: number, pageSize: number) => `/api/Roles?page=${pageNumber}&size=${pageSize}`,
-  GET_BY_ID: (id: number) => `/api/Roles/${id}`,
-  CREATE: `/api/Roles`,
-  UPDATE: (id: number) => `/api/Roles/${id}`,
-  DELETE: (id: number) => `/api/Roles/${id}`,
+  GET_ALL:`${environment.apiURL.concat(ROLES_BASE)}`,
+  GET_BY_ID: (rolesId: number) => `${environment.apiURL.concat(GROUPS_BASE)}${rolesId}`,
+  CREATE: `${environment.apiURL.concat(ROLES_BASE)}`,
+  UPDATE: (rolesId: number) => `${environment.apiURL.concat(GROUPS_BASE)}${rolesId}`,
+  DELETE: (rolesId: number) => `${environment.apiURL.concat(GROUPS_BASE)}${rolesId}`,
 };
 
 export const STUDENTS_URLS = {

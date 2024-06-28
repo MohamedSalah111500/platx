@@ -28,6 +28,12 @@ export interface RoleForm {
   name: FormControl<string>;
 }
 
+
+export interface GetAllStudentsResponse {
+  items: Student[];
+  totalCount: number;
+}
+
 export interface Student {
   firstName: string;
   lastName: string;
@@ -40,4 +46,23 @@ export interface Student {
   grades: string;
   userId: string;
   profileImage: string;
+}
+
+export interface GetAllStaffsResponse {
+  items: Staff[];
+  totalCount: number;
+}
+
+export interface Staff {
+  firstName: string;
+  lastName: string;
+  email: string;
+  dateOfBirth: string;
+  address: string;
+  phoneNumber: string;
+  emergencyContact: string;
+  userId: string;
+  profileImage: string;
+  subjectsTaught: string;
+  password: string;
 }
