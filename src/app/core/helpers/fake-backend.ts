@@ -4,7 +4,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
 import { CandidateList, JobApplydata, JobGriddata, JobListdata, chatData, chatMessagesData, customersData, emailData, listData, orders, ordersData, projectData, recentFiles, tasks, userGridData, userList } from '../data';
 import { cartData } from '../data';
-import { SpinnerService } from 'src/app/shared/ui/spinner/spinner.service';
+import { SpinnerService } from '../../shared/ui/spinner/spinner.service';
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {

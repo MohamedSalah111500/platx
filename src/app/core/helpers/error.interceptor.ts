@@ -8,21 +8,25 @@ import {
 import { Observable, throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { AuthenticationService } from "../../account/auth/services/auth.service";
-import { SpinnerService } from "src/app/shared/ui/spinner/spinner.service";
+import { SpinnerService } from "../../shared/ui/spinner/spinner.service";
 import { ToastrService } from "ngx-toastr";
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
   constructor(
     private authenticationService: AuthenticationService,
-    public toastr: ToastrService
+    public toastr: ToastrService,
+    private spinnerService:SpinnerService
   ) {}
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
 
-
+    const isSpecificApiRequest = request.url.includes("/api");
+    if (isSpecificApiRequest) {
+      this.spinnerService.show();
+    }
     return next.handle(request).pipe(
       catchError((err) => {
         if (err.status === 401) {

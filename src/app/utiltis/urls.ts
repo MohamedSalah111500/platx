@@ -24,10 +24,10 @@ export const GROUPS_URLS = {
 
 export const ROLES_URLS = {
   GET_ALL:`${environment.apiURL.concat(ROLES_BASE)}`,
-  GET_BY_ID: (rolesId: number) => `${environment.apiURL.concat(GROUPS_BASE)}${rolesId}`,
+  GET_BY_ID: (rolesId: number) => `${environment.apiURL.concat(ROLES_BASE)}/${rolesId}`,
   CREATE: `${environment.apiURL.concat(ROLES_BASE)}`,
-  UPDATE: (rolesId: number) => `${environment.apiURL.concat(GROUPS_BASE)}${rolesId}`,
-  DELETE: (rolesId: number) => `${environment.apiURL.concat(GROUPS_BASE)}${rolesId}`,
+  UPDATE: (rolesId: number) => `${environment.apiURL.concat(ROLES_BASE)}/${rolesId}`,
+  DELETE: (rolesId: number) => `${environment.apiURL.concat(ROLES_BASE)}/${rolesId}`,
 };
 
 export const STUDENTS_URLS = {

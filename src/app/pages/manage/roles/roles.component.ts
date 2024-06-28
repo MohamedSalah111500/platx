@@ -22,6 +22,7 @@ import {
 import { PageChangedEvent } from "ngx-bootstrap/pagination";
 import { ManageService } from "../services/manageService.service";
 import { Role, RoleForm } from "../types";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: "app-roles",
@@ -61,7 +62,9 @@ export class RolesComponent implements OnInit {
     private modalService: BsModalService,
     private fb: FormBuilder,
     public store: Store,
-    private manageService: ManageService
+    private manageService: ManageService,
+    public toastr: ToastrService
+
   ) {
     this.roleForm = this.fb.group<RoleForm>({
       id: new FormControl(null),
@@ -97,8 +100,9 @@ export class RolesComponent implements OnInit {
       this.manageService.createRole(payload).subscribe(
         (response) => {
           console.log("Role created:", response);
-          this.modalService.hide()
+          this.newContactModal?.hide();
           // Handle success response
+          this.getAllData(this.page, this.pageSize);
         },
         (error) => {
           console.error("Error creating role:", error);
@@ -168,7 +172,8 @@ export class RolesComponent implements OnInit {
     this.manageService.deleteRole(id).subscribe(
       (response) => {
         console.log("Role delete:", response);
-        // Handle success response
+        this.toastr.success('deleted successfully' , 'Role')
+        this.getAllData(this.page, this.pageSize);
       },
       (error) => {
         console.error("Error creating role:", error);

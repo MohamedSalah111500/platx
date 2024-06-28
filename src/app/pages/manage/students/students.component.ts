@@ -109,7 +109,8 @@ export class StudentsComponent implements OnInit {
     private fb: FormBuilder,
     public store: Store,
     private studentsService: ManageService,
-    private manageService: ManageService
+    private manageService: ManageService,
+
   ) {}
 
   ngOnInit() {
@@ -147,25 +148,23 @@ export class StudentsComponent implements OnInit {
       document.querySelectorAll("#member-img").forEach((element: any) => {
         element.src = this.imageURL;
       });
-      this.studentForm.controls["profileImage"].setValue(this.imageURL);
+      console.log(this.imageURL)
+      this.studentForm.controls.profileImage.setValue(this.imageURL);
     };
     reader.readAsDataURL(file);
   }
 
   getAllData(pageNumber: number, pageSize: number) {
+    this.loading = true
     this.manageService.getAllStudents(pageNumber, pageSize).subscribe(
       (response) => {
-        // this.list = response.items;
-        this.list = this.mockRes.items;
+         this.list = response.items;
         this.returnedArray = [...this.list];
-        // this.totalCount = response.totalCount;
-        this.totalCount = this.mockRes.totalCount;
-        console.log(response.items);
+        this.totalCount = response.totalCount;
+        this.loading = false
       },
       (error) => {
-        this.list = this.mockRes.items;
-        this.returnedArray = [...this.list];
-        this.totalCount = this.mockRes.totalCount;
+        this.loading = false;
       }
     );
   }
@@ -239,7 +238,21 @@ export class StudentsComponent implements OnInit {
   create() {
     this.submitted = true;
     if (this.studentForm.valid) {
-      this.studentsService.createStudent(this.studentForm.value).subscribe(
+      const payload = {
+        firstName: this.studentForm.value.firstName,
+        lastName: this.studentForm.value.lastName,
+        email: this.studentForm.value.email,
+        dateOfBirth: this.studentForm.value.dateOfBirth,
+        enrollment: this.studentForm.value.enrollment,
+        address: this.studentForm.value.address,
+        phoneNumber: this.studentForm.value.phoneNumber,
+        emergencyContact: this.studentForm.value.emergencyContact,
+        grades: this.studentForm.value.grades,
+        userId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+        profileImage: this.studentForm.controls.profileImage.value
+      };
+      console.log(payload)
+      this.studentsService.createStudent(payload).subscribe(
         (response) => {
           console.log("Student created:", response);
         },
