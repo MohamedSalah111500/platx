@@ -24,7 +24,7 @@ const TOKEN_HEADER_KEY = "Authorization"; // for Node.js Express back-end
         // authReq = req.clone({ headers: req.headers.set(TOKEN_HEADER_KEY, 'Bearer ' + token) });
 
         // for Node.js Express back-end
-        authReq = req.clone({ headers: req.headers.set(TOKEN_HEADER_KEY, token) });
+        // authReq = req.clone({ headers: req.headers.set(TOKEN_HEADER_KEY, token) });
       }
       return next.handle(authReq);
     }
