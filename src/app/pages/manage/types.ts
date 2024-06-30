@@ -19,7 +19,7 @@ export interface CreateRoleRequest {
 }
 
 export interface UpdateRoleRequest {
-  id: number;
+  id?: number;
   name: string;
 }
 
@@ -35,6 +35,7 @@ export interface GetAllStudentsResponse {
 }
 
 export interface Student {
+  id?:string;
   firstName: string;
   lastName: string;
   email: string;
@@ -54,6 +55,7 @@ export interface GetAllStaffsResponse {
 }
 
 export interface Staff {
+  id?:string;
   firstName: string;
   lastName: string;
   email: string;
@@ -63,6 +65,7 @@ export interface Staff {
   emergencyContact: string;
   userId: string;
   profileImage: string;
-  subjectsTaught: string;
-  password: string;
+  subjectsTaught?: string;
+  groups?:[],
+  password?: string;
 }

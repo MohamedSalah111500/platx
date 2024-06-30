@@ -57,27 +57,10 @@
               <tbody>
                 @if(!loading){ @for (item of list; track item; let i = $index) {
                 <tr>
-                  <td>
-                    <p class="avatar-xs">
-                      {{ i + 1 + (page - 1) * pageSize }}
-                    </p>
-                  </td>
-                  <td>
-                    <p class="avatar-xs">
-                      {{ item.name }}
-                    </p>
-                  </td>
-                  <td>
-                    <p class="avatar-xs">
-                      {{ item.creationTime | date : "medium" }}
-                    </p>
-                  </td>
-                  <td>
-                    <p class="avatar-xs">
-                      {{ item.updateTime }}
-                    </p>
-                  </td>
-
+                  <td>{{ i + 1 + (page - 1) * pageSize }}</td>
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.creationTime | date : "medium" }}</td>
+                  <td>{{ item.updateTime }}</td>
                   <td>
                     <ul class="list-inline font-size-20 contact-links mb-0">
                       <li class="list-inline-item">
@@ -116,7 +99,7 @@
                             <li>
                               <a
                                 href="javascript:void(0);"
-                                (click)="deleteData(item.id)"
+                                (click)="openDeleteModel(item.id)"
                                 class="dropdown-item remove-list"
                                 data-remove-id="8"
                                 ><i
@@ -168,7 +151,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="newContactModalLabel">Add New</h5>
+        <h5 class="modal-title">{{editMode ? 'Edit':'Add New'}}</h5>
         <button
           type="button"
           class="btn-close"
@@ -228,7 +211,7 @@
                   id="addContact-btn"
                   class="btn btn-success"
                 >
-                  Add Customer
+                {{editMode ? 'Update':'Add New'}}
                 </button>
               </div>
             </div>
@@ -252,44 +235,11 @@
   tabindex="-1"
   aria-hidden="true"
 >
-  <div class="modal-dialog modal-dialog-centered modal-sm">
-    <div class="modal-content">
-      <div class="modal-body px-4 py-5 text-center">
-        <button
-          type="button"
-          class="btn-close position-absolute end-0 top-0 m-3"
-          (click)="removeItemModal.hide()"
-        ></button>
-        <div class="avatar-sm mb-4 mx-auto">
-          <div
-            class="avatar-title bg-primary text-primary bg-opacity-10 font-size-20 rounded-3"
-          >
-            <i class="mdi mdi-trash-can-outline"></i>
-          </div>
-        </div>
-        <p class="text-muted font-size-16 mb-4">
-          Are you Sure You want to Remove this Row ?
-        </p>
+<platx-confirm-model
+  [title]="'Are you sure you want to remove this row?'"
+  (confirm)="confirmDelete(deleteId)"
+  (cancel)="removeItemModal.hide()"
+  />
 
-        <div class="hstack gap-2 justify-content-center mb-0">
-          <button
-            type="button"
-            class="btn btn-danger me-1"
-            id="remove-item"
-            (click)="confirmDelete(deleteId)"
-          >
-            Remove Now
-          </button>
-          <button
-            type="button"
-            class="btn btn-secondary"
-            (click)="removeItemModal.hide()"
-          >
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 <!-- end removeItemModal -->

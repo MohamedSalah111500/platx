@@ -19,7 +19,6 @@ export class AuthenticationService {
    */
   public currentUser(): User {
     let currentUser: User = JSON.parse(localStorage.getItem("currentUser"));
-    console.log(currentUser);
     return currentUser;
   }
 

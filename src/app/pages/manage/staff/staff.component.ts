@@ -1,125 +1,85 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs';
-import { BsModalService, ModalDirective } from 'ngx-bootstrap/modal';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { Observable } from "rxjs";
+import { BsModalService, ModalDirective } from "ngx-bootstrap/modal";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
-import { Store } from '@ngrx/store';
-import { adduserlist, deleteuserlist, updateuserlist } from 'src/app/store/UserList/userlist.action';
-import { PageChangedEvent } from 'ngx-bootstrap/pagination';
-import { GetAllStaffsResponse, Staff } from '../types';
-import { ManageService } from '../services/manageService.service';
+import { Store } from "@ngrx/store";
+import {
+  adduserlist,
+  deleteuserlist,
+  updateuserlist,
+} from "src/app/store/UserList/userlist.action";
+import { PageChangedEvent } from "ngx-bootstrap/pagination";
+import { GetAllStaffsResponse, Staff } from "../types";
+import { ManageService } from "../services/manageService.service";
+import { Group } from "../../groups/types";
+import { ToastrService } from "ngx-toastr";
+import { GroupsService } from "../../groups/services/groupsService.service";
 
 @Component({
-  selector: 'app-staff',
-  templateUrl: './staff.component.html',
+  selector: "app-staff",
+  templateUrl: "./staff.component.html",
   // styleUrls: ['./staff.component.scss'],
 })
-
 export class StaffComponent implements OnInit {
   // bread crumb items
   breadCrumbItems: Array<{}>;
   term: any;
-  contactsList: any;
   // Table data
   total: Observable<number>;
-  contacts: any;
   files: File[] = [];
   endItem: any;
-
+  editMode: boolean = false;
+  editItem!: Staff;
   @ViewChild("newContactModal", { static: false })
   newContactModal?: ModalDirective;
   @ViewChild("removeItemModal", { static: false })
   removeItemModal?: ModalDirective;
   deleteId: any;
   returnedArray: any;
-  mockRes: GetAllStaffsResponse = {
-    items: [
-      {
-        firstName: "Mohamed",
-        lastName: "salah",
-        email: "user@example.com",
-        dateOfBirth: "2024-06-28T15:45:27.695Z",
-        address: "string",
-        phoneNumber: "string",
-        emergencyContact: "string",
-        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        profileImage: "http://localhost:4200/assets/images/users/avatar-1.jpg",
-        subjectsTaught: "string",
-        password: "string"
-      },
-      {
-        firstName: "Mohamed",
-        lastName: "salah",
-        email: "user@example.com",
-        dateOfBirth: "2024-06-28T15:45:27.695Z",
-        address: "string",
-        phoneNumber: "string",
-        emergencyContact: "string",
-        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        profileImage: "http://localhost:4200/assets/images/users/avatar-1.jpg",
-        subjectsTaught: "string",
-        password: "string"
-      },
-      {
-        firstName: "Mohamed",
-        lastName: "salah",
-        email: "user@example.com",
-        dateOfBirth: "2024-06-28T15:45:27.695Z",
-        address: "string",
-        phoneNumber: "string",
-        emergencyContact: "string",
-        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        profileImage: "http://localhost:4200/assets/images/users/avatar-1.jpg",
-        subjectsTaught: "string",
-        password: "string"
-      },
-    ],
-    totalCount: 5,
-  };
-  groups = [
-    { id: 1, name: "Group 1" },
-    { id: 2, name: "Group 2" },
-  ];
+
   // -------------------
   loading: boolean = false;
   list: Staff[];
   totalCount: number = 0;
   page: number = 1;
   pageSize: number = 8;
-  studentForm: FormGroup<any>;
+  stafftForm: FormGroup<any>;
   submitted = false;
+  // lookups
+  groups: Group[];
 
   constructor(
-    private modalService: BsModalService,
     private fb: FormBuilder,
     public store: Store,
-    private studentsService: ManageService,
-    private manageService: ManageService
+    public toastr: ToastrService,
+    private manageService: ManageService,
+    private groupsService: GroupsService
   ) {}
 
   ngOnInit() {
     this.breadCrumbItems = [
       { label: "Manage" },
-      { label: "Students", active: true },
+      { label: "Staff", active: true },
     ];
 
-    this.studentForm = this.fb.group({
+    this.stafftForm = this.fb.group({
       firstName: ["", Validators.required],
       lastName: ["", Validators.required],
       email: ["", [Validators.required, Validators.email]],
       dateOfBirth: ["", Validators.required],
-      enrollment: ["", Validators.required],
       address: ["", Validators.required],
       phoneNumber: ["", Validators.required],
       emergencyContact: ["", Validators.required],
-      subjectsTaught: ["", Validators.required],
-      assignedGroups: ["", Validators.required],
-      password: ["", Validators.required],
+      group: [""],
+      subjectsTaught: [null],
       userId: [""],
       profileImage: [""],
+      id: [null],
     });
 
-    this.getAllData(this.page, this.pageSize)
+    this.getAllData(this.page, this.pageSize);
+    this.getAllGroups();
   }
 
   // File Upload
@@ -133,106 +93,108 @@ export class StaffComponent implements OnInit {
       document.querySelectorAll("#member-img").forEach((element: any) => {
         element.src = this.imageURL;
       });
-      this.studentForm.controls["profileImage"].setValue(this.imageURL);
+      this.stafftForm.controls.profileImage.setValue(this.imageURL);
     };
     reader.readAsDataURL(file);
   }
 
   getAllData(pageNumber: number, pageSize: number) {
-    this.manageService.getAllStudents(pageNumber, pageSize).subscribe(
+    this.loading = true;
+    this.manageService.getAllStaff(pageNumber, pageSize).subscribe(
       (response) => {
-        // this.list = response.items;
-        this.list = this.mockRes.items;
+        this.list = response.items;
         this.returnedArray = [...this.list];
-        // this.totalCount = response.totalCount;
-        this.totalCount = this.mockRes.totalCount;
-        console.log(response.items);
+        this.totalCount = response.totalCount;
+        this.loading = false;
       },
       (error) => {
-        this.list = this.mockRes.items;
-        this.returnedArray = [...this.list];
-        this.totalCount = this.mockRes.totalCount;
+        this.loading = false;
       }
     );
   }
 
-  // Save User
-  saveUser() {
-    if (this.studentForm.valid) {
-      if (this.studentForm.get("id")?.value) {
-        const updatedData = this.studentForm.value;
-        this.store.dispatch(updateuserlist({ updatedData }));
-      } else {
-        this.studentForm.controls["id"].setValue(
-          (this.contactsList.length + 1).toString()
-        );
-        const newData = this.studentForm.value;
-        this.store.dispatch(adduserlist({ newData }));
-      }
-    }
-    this.newContactModal?.hide();
-    document.querySelectorAll("#member-img").forEach((element: any) => {
-      element.src = "assets/images/users/user-dummy-img.jpg";
-    });
-
-    setTimeout(() => {
-      this.studentForm.reset();
-    }, 1000);
+  getAllGroups() {
+    this.groupsService
+      .getAllGroups(1, 100000)
+      .subscribe((response) => (this.groups = response.items));
   }
 
   // fiter job
-  searchJob() {
+  search() {
     if (this.term) {
-      this.contactsList = this.returnedArray.filter((data: any) => {
+      this.list = this.returnedArray.filter((data: any) => {
         return data.name.toLowerCase().includes(this.term.toLowerCase());
       });
     } else {
-      this.contactsList = this.returnedArray;
+      this.list = this.returnedArray;
     }
   }
 
-  // Edit User
-  editUser(id: any) {
-    this.submitted = false;
-    this.newContactModal?.show();
-    var modelTitle = document.querySelector(".modal-title") as HTMLAreaElement;
-    modelTitle.innerHTML = "Edit";
-    var updateBtn = document.getElementById(
-      "addContact-btn"
-    ) as HTMLAreaElement;
-    updateBtn.innerHTML = "Update";
-    this.studentForm.patchValue(this.contactsList[id]);
-  }
-
-  // pagechanged
   pageChanged(event: PageChangedEvent): void {
-    const startItem = (event.page - 1) * event.itemsPerPage;
-    this.endItem = event.page * event.itemsPerPage;
-    this.contactsList = this.returnedArray.slice(startItem, this.endItem);
+    this.getAllData(event.page, event.itemsPerPage);
+    this.page = event.page;
   }
 
-  // Delete User
-  removeUser(id: any) {
+  openDeleteModel(id: any) {
     this.deleteId = id;
     this.removeItemModal?.show();
   }
 
   confirmDelete(id: any) {
-    this.store.dispatch(deleteuserlist({ id: this.deleteId }));
+    this.manageService.deleteStaff(id).subscribe(() => {
+      this.toastr.success("deleted successfully", "Staff");
+      this.getAllData(this.page, this.pageSize);
+    });
     this.removeItemModal?.hide();
   }
 
-  create() {
+  edit(item: Staff) {
+    this.editMode = true;
+    this.submitted = false;
+    this.editItem = item;
+    this.stafftForm.patchValue(item);
+    this.newContactModal?.show();
+  }
+
+  create(): void {
     this.submitted = true;
-    if (this.studentForm.valid) {
-      this.studentsService.createStudent(this.studentForm.value).subscribe(
-        (response) => {
-          console.log("Student created:", response);
-        },
-        (error) => {
-          console.error("Error creating student:", error);
-        }
-      );
+    if (this.stafftForm.valid) {
+      const payload = {
+        firstName: this.stafftForm.value.firstName,
+        lastName: this.stafftForm.value.lastName,
+        email: this.stafftForm.value.email,
+        dateOfBirth: this.stafftForm.value.dateOfBirth,
+        address: this.stafftForm.value.address,
+        phoneNumber: this.stafftForm.value.phoneNumber,
+        emergencyContact: this.stafftForm.value.emergencyContact,
+        // subjectsTaught: this.stafftForm.value.subjectsTaught,
+        // groups: this.stafftForm.value.groups,
+        userId: null,
+        profileImage: this.stafftForm.controls.profileImage.value.replace(
+          /^data:image\/[a-z]+;base64,/,
+          ""
+        ),
+      };
+
+      if (this.editMode) {
+        payload["id"] = this.stafftForm.value.id;
+        this.manageService
+          .updateStaff(payload)
+          .subscribe((response) => {
+            this.toastr.success("Staff updated successfully", "Successfully");
+            this.stafftForm.reset();
+            this.newContactModal?.hide();
+            this.getAllData(this.page, this.pageSize);
+          });
+      } else {
+        this.manageService.createStaff(payload).subscribe((response) => {
+          this.toastr.success("Staff created successfully", "Successfully");
+          this.stafftForm.reset();
+          this.newContactModal?.hide();
+          this.getAllData(this.page, this.pageSize);
+        });
+      }
+      this.submitted = false;
     }
   }
 }

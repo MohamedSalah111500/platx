@@ -10,8 +10,9 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { PagetitleComponent } from './pagetitle/pagetitle.component';
 import { LoaderComponent } from './loader/loader.component';
 import { SpinnerComponent } from './spinner/spinner.component';
+import { ConfirmModelComponent } from './confirm-model/confirm-model.component';
 @NgModule({
-  declarations: [PagetitleComponent,  LoaderComponent, SpinnerComponent],
+  declarations: [PagetitleComponent,  LoaderComponent, SpinnerComponent, ConfirmModelComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -19,6 +20,6 @@ import { SpinnerComponent } from './spinner/spinner.component';
     TimepickerModule.forRoot(),
     BsDropdownModule.forRoot()
   ],
-  exports: [PagetitleComponent, LoaderComponent,SpinnerComponent]
+  exports: [PagetitleComponent, LoaderComponent,SpinnerComponent,ConfirmModelComponent]
 })
 export class UIModule { }

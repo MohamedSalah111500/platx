@@ -11,13 +11,10 @@ export class SpinnerService {
   visibility$ = this.visibilitySubject.asObservable();
 
   show() {
-    console.log("show")
     this.visibilitySubject.next(true);
   }
 
   hide() {
-    console.log("hide")
-
     this.visibilitySubject.next(false);
   }
 }

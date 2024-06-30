@@ -1,70 +1,46 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { Observable } from "rxjs";
-import {
-  BsModalService,
-  BsModalRef,
-  ModalDirective,
-} from "ngx-bootstrap/modal";
+import { ModalDirective } from "ngx-bootstrap/modal";
 import {
   FormBuilder,
   FormControl,
   FormGroup,
-  UntypedFormBuilder,
-  UntypedFormGroup,
   Validators,
 } from "@angular/forms";
 
-import { Store } from "@ngrx/store";
-import {
-  adduserlist,
-  updateuserlist,
-} from "src/app/store/UserList/userlist.action";
 import { PageChangedEvent } from "ngx-bootstrap/pagination";
 import { ManageService } from "../services/manageService.service";
-import { Role, RoleForm } from "../types";
+import { Role, RoleForm, UpdateRoleRequest } from "../types";
 import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: "app-roles",
   templateUrl: "./roles.component.html",
-  // styleUrls: ['./roles.component.scss'],
 })
+
 export class RolesComponent implements OnInit {
-  // bread crumb items
   breadCrumbItems: Array<{}>;
   term: any;
-  contactsList: any;
-  // Table data
-  total: Observable<number>;
-  createContactForm!: UntypedFormGroup;
   submitted = false;
-  contacts: any;
-  files: File[] = [];
   endItem: any;
-
   @ViewChild("newContactModal", { static: false })
   newContactModal?: ModalDirective;
   @ViewChild("removeItemModal", { static: false })
   removeItemModal?: ModalDirective;
   deleteId: any;
   returnedArray: any;
-
+  editMode: boolean = false;
   // -------------------
   loading: boolean = false;
   list: Role[];
-
   totalCount: number = 0;
   page: number = 1;
   pageSize: number = 8;
   roleForm: FormGroup<RoleForm>;
 
   constructor(
-    private modalService: BsModalService,
     private fb: FormBuilder,
-    public store: Store,
     private manageService: ManageService,
     public toastr: ToastrService
-
   ) {
     this.roleForm = this.fb.group<RoleForm>({
       id: new FormControl(null),
@@ -96,42 +72,23 @@ export class RolesComponent implements OnInit {
   create(): void {
     this.submitted = true;
     if (this.roleForm.valid) {
-      const payload = { name: this.roleForm.controls.name.value };
-      this.manageService.createRole(payload).subscribe(
-        (response) => {
+      const payload: UpdateRoleRequest = {
+        name: this.roleForm.controls.name.value,
+      };
+      if (this.editMode) {
+        payload.id = this.roleForm.controls.id.value;
+        this.manageService.updateRole(payload).subscribe((response) => {
+          console.log("Role Updated:", response);
+          this.newContactModal?.hide();
+        });
+      } else {
+        this.manageService.createRole(payload).subscribe((response) => {
           console.log("Role created:", response);
           this.newContactModal?.hide();
-          // Handle success response
-          this.getAllData(this.page, this.pageSize);
-        },
-        (error) => {
-          console.error("Error creating role:", error);
-          // Handle error response
-        }
-      );
-    }
-  }
-  save() {
-    if (this.createContactForm.valid) {
-      if (this.createContactForm.get("id")?.value) {
-        const updatedData = this.createContactForm.value;
-        this.store.dispatch(updateuserlist({ updatedData }));
-      } else {
-        this.createContactForm.controls["id"].setValue(
-          (this.contactsList.length + 1).toString()
-        );
-        const newData = this.createContactForm.value;
-        this.store.dispatch(adduserlist({ newData }));
+        });
       }
+      this.getAllData(this.page, this.pageSize);
     }
-    this.newContactModal?.hide();
-    document.querySelectorAll("#member-img").forEach((element: any) => {
-      element.src = "assets/images/users/user-dummy-img.jpg";
-    });
-
-    setTimeout(() => {
-      this.createContactForm.reset();
-    }, 1000);
   }
 
   search() {
@@ -145,14 +102,9 @@ export class RolesComponent implements OnInit {
   }
 
   edit(item: any) {
+    this.editMode = true;
     this.submitted = false;
     this.newContactModal?.show();
-    var modelTitle = document.querySelector(".modal-title") as HTMLAreaElement;
-    modelTitle.innerHTML = "Edit Profile";
-    var updateBtn = document.getElementById(
-      "addContact-btn"
-    ) as HTMLAreaElement;
-    updateBtn.innerHTML = "Update";
     this.roleForm.patchValue(item);
   }
 
@@ -162,24 +114,16 @@ export class RolesComponent implements OnInit {
     this.page = event.page;
   }
 
-  // Delete User
-  deleteData(id: any) {
+  openDeleteModel(id: any) {
     this.deleteId = id;
     this.removeItemModal?.show();
   }
 
   confirmDelete(id: any) {
-    this.manageService.deleteRole(id).subscribe(
-      (response) => {
-        console.log("Role delete:", response);
-        this.toastr.success('deleted successfully' , 'Role')
-        this.getAllData(this.page, this.pageSize);
-      },
-      (error) => {
-        console.error("Error creating role:", error);
-        // Handle error response
-      }
-    );
+    this.manageService.deleteRole(id).subscribe(() => {
+      this.toastr.success("deleted successfully", "Role");
+      this.getAllData(this.page, this.pageSize);
+    });
     this.removeItemModal?.hide();
   }
 }

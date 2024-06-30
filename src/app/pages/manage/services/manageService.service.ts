@@ -10,8 +10,10 @@ import {
   UpdateRoleRequest,
   Student,
   GetAllStudentsResponse,
+  Staff,
+  GetAllStaffsResponse,
 } from "../types";
-import { ROLES_URLS, STUDENTS_URLS } from "src/app/utiltis/urls";
+import { ROLES_URLS, STAFF_URLS, STUDENTS_URLS } from "src/app/utiltis/urls";
 import { pagination } from "src/app/utiltis/functions";
 
 @Injectable({
@@ -20,6 +22,7 @@ import { pagination } from "src/app/utiltis/functions";
 export class ManageService {
   constructor(private http: HttpClient) {}
 
+// ROLES
   getAllRoles(
     pageNumber: number,
     pageSize: number
@@ -64,9 +67,9 @@ export class ManageService {
     });
   }
 
-  updateRole(id: number, payload: UpdateRoleRequest): Observable<Role> {
+  updateRole(payload: UpdateRoleRequest): Observable<Role> {
     return new Observable((observer: Observer<Role>) => {
-      this.http.put<Role>(ROLES_URLS.UPDATE(id), payload).subscribe(
+      this.http.put<Role>(ROLES_URLS.UPDATE, payload).subscribe(
         (responseData: Role) => {
           observer.next(responseData);
         },
@@ -89,7 +92,7 @@ export class ManageService {
       );
     });
   }
-
+// STUDENTS
   createStudent(payload: Student): Observable<Student> {
     return new Observable((observer: Observer<Student>) => {
       this.http.post<Student>(STUDENTS_URLS.CREATE, payload).subscribe(
@@ -125,7 +128,7 @@ export class ManageService {
 
   updateStudent(id: string, payload: Student): Observable<Student> {
     return new Observable((observer: Observer<Student>) => {
-      this.http.put<Student>(STUDENTS_URLS.UPDATE(id), payload).subscribe(
+      this.http.put<Student>(STUDENTS_URLS.UPDATE, payload).subscribe(
         (responseData: Student) => {
           observer.next(responseData);
         },
@@ -139,6 +142,66 @@ export class ManageService {
   deleteStudent(id: string): Observable<void> {
     return new Observable((observer: Observer<void>) => {
       this.http.delete<void>(STUDENTS_URLS.DELETE(id)).subscribe(
+        () => {
+          observer.next();
+        },
+        (error) => {
+          observer.error(error);
+        }
+      );
+    });
+  }
+
+  // STAFF
+  createStaff(payload: Staff): Observable<Staff> {
+    return new Observable((observer: Observer<Staff>) => {
+      this.http.post<Staff>(STAFF_URLS.CREATE, payload).subscribe(
+        (responseData: Staff) => {
+          observer.next(responseData);
+        },
+        (error) => {
+          observer.error(error);
+        }
+      );
+    });
+  }
+
+  getAllStaff(pageNumber: number, pageSize: number): Observable<GetAllStaffsResponse> {
+    return new Observable((observer: Observer<GetAllStaffsResponse>) => {
+      this.http
+        .get(pagination(STAFF_URLS.GET_ALL, pageNumber, pageSize))
+        .subscribe((responseData: GetAllStaffsResponse) => {
+          observer.next(responseData);
+        },(error) => observer.error(error));
+    });
+  }
+
+  getStaff(id: string): Observable<Staff> {
+    return new Observable((observer: Observer<Staff>) => {
+      this.http
+        .get(STAFF_URLS.GET_BY_ID(id))
+        .subscribe((responseData: Staff) => {
+          observer.next(responseData);
+        },((error) => observer.error(error)));
+    });
+  }
+
+  updateStaff( payload: Staff): Observable<Staff> {
+    return new Observable((observer: Observer<Staff>) => {
+      this.http.put<Staff>(STAFF_URLS.UPDATE, payload).subscribe(
+        (responseData: Staff) => {
+          observer.next(responseData);
+        },
+        (error) => {
+          observer.error(error);
+        }
+      );
+    });
+  }
+
+  deleteStaff(id: string): Observable<void> {
+    return new Observable((observer: Observer<void>) => {
+      this.http.delete<void>(STAFF_URLS.DELETE(id)).subscribe(
         () => {
           observer.next();
         },

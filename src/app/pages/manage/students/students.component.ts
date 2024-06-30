@@ -1,29 +1,19 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { Observable } from "rxjs";
-import {
-  BsModalService,
-  BsModalRef,
-  ModalDirective,
-} from "ngx-bootstrap/modal";
-import {
-  FormBuilder,
-  FormGroup,
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators,
-} from "@angular/forms";
+import { ModalDirective } from "ngx-bootstrap/modal";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 import { Store } from "@ngrx/store";
 import {
   adduserlist,
-  deleteuserlist,
-  fetchuserlistData,
   updateuserlist,
 } from "src/app/store/UserList/userlist.action";
-import { selectData } from "src/app/store/UserList/userlist-selector";
 import { PageChangedEvent } from "ngx-bootstrap/pagination";
-import { GetAllStudentsResponse, Student } from "../types";
+import { Student } from "../types";
 import { ManageService } from "../services/manageService.service";
+import { ToastrService } from "ngx-toastr";
+import { Group } from "../../groups/types";
+import { GroupsService } from "../../groups/services/groupsService.service";
 
 @Component({
   selector: "app-students",
@@ -34,68 +24,18 @@ export class StudentsComponent implements OnInit {
   // bread crumb items
   breadCrumbItems: Array<{}>;
   term: any;
-  contactsList: any;
   // Table data
   total: Observable<number>;
-  contacts: any;
   files: File[] = [];
   endItem: any;
-
+  editMode: boolean = false;
+  editItem!: Student;
   @ViewChild("newContactModal", { static: false })
   newContactModal?: ModalDirective;
   @ViewChild("removeItemModal", { static: false })
   removeItemModal?: ModalDirective;
   deleteId: any;
   returnedArray: any;
-  mockRes: GetAllStudentsResponse = {
-    items: [
-      {
-        firstName: "Mohamed",
-        lastName: "salah",
-        email: "user@example.com",
-        dateOfBirth: "2024-06-28T15:45:27.695Z",
-        enrollment: "2024-06-28T15:45:27.695Z",
-        address: "string",
-        phoneNumber: "string",
-        emergencyContact: "string",
-        grades: "string",
-        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        profileImage: "http://localhost:4200/assets/images/users/avatar-1.jpg",
-      },
-      {
-        firstName: "Ali",
-        lastName: "hassan",
-        email: "user@example.com",
-        dateOfBirth: "2024-06-28T15:45:27.695Z",
-        enrollment: "2024-06-28T15:45:27.695Z",
-        address: "string",
-        phoneNumber: "string",
-        emergencyContact: "string",
-        grades: "string",
-        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        profileImage: "string",
-      },
-      {
-        firstName: "string",
-        lastName: "string",
-        email: "user@example.com",
-        dateOfBirth: "2024-06-28T15:45:27.695Z",
-        enrollment: "2024-06-28T15:45:27.695Z",
-        address: "string",
-        phoneNumber: "string",
-        emergencyContact: "string",
-        grades: "string",
-        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        profileImage: "http://localhost:4200/assets/images/users/avatar-1.jpg",
-      },
-    ],
-    totalCount: 5,
-  };
-  groups = [
-    { id: 1, name: "Group 1" },
-    { id: 2, name: "Group 2" },
-  ];
-  // -------------------
   loading: boolean = false;
   list: Student[];
   totalCount: number = 0;
@@ -103,14 +43,15 @@ export class StudentsComponent implements OnInit {
   pageSize: number = 8;
   studentForm: FormGroup<any>;
   submitted = false;
+  // lookups
+  groups: Group[];
 
   constructor(
-    private modalService: BsModalService,
     private fb: FormBuilder,
     public store: Store,
-    private studentsService: ManageService,
+    public toastr: ToastrService,
     private manageService: ManageService,
-
+    private groupsService: GroupsService
   ) {}
 
   ngOnInit() {
@@ -132,9 +73,11 @@ export class StudentsComponent implements OnInit {
       group: ["", Validators.required],
       userId: [""],
       profileImage: [""],
+      id: [null],
     });
 
-    this.getAllData(this.page, this.pageSize)
+    this.getAllData(this.page, this.pageSize);
+    this.getAllGroups();
   }
 
   // File Upload
@@ -148,20 +91,19 @@ export class StudentsComponent implements OnInit {
       document.querySelectorAll("#member-img").forEach((element: any) => {
         element.src = this.imageURL;
       });
-      console.log(this.imageURL)
       this.studentForm.controls.profileImage.setValue(this.imageURL);
     };
     reader.readAsDataURL(file);
   }
 
   getAllData(pageNumber: number, pageSize: number) {
-    this.loading = true
+    this.loading = true;
     this.manageService.getAllStudents(pageNumber, pageSize).subscribe(
       (response) => {
-         this.list = response.items;
+        this.list = response.items;
         this.returnedArray = [...this.list];
         this.totalCount = response.totalCount;
-        this.loading = false
+        this.loading = false;
       },
       (error) => {
         this.loading = false;
@@ -169,73 +111,50 @@ export class StudentsComponent implements OnInit {
     );
   }
 
-  // Save User
-  saveUser() {
-    if (this.studentForm.valid) {
-      if (this.studentForm.get("id")?.value) {
-        const updatedData = this.studentForm.value;
-        this.store.dispatch(updateuserlist({ updatedData }));
-      } else {
-        this.studentForm.controls["id"].setValue(
-          (this.contactsList.length + 1).toString()
-        );
-        const newData = this.studentForm.value;
-        this.store.dispatch(adduserlist({ newData }));
-      }
-    }
-    this.newContactModal?.hide();
-    document.querySelectorAll("#member-img").forEach((element: any) => {
-      element.src = "assets/images/users/user-dummy-img.jpg";
-    });
-
-    setTimeout(() => {
-      this.studentForm.reset();
-    }, 1000);
+  getAllGroups() {
+    this.groupsService
+      .getAllGroups(1, 100000)
+      .subscribe((response) => (this.groups = response.items));
   }
 
   // fiter job
-  searchJob() {
+  search() {
     if (this.term) {
-      this.contactsList = this.returnedArray.filter((data: any) => {
+      this.list = this.returnedArray.filter((data: any) => {
         return data.name.toLowerCase().includes(this.term.toLowerCase());
       });
     } else {
-      this.contactsList = this.returnedArray;
+      this.list = this.returnedArray;
     }
   }
 
-  // Edit User
-  editUser(id: any) {
-    this.submitted = false;
-    this.newContactModal?.show();
-    var modelTitle = document.querySelector(".modal-title") as HTMLAreaElement;
-    modelTitle.innerHTML = "Edit";
-    var updateBtn = document.getElementById(
-      "addContact-btn"
-    ) as HTMLAreaElement;
-    updateBtn.innerHTML = "Update";
-    this.studentForm.patchValue(this.contactsList[id]);
-  }
-
-  // pagechanged
   pageChanged(event: PageChangedEvent): void {
-    const startItem = (event.page - 1) * event.itemsPerPage;
-    this.endItem = event.page * event.itemsPerPage;
-    this.contactsList = this.returnedArray.slice(startItem, this.endItem);
+    this.getAllData(event.page, event.itemsPerPage);
+    this.page = event.page;
   }
 
-  // Delete User
-  removeUser(id: any) {
+  openDeleteModel(id: any) {
     this.deleteId = id;
     this.removeItemModal?.show();
   }
 
   confirmDelete(id: any) {
-    this.store.dispatch(deleteuserlist({ id: this.deleteId }));
+    this.manageService.deleteStudent(id).subscribe(() => {
+      this.toastr.success("deleted successfully", "Role");
+      this.getAllData(this.page, this.pageSize);
+    });
     this.removeItemModal?.hide();
   }
 
-  create() {
+  edit(item: Student) {
+    this.editMode = true;
+    this.submitted = false;
+    this.editItem = item;
+    this.studentForm.patchValue(item);
+    this.newContactModal?.show();
+  }
+
+  create(): void {
     this.submitted = true;
     if (this.studentForm.valid) {
       const payload = {
@@ -248,18 +167,32 @@ export class StudentsComponent implements OnInit {
         phoneNumber: this.studentForm.value.phoneNumber,
         emergencyContact: this.studentForm.value.emergencyContact,
         grades: this.studentForm.value.grades,
-        userId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-        profileImage: this.studentForm.controls.profileImage.value
+        userId: null,
+        profileImage: this.studentForm.controls.profileImage?.value?.replace(
+          /^data:image\/[a-z]+;base64,/,
+          ""
+        ),
       };
-      console.log(payload)
-      this.studentsService.createStudent(payload).subscribe(
-        (response) => {
-          console.log("Student created:", response);
-        },
-        (error) => {
-          console.error("Error creating student:", error);
-        }
-      );
+
+      if (this.editMode) {
+        payload["id"] = this.studentForm.value.id;
+
+        this.manageService
+          .updateStudent(this.editItem.id, payload)
+          .subscribe((response) => {
+            this.toastr.success("Student updated successfully", "Successfully");
+            this.studentForm.reset();
+            this.newContactModal?.hide();
+            this.getAllData(this.page, this.pageSize);
+          });
+      } else {
+        this.manageService.createStudent(payload).subscribe((response) => {
+          this.toastr.success("Student created successfully", "Successfully");
+          this.studentForm.reset();
+          this.newContactModal?.hide();
+          this.getAllData(this.page, this.pageSize);
+        });
+      }
     }
   }
 }
