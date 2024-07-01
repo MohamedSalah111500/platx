@@ -71,7 +71,7 @@ export class StaffComponent implements OnInit {
       address: ["", Validators.required],
       phoneNumber: ["", Validators.required],
       emergencyContact: ["", Validators.required],
-      group: [""],
+      groups: [""],
       subjectsTaught: [null],
       userId: [""],
       profileImage: [""],
@@ -168,24 +168,19 @@ export class StaffComponent implements OnInit {
         phoneNumber: this.stafftForm.value.phoneNumber,
         emergencyContact: this.stafftForm.value.emergencyContact,
         // subjectsTaught: this.stafftForm.value.subjectsTaught,
-        // groups: this.stafftForm.value.groups,
+        groups: this.stafftForm.value.groups,
         userId: null,
-        profileImage: this.stafftForm.controls.profileImage.value.replace(
-          /^data:image\/[a-z]+;base64,/,
-          ""
-        ),
+        profileImage: this.stafftForm.controls.profileImage.value,
       };
 
       if (this.editMode) {
         payload["id"] = this.stafftForm.value.id;
-        this.manageService
-          .updateStaff(payload)
-          .subscribe((response) => {
-            this.toastr.success("Staff updated successfully", "Successfully");
-            this.stafftForm.reset();
-            this.newContactModal?.hide();
-            this.getAllData(this.page, this.pageSize);
-          });
+        this.manageService.updateStaff(payload).subscribe((response) => {
+          this.toastr.success("Staff updated successfully", "Successfully");
+          this.stafftForm.reset();
+          this.newContactModal?.hide();
+          this.getAllData(this.page, this.pageSize);
+        });
       } else {
         this.manageService.createStaff(payload).subscribe((response) => {
           this.toastr.success("Staff created successfully", "Successfully");

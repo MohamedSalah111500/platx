@@ -9,11 +9,11 @@ import {
   updateuserlist,
 } from "src/app/store/UserList/userlist.action";
 import { PageChangedEvent } from "ngx-bootstrap/pagination";
-import { Student } from "../types";
 import { ManageService } from "../services/manageService.service";
 import { ToastrService } from "ngx-toastr";
 import { Group } from "../../groups/types";
 import { GroupsService } from "../../groups/services/groupsService.service";
+import { Student } from "../types";
 
 @Component({
   selector: "app-students",
@@ -40,7 +40,7 @@ export class StudentsComponent implements OnInit {
   list: Student[];
   totalCount: number = 0;
   page: number = 1;
-  pageSize: number = 8;
+  pageSize: number = 10;
   studentForm: FormGroup<any>;
   submitted = false;
   // lookups
@@ -70,7 +70,7 @@ export class StudentsComponent implements OnInit {
       phoneNumber: ["", Validators.required],
       emergencyContact: ["", Validators.required],
       grades: ["", Validators.required],
-      group: ["", Validators.required],
+      groupId: ["", Validators.required],
       userId: [""],
       profileImage: [""],
       id: [null],
@@ -168,10 +168,8 @@ export class StudentsComponent implements OnInit {
         emergencyContact: this.studentForm.value.emergencyContact,
         grades: this.studentForm.value.grades,
         userId: null,
-        profileImage: this.studentForm.controls.profileImage?.value?.replace(
-          /^data:image\/[a-z]+;base64,/,
-          ""
-        ),
+        groupId: this.studentForm.value.groupId,
+        profileImage: this.studentForm.controls.profileImage?.value
       };
 
       if (this.editMode) {

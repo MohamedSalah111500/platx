@@ -43,72 +43,93 @@
                         </div><!-- end col-->
                       </div>
                       <!-- end row -->
+
+                      <!-- /////// Student List /////// -->
+                      @if(studentList && studentList.length < 1){
+                        <platx-empty-state type="emptyRecords"></platx-empty-state>
+                      }@else{
                       <div class="table-responsive">
-                        <table class="table align-middle table-nowrap table-hover dt-responsive nowrap w-100" id="userList-table">
+                        <table class="table align-middle table-nowrap table-hover dt-responsive nowrap w-100 " id="userList-table">
                           <thead class="table-light">
                             <tr>
                               <th scope="col" style="width: 40px;">#</th>
+                              <th scope="col" style="width: 70px;">Photo</th>
                               <th scope="col">Name</th>
                               <th scope="col">Email</th>
-                              <th scope="col">Phone</th>
-                              <th scope="col" style="width: 200px;">Action</th>
+                              <th scope="col">Group</th>
+                              <th scope="col" style="width: 150px;">Action</th>
                             </tr>
                           </thead>
                           <tbody>
-                            @for (student of students; track $index) {
-                            <tr>
-                              <td>
-                                @if(student.profilePhoto){
-                                <div>
-                                  <img class="rounded-circle avatar-xs" src="{{student.profilePhoto}}" alt="">
-                                </div>
-                                }@else {
-                                <div class="avatar-xs">
-                                  <span class="avatar-title rounded-circle">
-                                    {{student.firstName.charAt(0)}}
-                                  </span>
-                                </div>}
-                              </td>
-                              <td>
-                                <h5 class="font-size-14 mb-1"><a href="javascript: void(0);" class="text-dark">
-                                  {{student.firstName}} {{student.lastName}}
-                                </a>
-                                </h5>
-                                <p class="text-muted mb-0">{{student.phoneNumber}}</p>
-                              </td>
-                              <td>{{student.email}}</td>
-                              <td>{{student.email}}</td>
+                            @if(!loading){ @for (item of studentList; track item; let i = $index) {
+                              <tr>
+                                <td>{{ i + 1 + (page - 1) * pageSize }}</td>
+                                <td>
+                                  @if(item.profilePhoto){
+                                  <div>
+                                    <img class="rounded-circle avatar-sm" src="{{item.profilePhoto}}" alt="">
+                                  </div>
+                                  }@else {
+                                  <div class="avatar-sm">
+                                    <span class="avatar-title rounded-circle">
+                                      {{item.firstName.charAt(0).toUpperCase()}}{{item.lastName.charAt(0)}}
+                                    </span>
+                                  </div>
+                                }
+                                </td>
+                                <td>{{ item.firstName }}  {{ item.lastName }}</td>
+                                <td>  {{ (item.email.length>15)? (item.email  | slice:0:15)+' ...':(item.email ) }}</td>
+                                <td>{{ item.dateOfBirth | date : "short" }}</td>
 
-                              <td>
-                                <ul class="list-inline font-size-20 contact-links mb-0">
-                                  <li class="list-inline-item px-2">
-                                    <a routerLink="/chat" tooltip="Message"><i class="bx bx-message-square-dots"></i></a>
-                                  </li>
-                                  <li class="list-inline-item px-2">
-                                    <a routerLink="/contacts/profile" tooltip="Profile"><i class="bx bx-user-circle"></i></a>
-                                  </li>
-                                  <li class="list-inline-item">
-                                    <div dropdown class="dropdown">
-                                      <a dropdownToggle href="javascript: void(0);" class="dropdown-toggle card-drop px-2 show" aria-expanded="true"> <i class="mdi mdi-dots-horizontal font-size-18"></i> </a>
-                                      <ul *dropdownMenu class="dropdown-menu dropdown-menu-end show" style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate(0px, 31.25px);" placement="bottom-end">
-                                        <li><a href="javascript:void(0);" (click)="editUser($index)" class="dropdown-item edit-list" data-edit-id="8"><i class="mdi mdi-pencil font-size-16 text-success me-1"></i> Edit</a></li>
-                                        <li><a href="javascript:void(0);" (click)="removeUser(data.id)" class="dropdown-item remove-list" data-remove-id="8"><i class="mdi mdi-trash-can font-size-16 text-danger me-1"></i> Delete</a></li>
-                                      </ul>
-                                    </div>
-                                  </li>
-                                </ul>
-                              </td>
-                            </tr>}
+
+                                <td>
+                                  <ul class="list-inline font-size-20 contact-links mb-0">
+
+                                    <li class="list-inline-item">
+                                      <div dropdown class="dropdown">
+                                        <a dropdownToggle href="javascript: void(0);" class="dropdown-toggle card-drop px-2 show" aria-expanded="true"> <i class="mdi mdi-dots-horizontal font-size-18"></i> </a>
+                                        <ul *dropdownMenu class="dropdown-menu dropdown-menu-end show" style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate(0px, 31.25px);" placement="bottom-end">
+                                          <li>
+                                            <a   data-bs-toggle="modal"
+                                            (click)="moveStudentHandler(item,moveStudentModel)" class="dropdown-item edit-list" >
+                                              <i class="bx bx-move font-size-16  me-2"></i> Move
+                                            </a>
+                                          </li>
+                                          <li>
+                                            <a  (click)="edit(item)" class="dropdown-item edit-list" >
+                                              <i class="bx bx-message-square-dots font-size-16  me-2"></i> Message
+                                            </a>
+                                          </li>
+                                          <li>
+                                            <a  (click)="edit(item)" class="dropdown-item edit-list" >
+                                              <i class="bx bx-user-circle font-size-16  me-2"></i> Profile
+                                            </a>
+                                          </li>
+                                        </ul>
+                                      </div>
+                                    </li>
+                                  </ul>
+                                </td>
+                              </tr>
+                              } }
                           </tbody>
                         </table>
                       </div>
+                    }
                       <div class="row">
                         <div class="col-lg-12">
                           <ul class="pagination pagination-rounded justify-content-center mt-4">
-                            <pagination class="pagination-wrap hstack gap-2" [totalItems]="returnedArray?.length" [itemsPerPage]="10" (pageChanged)="pageChanged($event)"></pagination>
-                          </ul>
+                            <pagination
+                            class="pagination-wrap hstack gap-2"
+                            [totalItems]="totalStudentCount"
+                            [itemsPerPage]="pageSize"
+                            (pageChanged)="pageChanged($event)"
+                          ></pagination>
+                                      </ul>
                         </div>
                       </div>
+                      <!-- /////// Student List /////// -->
+
                     </div>
                   </div>
                 </div>
@@ -686,3 +707,40 @@
   <!-- end row -->
 
 </div>
+
+
+
+
+
+<!-- Modal -->
+<div
+  bsModal
+  #moveStudentModel="bs-modal"
+  class="modal fade"
+  id="moveStudentModel"
+  aria-labelledby="moveStudentModelLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Move Student</h5>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="moveStudentModel.hide()"
+        ></button>
+      </div>
+      @if(selectedStudent){
+      <div class="modal-body">
+        <platx-move-student [student]="selectedStudent"
+        [groups]="allGroups"
+        [currentGroupName]="currentGroupName"
+        (moveStudent)="onMoveStudent($event)"
+        ></platx-move-student>
+      </div>
+    }
+    </div>
+  </div>
+</div>
+<!-- end moveStudentModel -->

@@ -61,4 +61,5 @@ export interface Student {
   phoneNumber: string;
   email: string;
   profilePhoto: string;
+  dateOfBirth:Date
 }

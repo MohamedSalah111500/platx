@@ -418,10 +418,17 @@ a.ck.ck-button.ck-on {
   cursor: pointer;
 }
 
-.spinner-wrapper{
+.spinner-wrapper {
   width: 100% !important;
-    display: flex;
-    min-height: 400px;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  min-height: 400px;
+  align-items: center;
+  justify-content: center;
+}
+.table-responsive {
+  min-height: 200px;
+}
+.dropdown-item {
+  padding-inline: 20px;
+  cursor: pointer;
 }

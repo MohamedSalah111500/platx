@@ -1,0 +1,40 @@
+<div class="move-student-container">
+  <div class="student-card">
+    <div class="student-img">
+      @if(student.profilePhoto){
+      <div>
+        <img
+          class="rounded-circle avatar-sm"
+          src="{{ student.profilePhoto }}"
+          alt=""
+        />
+      </div>
+      }@else {
+      <div class="avatar-sm">
+        <span class="avatar-title rounded-circle">
+          {{ student.firstName.charAt(0).toUpperCase()
+          }}{{ student.lastName.charAt(0) }}
+        </span>
+      </div>
+      }
+    </div>
+    <h3 class="font-size-18 font-bold">{{ student.firstName }} {{ student.lastName }}</h3>
+    <p>Phone: {{ student.phoneNumber }}</p>
+    <p>Current Group: {{ currentGroupName }}</p>
+  </div>
+  <div class="group-selection">
+    <h4>Select a new group:</h4>
+    <ul>
+      <li
+        *ngFor="let group of groups"
+        (click)="selectedGroup = group.id"
+        [class.selected]="group.id === selectedGroup"
+      >
+        {{ group.name }}
+      </li>
+    </ul>
+    <button (click)="onMoveStudent()" [disabled]="selectedGroup === null">
+      Move Student
+    </button>
+  </div>
+</div>

@@ -47,8 +47,18 @@ export interface Student {
   grades: string;
   userId: string;
   profileImage: string;
+  groups?:Group[]
 }
 
+interface Group{
+  id: number;
+  description: string;
+  icon: string;
+  nextDueDate: string;
+  nextDueTime: string;
+  status: number;
+  studentsIcons: string[];
+}
 export interface GetAllStaffsResponse {
   items: Staff[];
   totalCount: number;
@@ -66,6 +76,7 @@ export interface Staff {
   userId: string;
   profileImage: string;
   subjectsTaught?: string;
-  groups?:[],
+  groups?:Group[]
   password?: string;
+
 }

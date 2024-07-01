@@ -97,6 +97,28 @@ export class OverviewComponent implements OnInit {
   usermessage: string;
   emoji: any = "";
 
+  studentList: Student[];
+  totalStudentCount: number = 0;
+  pageSize: number = 5;
+  page: number = 1;
+
+  selectedStudent: Student;
+
+  allGroups: any[] = [
+    { id: 1, name: "Group A" },
+    { id: 2, name: "Group B" },
+    { id: 3, name: "Group C" },
+  ];
+
+  currentGroupName: string = "Group A";
+
+  onMoveStudent(event: { studentId: number; newGroupId: number }) {
+    console.log(
+      `Student ${event.studentId} moved to group ${event.newGroupId}`
+    );
+    // Handle the logic to move the student to the new group
+  }
+
   constructor(
     private modalService: BsModalService,
     private formBuilder: UntypedFormBuilder,
@@ -104,8 +126,8 @@ export class OverviewComponent implements OnInit {
     private groupsService: GroupsService,
     private route: ActivatedRoute
   ) {
-      this.groupId =this.route.snapshot.params['id'];
-      // You can use the 'id' value as needed
+    this.groupId = this.route.snapshot.params["id"];
+    // You can use the 'id' value as needed
   }
 
   ngOnInit() {
@@ -181,8 +203,9 @@ export class OverviewComponent implements OnInit {
     this.loading = true;
     this.groupsService.getGroupStudents(id, pageNumber, pageSize).subscribe(
       (response) => {
-        this.students = response.items;
-        console.log("Registration successful:", response);
+        this.studentList = response.items;
+        this.returnedArray = [...this.studentList];
+        this.totalStudentCount = response.totalCount;
         this.loading = false;
       },
       (error) => {
@@ -260,9 +283,8 @@ export class OverviewComponent implements OnInit {
 
   // pagechanged
   pageChanged(event: PageChangedEvent): void {
-    const startItem = (event.page - 1) * event.itemsPerPage;
-    this.endItem = event.page * event.itemsPerPage;
-    this.contactsList = this.returnedArray.slice(startItem, this.endItem);
+    this.getGroupStudents(this.groupId, event.page, event.itemsPerPage);
+    this.page = event.page;
   }
 
   // Delete User
@@ -415,8 +437,11 @@ export class OverviewComponent implements OnInit {
       }
     });
   }
+  // move student logic
 
-  ngOnDestroy() {
-
+  moveStudentHandler(item: Student, moveStudentModel) {
+    this.selectedStudent = item;
+    moveStudentModel.show();
   }
+  ngOnDestroy() {}
 }
