@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-
 import { overviewBarChart } from "./data";
 
 import { ChartType } from "./overview.model";
@@ -27,6 +26,7 @@ import { selectchatData } from "src/app/store/Chat/chat-selector";
 import { GroupsService } from "../services/groupsService.service";
 import { Student } from "../types";
 import { ActivatedRoute } from "@angular/router";
+import { Group } from "../../groups/types";
 
 @Component({
   selector: "app-overview",
@@ -103,19 +103,19 @@ export class OverviewComponent implements OnInit {
   page: number = 1;
 
   selectedStudent: Student;
-
-  allGroups: any[] = [
-    { id: 1, name: "Group A" },
-    { id: 2, name: "Group B" },
-    { id: 3, name: "Group C" },
-  ];
+  groups!: Group[];
 
   currentGroupName: string = "Group A";
 
-  onMoveStudent(event: { studentId: number; newGroupId: number }) {
+  onMoveStudent(
+    event: { studentId: string; newGroupId: string },
+    moveStudentModel
+  ) {
     console.log(
       `Student ${event.studentId} moved to group ${event.newGroupId}`
     );
+    this.moveStudentFromGroup(this.groupId, event.studentId, event.newGroupId);
+    moveStudentModel.hide();
     // Handle the logic to move the student to the new group
   }
 
@@ -135,7 +135,6 @@ export class OverviewComponent implements OnInit {
       { label: "Groups" },
       { label: "Group No. X", active: true },
     ];
-    this.overviewBarChart = overviewBarChart;
 
     setTimeout(() => {
       this.store.dispatch(fetchuserlistData());
@@ -165,6 +164,7 @@ export class OverviewComponent implements OnInit {
     this.formData = this.formBuilder.group({
       message: ["", [Validators.required]],
     });
+    this.overviewBarChart = overviewBarChart;
 
     /**
      * fetches data
@@ -180,6 +180,7 @@ export class OverviewComponent implements OnInit {
 
     this.getGroup(this.groupId);
     this.getGroupStudents(this.groupId, 1, 10);
+    this.getAllGroups();
   }
 
   getGroup(id: string) {
@@ -436,6 +437,20 @@ export class OverviewComponent implements OnInit {
         }
       }
     });
+  }
+
+  getAllGroups() {
+    this.groupsService
+      .getAllGroups(1, 100000)
+      .subscribe((response) => (this.groups = response.items));
+  }
+  moveStudentFromGroup(groupId: string, studentId: string, newGroupId: string) {
+    this.groupsService
+      .patchMoveStudentFromGroup(groupId, studentId, newGroupId)
+      .subscribe(
+        (response) => (this.groups = response.items),
+        (err) => console.log(err)
+      );
   }
   // move student logic
 

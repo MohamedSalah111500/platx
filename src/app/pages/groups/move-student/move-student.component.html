@@ -1,40 +1,92 @@
 <div class="move-student-container">
-  <div class="student-card">
-    <div class="student-img">
-      @if(student.profilePhoto){
-      <div>
-        <img
-          class="rounded-circle avatar-sm"
-          src="{{ student.profilePhoto }}"
-          alt=""
-        />
+  <div class="row">
+    <div class="col-lg-12 d-flex justify-content-center mb-3">
+      <div class="student-card">
+        <div class="student-img">
+          @if(student.profilePhoto){
+          <div>
+            <img
+              class="rounded-circle avatar-lg"
+              src="{{ student.profilePhoto }}"
+              alt=""
+            />
+          </div>
+          }@else {
+          <div class="avatar-lg">
+            <span class="avatar-title rounded-circle font-size-20">
+              {{ student.firstName.charAt(0).toUpperCase()
+              }}{{ student.lastName.charAt(0) }}
+            </span>
+          </div>
+          }
+        </div>
+        <h3 class="font-size-18 font-bold">
+          {{ student.firstName }} {{ student.lastName }}
+        </h3>
+        <p class="d-flex justify-content-center align-items-center">
+          <i class="bx bx-phone-call font-size-18"></i>
+          &nbsp; {{ student.phoneNumber }}
+        </p>
       </div>
-      }@else {
-      <div class="avatar-sm">
-        <span class="avatar-title rounded-circle">
-          {{ student.firstName.charAt(0).toUpperCase()
-          }}{{ student.lastName.charAt(0) }}
-        </span>
+    </div>
+  </div>
+
+  <div class="row mb-3 align-items-end">
+    <div class="col-lg-5">
+      <label for="email" class="form-label">Current Group</label>
+      <input
+        type="text"
+        [value]="currentGroupName"
+        id="email"
+        class="form-control"
+        placeholder="Current group"
+        disabled
+      />
+    </div>
+    <div class="col-lg-2 text-center font-size-24">
+      <i class="bx bx-right-arrow-alt"></i>
+    </div>
+
+    <div class="col-lg-5">
+      @if(groups){
+      <div class="group-selection">
+        <label for="address" class="form-label"> Select a new group</label>
+        <ng-select
+          [items]="groups"
+          bindLabel="description"
+          bindValue="id"
+          placeholder="Select Group"
+          [(ngModel)]="selectedGroupId"
+        ></ng-select>
       </div>
       }
     </div>
-    <h3 class="font-size-18 font-bold">{{ student.firstName }} {{ student.lastName }}</h3>
-    <p>Phone: {{ student.phoneNumber }}</p>
-    <p>Current Group: {{ currentGroupName }}</p>
   </div>
-  <div class="group-selection">
-    <h4>Select a new group:</h4>
-    <ul>
-      <li
-        *ngFor="let group of groups"
-        (click)="selectedGroup = group.id"
-        [class.selected]="group.id === selectedGroup"
+  <div class="row">
+    <div class="col-lg-12">
+      <button
+        (click)="confirmModal.show()"
+        class="btn btn-primary w-100"
+        [disabled]="selectedGroupId === null"
       >
-        {{ group.name }}
-      </li>
-    </ul>
-    <button (click)="onMoveStudent()" [disabled]="selectedGroup === null">
-      Move Student
-    </button>
+        Move Student
+      </button>
+    </div>
   </div>
+</div>
+
+<!-- Confirm Model -->
+<div
+  bsModal
+  #confirmModal="bs-modal"
+  class="modal fade"
+  id="confirmModal"
+  tabindex="-1"
+  aria-hidden="true"
+>
+<platx-confirm-model
+  [title]="'Are you sure you want to Move this Student ?'"
+  (confirm)="onMoveStudent(confirmModal)"
+  (cancel)="confirmModal.hide()"
+  />
 </div>

@@ -1,18 +1,12 @@
 .move-student-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
   padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
   background-color: #f9f9f9;
 }
 
 .student-card {
   flex: 1;
-  margin-right: 20px;
   padding: 20px;
-  border: 1px solid #ccc;
+  border-bottom: 1px solid #eaeaea;
   border-radius: 8px;
   background-color: #fff;
   text-align: center;
@@ -33,38 +27,4 @@
 
 .group-selection {
   flex: 1;
-}
-
-.group-selection ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.group-selection li {
-  padding: 10px;
-  cursor: pointer;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-bottom: 5px;
-  background-color: #fff;
-}
-
-.group-selection li.selected {
-  background-color: #d3f9d8;
-}
-
-button {
-  display: block;
-  margin-top: 10px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  background-color: #007bff;
-  color: #fff;
-  cursor: pointer;
-}
-
-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
 }

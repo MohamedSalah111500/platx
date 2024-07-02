@@ -23,6 +23,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 // apexchart
 import { NgApexchartsModule } from 'ng-apexcharts';
@@ -63,7 +64,12 @@ const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
     DropzoneModule,
     CommonModule,
     ModalModule,
-    PickerModule
+    PickerModule,
+    UIModule,
+    NgSelectModule,
+    NgApexchartsModule,
+    FormsModule,
+    ReactiveFormsModule ,
 
   ],
   providers: [{

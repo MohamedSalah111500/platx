@@ -705,14 +705,9 @@
     <!-- end col -->
   </div>
   <!-- end row -->
-
 </div>
 
-
-
-
-
-<!-- Modal -->
+<!--Move student Modal -->
 <div
   bsModal
   #moveStudentModel="bs-modal"
@@ -721,7 +716,7 @@
   aria-labelledby="moveStudentModelLabel"
   aria-hidden="true"
 >
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Move Student</h5>
@@ -732,15 +727,15 @@
         ></button>
       </div>
       @if(selectedStudent){
-      <div class="modal-body">
+      <div class="modal-body p-0">
         <platx-move-student [student]="selectedStudent"
-        [groups]="allGroups"
+        [groups]="groups"
         [currentGroupName]="currentGroupName"
-        (moveStudent)="onMoveStudent($event)"
+        (moveStudent)="onMoveStudent($event,moveStudentModel)"
         ></platx-move-student>
       </div>
     }
     </div>
   </div>
 </div>
-<!-- end moveStudentModel -->
+

@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { Group } from '../groups.model';
+import { Group } from "../../groups/types";
 import { Student } from '../types';
 
 @Component({
@@ -9,19 +9,21 @@ import { Student } from '../types';
 })
 export class MoveStudentComponent implements OnInit {
   @Input() student: Student;
-  @Input() groups: Group[];
+  @Input() groups!: Group[];
   @Input() currentGroupName: string;
   @Output() moveStudent = new EventEmitter<{ studentId: number, newGroupId: number }>();
 
-  selectedGroup: number | null = null;
+  selectedGroupId: number | null = null;
 
   constructor() {}
 
   ngOnInit(): void {}
 
-  onMoveStudent() {
-    if (this.selectedGroup !== null) {
-      this.moveStudent.emit({ studentId: this.student.id, newGroupId: this.selectedGroup });
+
+  onMoveStudent(confirmModal) {
+    if (this.selectedGroupId !== null) {
+      this.moveStudent.emit({ studentId: this.student.id, newGroupId: this.selectedGroupId });
+      confirmModal.hide()
     }
   }
 }

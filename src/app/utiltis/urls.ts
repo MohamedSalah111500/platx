@@ -23,6 +23,10 @@ export const GROUPS_URLS = {
     `${environment.apiURL.concat(GROUPS_BASE)}${groupId}/staff`,
   GET_GROUP_FILES: (groupId) =>
     `${environment.apiURL.concat(GROUPS_BASE)}${groupId}/files`,
+  PATCH_STUDENT: (groupId: string, studentId: string, newGroupId: string) =>
+    `${environment.apiURL.concat(
+      GROUPS_BASE
+    )}move-student/${groupId}/${studentId}/${newGroupId}`,
 };
 
 export const ROLES_URLS = {
