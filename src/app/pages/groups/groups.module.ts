@@ -35,7 +35,8 @@ import { GroupsComponent } from './groups/groups.component';
 import { WidgetModule } from 'src/app/shared/widget/widget.module';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
-import { MoveStudentComponent } from './move-student/move-student.component';
+import { MoveStudentComponent } from './components/move-student/move-student.component';
+import { GroupBlockComponent } from './components/group-block/group-block.component';
 
 const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
   // Change this to your upload POST address:
@@ -45,7 +46,7 @@ const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
 };
 
 @NgModule({
-  declarations: [GroupsComponent, OverviewComponent, CreateComponent,MoveStudentComponent],
+  declarations: [GroupsComponent, OverviewComponent, CreateComponent,MoveStudentComponent, GroupBlockComponent],
   imports: [
     CommonModule,
     GroupsRoutingModule,

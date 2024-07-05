@@ -15,6 +15,7 @@ import { ManageService } from "../services/manageService.service";
 import { Group } from "../../groups/types";
 import { ToastrService } from "ngx-toastr";
 import { GroupsService } from "../../groups/services/groupsService.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-staff",
@@ -54,7 +55,8 @@ export class StaffComponent implements OnInit {
     public store: Store,
     public toastr: ToastrService,
     private manageService: ManageService,
-    private groupsService: GroupsService
+    private groupsService: GroupsService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -134,7 +136,9 @@ export class StaffComponent implements OnInit {
     this.getAllData(event.page, event.itemsPerPage);
     this.page = event.page;
   }
-
+  navigateTo(path: string, type: string, id: string): void {
+    this.router.navigate([path], { queryParams: { type, id } });
+  }
   openDeleteModel(id: any) {
     this.deleteId = id;
     this.removeItemModal?.show();

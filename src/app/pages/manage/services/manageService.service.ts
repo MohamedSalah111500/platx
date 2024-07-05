@@ -116,7 +116,7 @@ export class ManageService {
     });
   }
 
-  getGroup(id: string): Observable<Student> {
+  getStudent(id: string): Observable<Student> {
     return new Observable((observer: Observer<Student>) => {
       this.http
         .get(STUDENTS_URLS.GET_BY_ID(id))

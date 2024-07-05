@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { Group } from "../../groups/types";
-import { Student } from '../types';
+import { Group } from "../../types";
+import { Student } from '../../types';
 
 @Component({
   selector: 'platx-move-student',
@@ -10,7 +10,7 @@ import { Student } from '../types';
 export class MoveStudentComponent implements OnInit {
   @Input() student: Student;
   @Input() groups!: Group[];
-  @Input() currentGroupName: string;
+  @Input() currentGroup: Group;
   @Output() moveStudent = new EventEmitter<{ studentId: number, newGroupId: number }>();
 
   selectedGroupId: number | null = null;

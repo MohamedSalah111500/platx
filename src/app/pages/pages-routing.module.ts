@@ -21,6 +21,8 @@ const routes: Routes = [
   { path: 'chat', component: ChatComponent },
   { path: 'courses-content', component: ClassesComponent },
   { path: 'filemanager', component: FilemanagerComponent },
+  { path: 'profile', loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule) },
+
   { path: 'manage', loadChildren: () => import('./manage/manage.module').then(m => m.ManageModule) },
 
 

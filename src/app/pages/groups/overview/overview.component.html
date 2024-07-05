@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <!-- start page title -->
-  <app-page-title title="Group No. X" [breadcrumbItems]="breadCrumbItems"></app-page-title>
+  <app-page-title [title]="currentGroup?.description" [breadcrumbItems]="breadCrumbItems"></app-page-title>
   <!-- end page title -->
   <div class="row ">
     <div class="col-md-3" *ngFor="let stat of statData; track: $index">
@@ -93,6 +93,12 @@
                                             <a   data-bs-toggle="modal"
                                             (click)="moveStudentHandler(item,moveStudentModel)" class="dropdown-item edit-list" >
                                               <i class="bx bx-move font-size-16  me-2"></i> Move
+                                            </a>
+                                          </li>
+                                          <li>
+                                            <a   data-bs-toggle="modal"
+                                            (click)="removeStudentHandler(item,removeStudentModel)" class="dropdown-item edit-list" >
+                                              <i class="bx bx bx-user-x  font-size-18  me-2"></i> Remove
                                             </a>
                                           </li>
                                           <li>
@@ -730,7 +736,7 @@
       <div class="modal-body p-0">
         <platx-move-student [student]="selectedStudent"
         [groups]="groups"
-        [currentGroupName]="currentGroupName"
+        [currentGroup]="currentGroup"
         (moveStudent)="onMoveStudent($event,moveStudentModel)"
         ></platx-move-student>
       </div>
@@ -739,3 +745,55 @@
   </div>
 </div>
 
+<!--Move student Modal -->
+<div
+  bsModal
+  #removeStudentModel="bs-modal"
+  class="modal fade"
+  id="removeStudentModel"
+  aria-labelledby="removeStudentModelLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Remove Student</h5>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="removeStudentModel.hide()"
+        ></button>
+      </div>
+
+
+        <div class="modal-body">
+
+            <div class="row">
+              <div class="col-lg-12">
+               <p> Are you sure that you want Remove this Student ?</p>
+              </div>
+
+              <div class="col-lg-12">
+                <div class="text-end">
+                  <button
+                    type="button"
+                    class="btn btn-outline-secondary me-1"
+                    (click)="removeStudentModel.hide()"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    id="addContact-btn"
+                    class="btn btn-primary"
+                    (click)="removeStudentFromGroup(removeStudentModel)"
+                  >
+                  confirm
+                  </button>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>

@@ -27,6 +27,10 @@ export const GROUPS_URLS = {
     `${environment.apiURL.concat(
       GROUPS_BASE
     )}move-student/${groupId}/${studentId}/${newGroupId}`,
+  REMOVE_STUDENT_FROM_GROUP: (groupId: string, studentId: number) =>
+    `${environment.apiURL.concat(
+      GROUPS_BASE
+    )}remove-student/${groupId}/${studentId}`,
 };
 
 export const ROLES_URLS = {

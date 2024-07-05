@@ -27,6 +27,7 @@ import { GroupsService } from "../services/groupsService.service";
 import { Student } from "../types";
 import { ActivatedRoute } from "@angular/router";
 import { Group } from "../../groups/types";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: "app-overview",
@@ -104,27 +105,15 @@ export class OverviewComponent implements OnInit {
 
   selectedStudent: Student;
   groups!: Group[];
-
-  currentGroupName: string = "Group A";
-
-  onMoveStudent(
-    event: { studentId: string; newGroupId: string },
-    moveStudentModel
-  ) {
-    console.log(
-      `Student ${event.studentId} moved to group ${event.newGroupId}`
-    );
-    this.moveStudentFromGroup(this.groupId, event.studentId, event.newGroupId);
-    moveStudentModel.hide();
-    // Handle the logic to move the student to the new group
-  }
+  currentGroup!: Group;
 
   constructor(
     private modalService: BsModalService,
     private formBuilder: UntypedFormBuilder,
     public store: Store,
     private groupsService: GroupsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public toastr: ToastrService
   ) {
     this.groupId = this.route.snapshot.params["id"];
     // You can use the 'id' value as needed
@@ -440,23 +429,54 @@ export class OverviewComponent implements OnInit {
   }
 
   getAllGroups() {
-    this.groupsService
-      .getAllGroups(1, 100000)
-      .subscribe((response) => (this.groups = response.items));
+    this.groupsService.getAllGroups(1, 100000).subscribe((response) => {
+      this.groups = response.items;
+      this.currentGroup = response.items.find(
+        (group) => group.id == this.route.snapshot.params["id"]
+      );
+    });
   }
+
+  // move student logic
+  onMoveStudent(
+    event: { studentId: string; newGroupId: string },
+    moveStudentModel
+  ) {
+    this.moveStudentFromGroup(this.groupId, event.studentId, event.newGroupId);
+    moveStudentModel.hide();
+  }
+
   moveStudentFromGroup(groupId: string, studentId: string, newGroupId: string) {
     this.groupsService
       .patchMoveStudentFromGroup(groupId, studentId, newGroupId)
       .subscribe(
-        (response) => (this.groups = response.items),
+        (response) => {
+          this.toastr.success("Student Moved successfully", "Moving Student");
+          this.getGroupStudents(this.groupId, 1, 10);
+        },
         (err) => console.log(err)
       );
   }
-  // move student logic
 
   moveStudentHandler(item: Student, moveStudentModel) {
     this.selectedStudent = item;
     moveStudentModel.show();
   }
+
+  removeStudentFromGroup(removeStudentModel) {
+    this.groupsService.removeStudentFromGroup(this.groupId, this.selectedStudent.id).subscribe(
+      (response) => {
+        this.toastr.success("Student Removed successfully", "Remove Student");
+        this.getGroupStudents(this.groupId, 1, 10);
+        removeStudentModel.hide()
+      },
+      (err) => console.log(err)
+    );
+  }
+  removeStudentHandler(item: Student, moveStudentModel) {
+    this.selectedStudent = item;
+    moveStudentModel.show();
+  }
+
   ngOnDestroy() {}
 }

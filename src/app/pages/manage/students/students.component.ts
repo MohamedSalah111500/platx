@@ -14,6 +14,7 @@ import { ToastrService } from "ngx-toastr";
 import { Group } from "../../groups/types";
 import { GroupsService } from "../../groups/services/groupsService.service";
 import { Student } from "../types";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-students",
@@ -51,7 +52,9 @@ export class StudentsComponent implements OnInit {
     public store: Store,
     public toastr: ToastrService,
     private manageService: ManageService,
-    private groupsService: GroupsService
+    private groupsService: GroupsService,
+    private router: Router
+
   ) {}
 
   ngOnInit() {
@@ -133,6 +136,10 @@ export class StudentsComponent implements OnInit {
     this.page = event.page;
   }
 
+  navigateTo(path: string, type: string, id: string): void {
+    this.router.navigate([path], { queryParams: { type, id } });
+  }
+
   openDeleteModel(id: any) {
     this.deleteId = id;
     this.removeItemModal?.show();
@@ -169,7 +176,7 @@ export class StudentsComponent implements OnInit {
         grades: this.studentForm.value.grades,
         userId: null,
         groupId: this.studentForm.value.groupId,
-        profileImage: this.studentForm.controls.profileImage?.value
+        profileImage: this.studentForm.controls.profileImage?.value,
       };
 
       if (this.editMode) {

@@ -59,7 +59,7 @@
                     <td>  {{ item.email }}</td>
                     <td>{{ item.grades }}</td>
                     <td>
-                      <span class="badge badge-pill badge-soft-primary font-size-13">{{ item.groups[0].description}}</span>
+                      <span class="badge badge-pill badge-soft-primary font-size-13">{{ item?.groups[0]?.description}}</span>
                       </td>
                     <td>
                       <ul class="list-inline font-size-20 contact-links mb-0">
@@ -67,7 +67,7 @@
                           <a href="javascript:void(0);" tooltip="Message"><i class="bx bx-message-square-dots"></i></a>
                         </li>
                         <li class="list-inline-item px-2">
-                          <a href="javascript:void(0);" tooltip="Profile"><i class="bx bx-user-circle"></i></a>
+                          <a href="javascript:void(0);" (click)="navigateTo('profile','student',item.id)" tooltip="Profile"><i class="bx bx-user-circle"></i></a>
                         </li>
                         <li class="list-inline-item">
                           <div dropdown class="dropdown">

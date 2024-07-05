@@ -74,12 +74,25 @@ export class GroupsService {
     studentId: string,
     newGroupId: string
   ): Observable<GetAllGroupsResponse> {
-    return new Observable((observer: Observer<GetAllGroupsResponse>) => {
+    return new Observable((observer: Observer<any>) => {
       this.http
         .patch(GROUPS_URLS.PATCH_STUDENT(groupId, studentId, newGroupId), null)
-        .subscribe((responseData: GetAllGroupsResponse) => {
-          observer.next(responseData);
+        .subscribe(() => {
+          observer.next({ message: "done" });
         });
+    });
+  }
+
+  removeStudentFromGroup(groupId: string, studentId: number): Observable<void> {
+    return new Observable((observer: Observer<void>) => {
+      this.http.delete<void>(GROUPS_URLS.REMOVE_STUDENT_FROM_GROUP(groupId,studentId)).subscribe(
+        () => {
+          observer.next();
+        },
+        (error) => {
+          observer.error(error);
+        }
+      );
     });
   }
 }
