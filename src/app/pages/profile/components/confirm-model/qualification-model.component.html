@@ -7,6 +7,7 @@
         data-bs-dismiss="modal"
         aria-label="Close"
         class="btn-close"
+        (click)="model.hide()"
       ></button>
     </div>
     <div class="modal-body p-4">
@@ -16,11 +17,23 @@
         class="needs-validation"
         novalidate
       >
+      <div class="mb-3">
+        <div class="mb-2">
+          <label
+            for="name"
+            class="form-label font-size-16 font-bold m-0" >Jop title (Headline) *</label>
+        </div>
+        <input
+          id="name"
+          class="form-control"
+          formControlName="name"/>
+      </div>
+
         <div class="mb-3">
           <div class="mb-2">
             <label
               for="description"
-              class="form-label font-size-18 font-bold m-0"
+              class="form-label font-size-16 font-bold m-0"
               >Description About You</label
             >
             <p class="font-size-10 m-0">
@@ -37,6 +50,8 @@
         </div>
 
 
+
+
         <div formArrayName="qualificationExperiences">
           <div
             *ngFor="
@@ -46,15 +61,47 @@
             [formGroupName]="i"
             class="mb-3 border p-3 rounded"
           >
+
           <div class="mb-3 row">
-            <div class="row justify-content-end mb-2 p-0">
+            <div class="row justify-content-between mb-3 p-0 ">
+              <div class="form-check ms-4 w-50">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  formControlName="isPresent"
+                  id="isPresent{{ i }}"
+                />
+                <label class="form-check-label" for="isPresent{{ i }}">
+                  Is Present
+                </label>
+              </div>
+
               <button (click)="removeQualificationExperience(i)" class="btn-close"></button>
             </div>
-            <label for="placeName{{ i }}" class="col-md-3 col-form-label">Place Name</label>
+            <label for="jobTitle{{ i }}" class="col-md-3 col-form-label">Job Title</label>
             <div class="col-md-9">
               <input
                 type="text"
                 placeholder="file name Example 'my Degree in Software'"
+                id="jobTitle{{ i }}"
+                formControlName="jobTitle"
+                class="form-control"
+                required
+              />
+              <div
+                class="invalid-feedback"
+                *ngIf="experience.get('jobTitle').invalid && experience.get('jobTitle').touched">
+                Job Title is required.
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+               <label for="placeName{{ i }}" class="col-md-3 col-form-label">Place Name</label>
+            <div class="col-md-9">
+              <input
+                type="text"
+                placeholder="place name Example 'El Andalos High School'"
                 id="placeName{{ i }}"
                 formControlName="placeName"
                 class="form-control"
@@ -74,7 +121,7 @@
               <input type="text"
               formControlName="date"
               class="form-control date" (click)="hidden=!hidden" name="daterange" autocomplete="off"
-              [(ngModel)]="selected" bsDaterangepicker  id="date{{ i }}" required/>
+               bsDaterangepicker  id="date{{ i }}" required/>
               <div
                 class="invalid-feedback"
                 *ngIf="experience.get('date').invalid && experience.get('date').touched">
@@ -82,28 +129,13 @@
               </div>
             </div>
           </div>
-
-
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                formControlName="isPresent"
-                id="isPresent{{ i }}"
-              />
-              <label class="form-check-label" for="isPresent{{ i }}">
-                Is Present
-              </label>
-            </div>
-
           </div>
 
           <div class="d-grid gap-2">
             <button
               type="button"
               class="btn btn-light "
-              (click)="addQualificationExperience()"
-            >
+              (click)="addQualificationExperience()">
             <i class="fa fa-plus text-success"></i>
             Add Experience
             </button>
@@ -115,12 +147,9 @@
         <div formArrayName="qualificationDocuments">
           <div
             *ngFor="
-              let document of qualificationDocuments.controls;
-              let i = index
-            "
+              let document of qualificationDocuments.controls;let i = index"
             [formGroupName]="i"
-            class="mb-3 border p-3 rounded"
-          >
+            class="mb-3 border p-3 rounded">
             <div class="mb-1 row">
               <div class="row justify-content-end mb-2 p-0">
                 <button (click)="removeQualificationDocument(i)" class="btn-close"></button>
@@ -131,6 +160,7 @@
                   type="text"
                   placeholder="file name Example 'my Degree in Software'"
                   id="documentName{{ i }}"
+                  formControlName="name"
                   class="form-control"
                   required
                 />
@@ -167,7 +197,7 @@
           <div class="d-grid gap-2 mb-4">
             <button
             type="button"
-            (click)="addQualificationExperience()"
+            (click)="addQualificationDocument()"
             class="btn btn-light "
           >
           <i class="fa fa-plus text-success"></i>

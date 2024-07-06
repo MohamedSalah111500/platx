@@ -1,4 +1,4 @@
-import { ChartType } from './profile.model';
+import { ChartType } from './types';
 
 const revenueBarChart: ChartType = {
     chart: {

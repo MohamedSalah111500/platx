@@ -5,6 +5,8 @@ const GROUPS_BASE = "api/Groups/";
 const ROLES_BASE = "api/Roles";
 const STUDENT_BASE = "api/Students";
 const STAFF_BASE = "api/Staffs";
+const QUALIFICATIONS_BASE = "api/Qualifications";
+
 
 export const AUTH_URLS = {
   LOGIN: `${environment.apiURL.concat(AUTH_BASE)}login`,
@@ -58,3 +60,13 @@ export const STAFF_URLS = {
   UPDATE: `${environment.apiURL.concat(STAFF_BASE)}`,
   DELETE: (id: string) => `${environment.apiURL.concat(STAFF_BASE)}/${id}`,
 };
+
+export const QUALIFICATIONS_URLS = {
+  CREATE: `${environment.apiURL.concat(QUALIFICATIONS_BASE)}`,
+
+  // GET_ALL: `${environment.apiURL.concat(QUALIFICATIONS_BASE)}`,
+  // GET_BY_ID: (id: string) => `${environment.apiURL.concat(QUALIFICATIONS_BASE)}/${id}`,
+  // UPDATE: `${environment.apiURL.concat(QUALIFICATIONS_BASE)}`,
+  // DELETE: (id: string) => `${environment.apiURL.concat(QUALIFICATIONS_BASE)}/${id}`,
+};
+

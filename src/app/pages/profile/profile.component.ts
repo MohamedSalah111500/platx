@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 
 import { revenueBarChart, statData } from "./data";
 
-import { ChartType } from "./profile.model";
+import { ChartType } from "./types";
 import { AuthenticationService } from "src/app/account/auth/services/auth.service";
 import { User } from "src/app/store/Authentication/auth.models";
 import { ActivatedRoute } from "@angular/router";

@@ -1,6 +1,9 @@
 import { HttpClient } from "@angular/common/http";
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { QualificationExperience, QualificationsPayload } from "../../types";
+import { ProfileService } from "../../services/profile.service";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: "platx-qualification-model",
@@ -8,12 +11,21 @@ import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 })
 export class QualificationModelComponent {
   @Input() title: string;
+  @Input() profileId: string;
+  @Input() model: any;
+
+
   qualificationForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private profileService: ProfileService,
+    public toastr: ToastrService
+
+  ) {
     this.qualificationForm = this.fb.group({
-      id: [0, Validators.required],
-      name: ["", Validators.required],
+      name: [""],
       staffId: [0, Validators.required],
       description: [""],
       qualificationDocuments: this.fb.array([]),
@@ -37,10 +49,8 @@ export class QualificationModelComponent {
   addQualificationDocument(): void {
     this.qualificationDocuments.push(
       this.fb.group({
-        id: [0, Validators.required],
         name: ["", Validators.required],
         documentPath: [""],
-        qualificationId: [0, Validators.required],
       })
     );
   }
@@ -52,7 +62,6 @@ export class QualificationModelComponent {
   addQualificationExperience(): void {
     this.qualificationExperiences.push(
       this.fb.group({
-        id: [0, Validators.required],
         placeName: ["", Validators.required],
         startDate: [""],
         endDate: [""],
@@ -60,7 +69,6 @@ export class QualificationModelComponent {
         isPresent: [false],
         jobTitle: [""],
         responsibility: [""],
-        qualificationId: [0, Validators.required],
       })
     );
   }
@@ -84,18 +92,36 @@ export class QualificationModelComponent {
   }
 
   onSubmit(): void {
-    console.log(this.qualificationForm.value)
+    let payload: QualificationsPayload = this.qualificationForm.value;
+    let newExperiences: QualificationExperience[] =
+      payload.qualificationExperiences.map(
+        (qualifiction: QualificationExperience) => ({
+          placeName: qualifiction.placeName,
+          startDate: qualifiction?.date[0]? qualifiction?.date[0]:null,
+          endDate: qualifiction?.date[1]? qualifiction?.date[0]:null,
+          isPresent: qualifiction.isPresent,
+          jobTitle: qualifiction.jobTitle,
+          responsibility: qualifiction.responsibility,
+        })
+      );
+
+    payload.qualificationExperiences = newExperiences;
+    payload.staffId = this.profileId;
+    console.log(this.qualificationForm);
+
     if (this.qualificationForm.valid) {
-      this.http
-        .put("api/your-endpoint", this.qualificationForm.value)
-        .subscribe(
-          (response) => {
-            console.log("Qualification updated successfully", response);
-          },
-          (error) => {
-            console.error("Error updating qualification", error);
-          }
-        );
+      this.profileService.createQualification(payload).subscribe(
+        (res) => {
+          console.log(res);
+          this.toastr.success(res.message, "Qualifications");
+          this.model.hide()
+        },
+        (err) => {
+          console.log(err);
+          this.toastr.error(err.message, "Qualifications");
+
+        }
+      );
     }
   }
 }
