@@ -7,19 +7,19 @@ export interface QualificationsPayloadPut {
   qualificationExperiences: QualificationExperiencePut[];
 }
 
-interface QualificationExperiencePut {
-  id: number;
+export interface QualificationExperiencePut {
+  id: string;
   placeName: string;
   startDate: string;
-  endDate: null;
+  endDate: string;
   isPresent: boolean;
-  jobTitle: null;
-  responsibility: null;
+  jobTitle: string;
+  responsibility: string;
   qualificationId: number;
-  date?: Date[];
+  date?: string[];
 }
 
-interface QualificationDocumentPut {
+export interface QualificationDocumentPut {
   id: number;
   name: string;
   documentPath: null;
@@ -62,4 +62,23 @@ export interface ChartType {
   fill?: any;
   xaxis?: any;
   yaxis?: any;
+}
+
+
+export interface StaffResponse {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  profileImage: string;
+  subjectsTaught: null;
+  address: string;
+  emergencyContact: string;
+  userId: null;
+  dateOfBirth: string;
+  password: null;
+  groups: any[];
+  qualifications: any[];
+  roles: any[];
 }

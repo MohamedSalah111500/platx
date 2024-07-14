@@ -124,7 +124,7 @@
                bsDaterangepicker  id="date{{ i }}" required/>
               <div
                 class="invalid-feedback"
-                *ngIf="experience.get('date').invalid && experience.get('date').touched">
+                *ngIf="experience.get('date')?.invalid && experience.get('date')?.touched">
                date is required.
               </div>
             </div>

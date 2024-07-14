@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 
 import { revenueBarChart, statData } from "./data";
 
-import { ChartType } from "./types";
+import { ChartType, StaffResponse } from "./types";
 import { AuthenticationService } from "src/app/account/auth/services/auth.service";
 import { User } from "src/app/store/Authentication/auth.models";
 import { ActivatedRoute } from "@angular/router";
@@ -22,12 +22,13 @@ export class ProfileComponent implements OnInit {
   breadCrumbItems: Array<{}>;
   revenueBarChart: ChartType;
   statData: any;
-
   type: string;
   profileId: string;
   data: any;
   loading: boolean = false;
-  profileData!: any;
+  profileData!: StaffResponse;
+  hasQualifications: boolean = false;
+
   constructor(
     private authService: AuthenticationService,
     private route: ActivatedRoute,
@@ -43,7 +44,7 @@ export class ProfileComponent implements OnInit {
     ];
 
     this.getdataFromQueryParam();
-    this._fetchData();
+    this.getProfileData();
   }
 
   getdataFromQueryParam() {
@@ -51,10 +52,9 @@ export class ProfileComponent implements OnInit {
       this.type = params["type"];
       this.profileId = params["id"];
     });
-    console.log(this.type, this.profileId);
   }
 
-  private _fetchData() {
+  private getProfileData() {
     this.loading = true;
     let fetchDataFun = null;
     switch (this.type) {
@@ -69,8 +69,9 @@ export class ProfileComponent implements OnInit {
     }
     fetchDataFun.subscribe((response) => {
       this.profileData = response;
-      console.log(this.profileData)
-      this.loading = false
+      this.hasQualifications =
+        response.qualifications.lenght == 0 ? false : true;
+      this.loading = false;
     });
 
     // this.manageService.getAllStaff(pageNumber, pageSize).subscribe(

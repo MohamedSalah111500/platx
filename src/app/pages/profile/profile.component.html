@@ -30,7 +30,7 @@
         </div>
         <div class="card-body pt-0 profile-block">
           <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-9">
               <div class="avatar-md profile-user-wid mb-4">
                 @if(profileData?.profileImage){
                 <img
@@ -46,11 +46,26 @@
                 }
               </div>
               <h5 class="font-size-18 ">
-                {{ profileData.firstName }} {{ profileData.lastName }}  <span class="text-muted mb-0 font-size-14"> - {{ profileData?.qualifications[0]?.name }}</span>
+                {{ profileData.firstName }} {{ profileData.lastName }}
+                @if(type=="staff"){
+                <span class="text-muted mb-0 font-size-14"> - {{ profileData?.qualifications[0]?.name }}</span>
+              }
               </h5>
-              <p class="text-muted mb-0 text-truncate font-size-12">
+              @if(type=="staff"){
+              <p class="text-muted mb-0 font-size-12">
                 {{ profileData?.qualifications[0]?.description }}
               </p>
+
+
+            }
+            </div>
+            <div class="col-sm-3 p-3">
+              <div class="d-flex align-items-center justify-content-end">
+              <button class="btn btn-light btn-sm d-flex align-items-center " (click)="editQualificationsModal?.show()">
+                Update  Info
+              <i class="mdi mdi-pencil font-size-16 mx-1"></i>
+            </button>
+          </div>
             </div>
           </div>
         </div>
@@ -62,12 +77,6 @@
       <div class="card">
         <div class="card-body">
           <h4 class="card-title mb-4">Personal Information</h4>
-
-          <p class="text-muted mb-4">
-            Hi I'm Mohamed Salah,has been the industry's standard dummy text To
-            an English person, it will seem like simplified English, as a
-            skeptical Cambridge.
-          </p>
           <div class="table-responsive">
             <table class="table table-nowrap mb-0">
               <tbody>
@@ -101,18 +110,13 @@
       }
       <!-- end card -->
     </div>
-
+@if(type=="staff"){
     <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12">
       <div class="card">
         <div class="card-body">
           <div class="d-flex align-items-center justify-content-between mb-4">
             <h4 class="card-title">Experience</h4>
-            <button
-              class="btn btn-light btn-sm"
-              (click)="editQualificationsModal.show()"
-            >
-              <i class="mdi mdi-pencil font-size-16 me-1"></i>
-            </button>
+
           </div>
           <div class="">
             @if(profileData?.qualifications[0]?.qualificationExperiences){
@@ -144,6 +148,7 @@
       </div>
       <!-- end card -->
     </div>
+  }
     <div class="col-xl-8">
       <div class="card">
         <div class="card-body">
@@ -181,6 +186,8 @@
   <platx-qualification-model
     [title]="'Update Qualififcations'"
     [profileId]="profileId"
+    [profileData]="profileData"
     [model]="editQualificationsModal"
+    [hasQualifications]="hasQualifications"
   ></platx-qualification-model>
 </div>
