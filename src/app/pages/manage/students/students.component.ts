@@ -2,12 +2,7 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { Observable } from "rxjs";
 import { ModalDirective } from "ngx-bootstrap/modal";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-
 import { Store } from "@ngrx/store";
-import {
-  adduserlist,
-  updateuserlist,
-} from "src/app/store/UserList/userlist.action";
 import { PageChangedEvent } from "ngx-bootstrap/pagination";
 import { ManageService } from "../services/manageService.service";
 import { ToastrService } from "ngx-toastr";

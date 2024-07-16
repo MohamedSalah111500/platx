@@ -27,7 +27,7 @@ export class ProfileService {
   ): Observable<any> {
     return new Observable((observer: Observer<any>) => {
       this.http
-        .post(QUALIFICATIONS_URLS.CREATE, payload)
+        .put(QUALIFICATIONS_URLS.CREATE, payload)
         .subscribe((responseData: any) => {
           observer.next(responseData);
         });

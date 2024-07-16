@@ -27,7 +27,7 @@ export class ProfileComponent implements OnInit {
   data: any;
   loading: boolean = false;
   profileData!: StaffResponse;
-  hasQualifications: boolean = false;
+  hasQualification: boolean = false;
 
   constructor(
     private authService: AuthenticationService,
@@ -69,8 +69,8 @@ export class ProfileComponent implements OnInit {
     }
     fetchDataFun.subscribe((response) => {
       this.profileData = response;
-      this.hasQualifications =
-        response.qualifications.lenght == 0 ? false : true;
+      this.hasQualification =
+        response.qualification?.lenght == 0 ? false : true;
       this.loading = false;
     });
 

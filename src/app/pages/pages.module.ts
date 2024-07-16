@@ -41,7 +41,6 @@ import { MapsModule } from './maps/maps.module';
 import { HttpClientModule } from '@angular/common/http';
 import { ChatComponent } from './chat/chat.component';
 
-import { FilemanagerComponent } from './filemanager/filemanager.component';
 import { ClassesComponent } from './classes/classes.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CreateEditEventComponent } from './components/create-edit-event/create-edit-event.component';
@@ -49,7 +48,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 
 @NgModule({
-  declarations: [CalendarComponent, ChatComponent, FilemanagerComponent,ClassesComponent, CreateEditEventComponent],
+  declarations: [CalendarComponent, ChatComponent,ClassesComponent, CreateEditEventComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -88,7 +87,7 @@ import { TimepickerModule } from 'ngx-bootstrap/timepicker';
     NgSelectModule,
     BsDatepickerModule.forRoot(),
     TimepickerModule.forRoot(),
-    
+
   ],
 })
 export class PagesModule { }

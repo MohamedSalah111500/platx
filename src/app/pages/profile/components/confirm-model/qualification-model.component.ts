@@ -19,7 +19,7 @@ export class QualificationModelComponent {
   @Input() title: string;
   @Input() profileId: string;
   @Input() model: any;
-  @Input() hasQualifications: boolean;
+  @Input() hasQualification: boolean;
   @Input() profileData: StaffResponse;
 
   qualificationForm: FormGroup;
@@ -41,7 +41,7 @@ export class QualificationModelComponent {
   ngOnInit(): void {
     console.log(this.model);
     this.model.onShow.subscribe(() => {
-      if (this.profileData) {
+      if (this.profileData.qualification) {
         this.updateForm(this.profileData);
       } else {
         this.addQualificationDocument(); // Add one document by default
@@ -52,17 +52,17 @@ export class QualificationModelComponent {
 
   updateForm(data: any): void {
     this.qualificationForm.patchValue({
-      id: data.qualifications[0]?.id || 0,
-      name: data.qualifications[0]?.name || "",
-      staffId: data.qualifications[0]?.staffId || 0,
-      description: data.qualifications[0]?.description || "",
+      id: data.qualification?.id || 0,
+      name: data.qualification?.name || "",
+      staffId: data.qualification.staffId || 0,
+      description: data.qualification?.description || "",
     });
 
-    data.qualifications[0]?.qualificationDocuments.forEach((document: any) => {
+    data.qualification?.qualificationDocuments.forEach((document: any) => {
       this.addQualificationDocument(document);
     });
 
-    data.qualifications[0]?.qualificationExperiences.forEach(
+    data.qualification?.qualificationExperiences.forEach(
       (experience: any) => {
         this.addQualificationExperience(experience);
       }
@@ -143,7 +143,6 @@ export class QualificationModelComponent {
           responsibility: qualifiction.responsibility,
         })
       );
-
     payload.qualificationExperiences = newExperiences;
     payload.staffId = this.profileId;
     console.log(this.qualificationForm);
@@ -151,12 +150,12 @@ export class QualificationModelComponent {
       this.profileService.createQualification(payload).subscribe(
         (res) => {
           console.log(res);
-          this.toastr.success(res.message, "Qualifications");
+          this.toastr.success(res.message, "Qualification");
           this.model.hide();
         },
         (err) => {
           console.log(err);
-          this.toastr.error(err.message, "Qualifications");
+          this.toastr.error(err.message, "Qualification");
         }
       );
     }
@@ -180,6 +179,8 @@ export class QualificationModelComponent {
 
     payload.qualificationExperiences = newExperiences;
     payload.staffId = +this.profileId;
+    payload.id = this.profileData.qualification.id;
+
     console.log(this.qualificationForm);
     if (this.qualificationForm.valid) {
       this.profileService.updateQualification(payload).subscribe(
@@ -197,7 +198,7 @@ export class QualificationModelComponent {
   }
 
   onSubmit(): void {
-    this.hasQualifications
+    this.hasQualification
       ? this.updateQualificationHandler()
       : this.createQualificationHandler();
   }

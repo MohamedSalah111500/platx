@@ -48,12 +48,12 @@
               <h5 class="font-size-18 ">
                 {{ profileData.firstName }} {{ profileData.lastName }}
                 @if(type=="staff"){
-                <span class="text-muted mb-0 font-size-14"> - {{ profileData?.qualifications[0]?.name }}</span>
+                <span class="text-muted mb-0 font-size-14"> - {{ profileData?.qualification?.name }}</span>
               }
               </h5>
               @if(type=="staff"){
               <p class="text-muted mb-0 font-size-12">
-                {{ profileData?.qualifications[0]?.description }}
+                {{ profileData?.qualification?.description }}
               </p>
 
 
@@ -119,9 +119,9 @@
 
           </div>
           <div class="">
-            @if(profileData?.qualifications[0]?.qualificationExperiences){
+            @if(profileData?.qualification?.qualificationExperiences){
             <ul class="verti-timeline list-unstyled">
-              @for (experience of profileData?.qualifications[0]?.qualificationExperiences; track $index){
+              @for (experience of profileData?.qualification?.qualificationExperiences; track $index){
               <li class="event-list"   [class.active]="experience.isPresent"  >
                 <div class="event-timeline-dot">
                   <i class="bx bx-right-arrow-circle" [class.bx-fade-right]="experience.isPresent"></i>
@@ -188,6 +188,6 @@
     [profileId]="profileId"
     [profileData]="profileData"
     [model]="editQualificationsModal"
-    [hasQualifications]="hasQualifications"
+    [hasQualification]="hasQualification"
   ></platx-qualification-model>
 </div>

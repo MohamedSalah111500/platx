@@ -6,7 +6,7 @@ const ROLES_BASE = "api/Roles";
 const STUDENT_BASE = "api/Students";
 const STAFF_BASE = "api/Staffs";
 const QUALIFICATIONS_BASE = "api/Qualifications";
-
+const FILE_MANAGER_BASE = "api/Attachements";
 
 export const AUTH_URLS = {
   LOGIN: `${environment.apiURL.concat(AUTH_BASE)}login`,
@@ -70,3 +70,10 @@ export const QUALIFICATIONS_URLS = {
   // DELETE: (id: string) => `${environment.apiURL.concat(QUALIFICATIONS_BASE)}/${id}`,
 };
 
+export const FILE_MANAGER_URLS = {
+  CREATE: `${environment.apiURL.concat(FILE_MANAGER_BASE)}`,
+  GET_ALL: `${environment.apiURL.concat(FILE_MANAGER_BASE)}`,
+  GET_SIZE: `${environment.apiURL.concat(FILE_MANAGER_BASE)}/GetAttachementsSize`,
+  UPDATE: `${environment.apiURL.concat(FILE_MANAGER_BASE)}`,
+  DELETE: (id: string) =>`${environment.apiURL.concat(FILE_MANAGER_BASE)}/${id}`,
+};

@@ -28,6 +28,7 @@ export interface QualificationDocumentPut {
 
 
 export interface QualificationsPayload {
+  id:number;
   name: string;
   staffId: string;
   description: string;
@@ -79,6 +80,6 @@ export interface StaffResponse {
   dateOfBirth: string;
   password: null;
   groups: any[];
-  qualifications: any[];
+  qualification: any;
   roles: any[];
 }
