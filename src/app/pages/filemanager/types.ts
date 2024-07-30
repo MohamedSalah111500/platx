@@ -1,3 +1,4 @@
+import { FormControl } from "@angular/forms";
 
 
 export interface GetAllFilesResponse {
@@ -5,6 +6,18 @@ export interface GetAllFilesResponse {
   totalCount: number;
 }
 
+export interface GetAllFilesSizeResponse {
+  wordSize: null;
+  pdfSize: null;
+  imageSize: string;
+  videoSize: null;
+  wordCount: number;
+  pdfCount: number;
+  imageCount: number;
+  videoCount: number;
+  linkCount: number;
+  linkSize: null;
+}
 export interface FileItem {
   id: number;
   name: string;
@@ -16,3 +29,18 @@ export interface FileItem {
   updateTime: null;
   size: string;
 }
+
+export interface CreateFileForm {
+  name: FormControl;
+  path: FormControl;
+  attachmentType: FormControl;
+  link: FormControl;
+}
+
+export interface CreateFilePayload {
+  name: string;
+  path: string;
+  attachementType: number;
+  link: string;
+}
+

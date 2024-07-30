@@ -1,8 +1,5 @@
 <div class="container-fluid">
-  <app-page-title
-    title="File Manager"
-    [breadcrumbItems]="breadCrumbItems"
-  ></app-page-title>
+  <app-page-title title="File Manager" [breadcrumbItems]="breadCrumbItems"></app-page-title>
 
   <div class="row">
     <div class="col-lg-9 col-md-12">
@@ -12,26 +9,16 @@
             <div class="col-sm-4">
               <div class="search-box me-2 mb-2 d-inline-block">
                 <div class="position-relative">
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="searchTableList"
-                    placeholder="Search..."
-                    [(ngModel)]="term"
-                    (ngModelChange)="search()"
-                  />
+                  <input type="text" class="form-control" id="searchTableList" placeholder="Search..."
+                    [(ngModel)]="term" (ngModelChange)="search()" />
                   <i class="bx bx-search-alt search-icon"></i>
                 </div>
               </div>
             </div>
             <div class="col-sm-8">
               <div class="text-sm-end">
-                <button
-                  type="button"
-                  data-bs-toggle="modal"
-                  (click)="newContactModal.show()"
-                  class="btn btn-success btn-rounded waves-effect waves-light addContact-modal mb-2"
-                >
+                <button type="button" data-bs-toggle="modal" (click)="newContactModal.show()"
+                  class="btn btn-success btn-rounded waves-effect waves-light addContact-modal mb-2">
                   <i class="mdi mdi-plus me-1"></i> New Contact
                 </button>
               </div>
@@ -39,157 +26,120 @@
             <!-- end col-->
           </div>
           <!-- end row -->
-          @if(list && list.length < 1){
-          <platx-empty-state type="emptyRecords"></platx-empty-state>
-          }@else{
+          @if(list && list.length < 1){ <platx-empty-state type="emptyRecords"></platx-empty-state>
+            }@else{
 
-          <div class="table-responsive">
-            <table
-              class="table align-middle table-nowrap table-hover dt-responsive nowrap w-100"
-              id="userList-table"
-            >
-              <thead class="table-light">
-                <tr>
-                  <th scope="col" style="width: 40px">#</th>
-                  <th scope="col" style="width: 70px">Type</th>
-                  <th scope="col">Name</th>
-                  <th scope="col">Date modified	</th>
-                  <th scope="col">Size</th>
-                  <th scope="col" style="width: 150px">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                @if(!loading){ @for (item of list; track item; let i = $index) {
-                <tr>
-                  <td>{{ i + 1 + (page - 1) * pageSize }}</td>
-                  <td>
-                  @if(item.attachementType == 1){
-                    <div class="avatar-xs align-self-center me-2">
-                      <div class="avatar-title rounded bg-transparent text-primary font-size-20">
-                        <i class="mdi mdi-file-document"></i>
-                      </div>
-                    </div>
-                  }
-
-                @if(item.attachementType == 2){
-                    <div class="avatar-xs align-self-center me-2">
-                      <div class="avatar-title rounded bg-transparent text-danger font-size-20">
-                        <i class="mdi mdi-file-pdf"></i>
-                      </div>
-                  </div>
-                  }
-
-                @if(item.attachementType == 3){
-                    <div class="avatar-xs align-self-center me-2">
-                      <div class="avatar-title rounded bg-transparent text-success font-size-20">
-                        <i class="mdi mdi-image"></i>
-                      </div>
-                    </div>
-                  }
-
-                @if(item.attachementType == 4){
-                  <div>
-                    <div class="avatar-xs align-self-center me-2">
-                      <div class="avatar-title rounded bg-transparent text-danger font-size-20">
-                        <i class="mdi mdi-play-circle-outline"></i>
-                      </div>
-                    </div>
-                  </div>
-                  }
-
-                  @if(item.attachementType == 5){
-                    <div>
+            <div class="table-responsive">
+              <table class="table align-middle table-nowrap table-hover dt-responsive nowrap w-100" id="userList-table">
+                <thead class="table-light">
+                  <tr>
+                    <th scope="col" style="width: 40px">#</th>
+                    <th scope="col" style="width: 70px">Type</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Date modified </th>
+                    <th scope="col">Size</th>
+                    <th scope="col" style="width: 150px">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @if(!loading){ @for (item of list; track item; let i = $index) {
+                  <tr>
+                    <td>{{ i + 1 + (page - 1) * pageSize }}</td>
+                    <td>
+                      @if(item.attachementType == 1){
                       <div class="avatar-xs align-self-center me-2">
-                        <div class="avatar-title rounded bg-transparent text-info font-size-20">
-                          <i class="mdi mdi-link"></i>
+                        <div class="avatar-title rounded bg-transparent text-primary font-size-20">
+                          <i class="mdi mdi-file-document"></i>
                         </div>
                       </div>
-                    </div>
-                    }
-                  </td>
+                      }
 
-                  <td>{{ item.name }}</td>
-                  <td>{{ item.creationTime | date : "medium"}}</td>
-                  <td>{{ item.size }}</td>
+                      @if(item.attachementType == 2){
+                      <div class="avatar-xs align-self-center me-2">
+                        <div class="avatar-title rounded bg-transparent text-danger font-size-20">
+                          <i class="mdi mdi-file-pdf"></i>
+                        </div>
+                      </div>
+                      }
 
-                  <td>
-                    <ul class="list-inline font-size-20 contact-links mb-0">
-                      <li class="list-inline-item px-2">
-                        <a href="javascript:void(0);" tooltip="Message"
-                          ><i class="bx bx-message-square-dots"></i
-                        ></a>
-                      </li>
+                      @if(item.attachementType == 3){
+                      <div class="avatar-xs align-self-center me-2">
+                        <div class="avatar-title rounded bg-transparent text-success font-size-20">
+                          <i class="mdi mdi-image"></i>
+                        </div>
+                      </div>
+                      }
 
-                      <li class="list-inline-item">
-                        <div dropdown class="dropdown">
-                          <a
-                            dropdownToggle
-                            href="javascript: void(0);"
-                            class="dropdown-toggle card-drop px-2 show"
-                            aria-expanded="true"
-                          >
-                            <i class="mdi mdi-dots-horizontal font-size-18"></i>
-                          </a>
-                          <ul
-                            *dropdownMenu
-                            class="dropdown-menu dropdown-menu-end show"
-                            style="
+                      @if(item.attachementType == 4){
+                      <div>
+                        <div class="avatar-xs align-self-center me-2">
+                          <div class="avatar-title rounded bg-transparent text-danger font-size-20">
+                            <i class="mdi mdi-play-circle-outline"></i>
+                          </div>
+                        </div>
+                      </div>
+                      }
+
+                      @if(item.attachementType == 5){
+                      <div>
+                        <div class="avatar-xs align-self-center me-2">
+                          <div class="avatar-title rounded bg-transparent text-info font-size-20">
+                            <i class="mdi mdi-link"></i>
+                          </div>
+                        </div>
+                      </div>
+                      }
+                    </td>
+
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.creationTime | date : "medium"}}</td>
+                    <td>{{ item.size }}</td>
+
+                    <td>
+                      <ul class="list-inline font-size-20 contact-links mb-0">
+
+                        <li class="list-inline-item">
+                          <div dropdown class="dropdown">
+                            <a dropdownToggle href="javascript: void(0);" class="dropdown-toggle card-drop px-2 show"
+                              aria-expanded="true">
+                              <i class="mdi mdi-dots-horizontal font-size-18"></i>
+                            </a>
+                            <ul *dropdownMenu class="dropdown-menu dropdown-menu-end show" style="
                               position: absolute;
                               inset: 0px 0px auto auto;
                               margin: 0px;
                               transform: translate(0px, 31.25px);
-                            "
-                            placement="bottom-end"
-                          >
-                            <li>
-                              <a
-                                href="javascript:void(0);"
-                                (click)="edit(item)"
-                                class="dropdown-item edit-list"
-                                data-edit-id="8"
-                                ><i
-                                  class="mdi mdi-pencil font-size-16 text-success me-1"
-                                ></i>
-                                Edit</a
-                              >
-                            </li>
-                            <li>
-                              <a
-                                href="javascript:void(0);"
-                                (click)="openDeleteModel(item.id)"
-                                class="dropdown-item remove-list"
-                                data-remove-id="8"
-                                ><i
-                                  class="mdi mdi-trash-can font-size-16 text-danger me-1"
-                                ></i>
-                                Delete</a
-                              >
-                            </li>
-                          </ul>
-                        </div>
-                      </li>
-                    </ul>
-                  </td>
-                </tr>
-                } }
-              </tbody>
-            </table>
-          </div>
-          }
-          <div class="row">
-            <div class="col-lg-12">
-              <ul
-                class="pagination pagination-rounded justify-content-center mt-4"
-              >
-                <pagination
-                  class="pagination-wrap hstack gap-2"
-                  [totalItems]="totalCount"
-                  [itemsPerPage]="pageSize"
-                  (pageChanged)="pageChanged($event)"
-                ></pagination>
-              </ul>
+                            " placement="bottom-end">
+                              <li>
+                                <a href="javascript:void(0);" (click)="edit(item)" class="dropdown-item edit-list"
+                                  data-edit-id="8"><i class="mdi mdi-pencil font-size-16 text-success me-1"></i>
+                                  Edit</a>
+                              </li>
+                              <li>
+                                <a href="javascript:void(0);" (click)="openDeleteModel(item.id)"
+                                  class="dropdown-item remove-list" data-remove-id="8"><i
+                                    class="mdi mdi-trash-can font-size-16 text-danger me-1"></i>
+                                  Delete</a>
+                              </li>
+                            </ul>
+                          </div>
+                        </li>
+                      </ul>
+                    </td>
+                  </tr>
+                  } }
+                </tbody>
+              </table>
             </div>
-          </div>
+            }
+            <div class="row">
+              <div class="col-lg-12">
+                <ul class="pagination pagination-rounded justify-content-center mt-4">
+                  <pagination class="pagination-wrap hstack gap-2" [totalItems]="totalCount" [itemsPerPage]="pageSize"
+                    (pageChanged)="pageChanged($event)"></pagination>
+                </ul>
+              </div>
+            </div>
         </div>
       </div>
     </div>
@@ -199,17 +149,9 @@
           <div class="text-center">
             <h5 class="font-size-15 mb-4">Storage</h5>
             <!-- <div class="apex-charts" id="radial-chart"></div> -->
-            <apx-chart
-              dir="ltr"
-              class="apex-charts"
-              [chart]="radialoptions.chart"
-              [series]="radialoptions.series"
-              [labels]="radialoptions.labels"
-              [colors]="radialoptions.colors"
-              [grid]="radialoptions.grid"
-              [plotOptions]="radialoptions.plotOptions"
-              [stroke]="radialoptions.stroke"
-            >
+            <apx-chart dir="ltr" class="apex-charts" [chart]="radialoptions.chart" [series]="radialoptions.series"
+              [labels]="radialoptions.labels" [colors]="radialoptions.colors" [grid]="radialoptions.grid"
+              [plotOptions]="radialoptions.plotOptions" [stroke]="radialoptions.stroke">
             </apx-chart>
             <p class="text-muted mt-4">48.02 GB (76%) of 64 GB used</p>
           </div>
@@ -227,11 +169,11 @@
 
                     <div class="overflow-hidden me-auto">
                       <h5 class="font-size-13 text-truncate mb-1">Images</h5>
-                      <p class="text-muted text-truncate mb-0">176 Files</p>
+                      <p class="text-muted text-truncate mb-0">{{filesSize?.imageCount ? filesSize?.imageCount : 0}} Files</p>
                     </div>
 
                     <div class="ms-2">
-                      <p class="text-muted">6 GB</p>
+                      <p class="text-muted">{{filesSize?.imageSize}}</p>
                     </div>
                   </div>
                 </div>
@@ -242,20 +184,18 @@
                 <div class="p-2">
                   <div class="d-flex">
                     <div class="avatar-xs align-self-center me-2">
-                      <div
-                        class="avatar-title rounded bg-transparent text-primary font-size-20"
-                      >
+                      <div class="avatar-title rounded bg-transparent text-primary font-size-20">
                         <i class="mdi mdi-file-document"></i>
                       </div>
                     </div>
 
                     <div class="overflow-hidden me-auto">
                       <h5 class="font-size-13 text-truncate mb-1">Word</h5>
-                      <p class="text-muted text-truncate mb-0">21 Files</p>
+                      <p class="text-muted text-truncate mb-0">{{filesSize?.wordCount ? filesSize?.wordCount : 0}} Files</p>
                     </div>
 
                     <div class="ms-2">
-                      <p class="text-muted">2 GB</p>
+                      <p class="text-muted">{{filesSize?.wordSize}}</p>
                     </div>
                   </div>
                 </div>
@@ -267,20 +207,18 @@
                 <div class="p-2">
                   <div class="d-flex">
                     <div class="avatar-xs align-self-center me-2">
-                      <div
-                        class="avatar-title rounded bg-transparent text-danger font-size-20"
->
+                      <div class="avatar-title rounded bg-transparent text-danger font-size-20">
                         <i class="mdi mdi-file-pdf"></i>
                       </div>
                     </div>
 
                     <div class="overflow-hidden me-auto">
                       <h5 class="font-size-13 text-truncate mb-1">PDF</h5>
-                      <p class="text-muted text-truncate mb-0">20 Files</p>
+                      <p class="text-muted text-truncate mb-0">{{filesSize?.pdfCount ? filesSize?.pdfCount : 0}} Files</p>
                     </div>
 
                     <div class="ms-2">
-                      <p class="text-muted">1.4 GB</p>
+                      <p class="text-muted">{{filesSize?.pdfSize}}</p>
                     </div>
                   </div>
                 </div>
@@ -291,20 +229,18 @@
                 <div class="p-2">
                   <div class="d-flex">
                     <div class="avatar-xs align-self-center me-2">
-                      <div
-                        class="avatar-title rounded bg-transparent text-danger font-size-20"
-                      >
+                      <div class="avatar-title rounded bg-transparent text-danger font-size-20">
                         <i class="mdi mdi-play-circle-outline"></i>
                       </div>
                     </div>
 
                     <div class="overflow-hidden me-auto">
                       <h5 class="font-size-13 text-truncate mb-1">Video</h5>
-                      <p class="text-muted text-truncate mb-0">45 Files</p>
+                      <p class="text-muted text-truncate mb-0">{{filesSize?.videoCount ? filesSize?.videoCount : 0}} Files</p>
                     </div>
 
                     <div class="ms-2">
-                      <p class="text-muted">4.1 GB</p>
+                      <p class="text-muted">{{filesSize?.videoSize}}</p>
                     </div>
                   </div>
                 </div>
@@ -316,20 +252,18 @@
                 <div class="p-2">
                   <div class="d-flex">
                     <div class="avatar-xs align-self-center me-2">
-                      <div
-                        class="avatar-title rounded bg-transparent text-info font-size-20"
-                      >
+                      <div class="avatar-title rounded bg-transparent text-info font-size-20">
                         <i class="mdi mdi-link"></i>
                       </div>
                     </div>
 
                     <div class="overflow-hidden me-auto">
                       <h5 class="font-size-13 text-truncate mb-1">Link</h5>
-                      <p class="text-muted text-truncate mb-0">21 link</p>
+                      <p class="text-muted text-truncate mb-0">{{filesSize?.linkCount ? filesSize?.linkCount : 0}} link</p>
                     </div>
 
                     <div class="ms-2">
-                      <p class="text-muted">3.2 GB</p>
+                      <p class="text-muted">{{filesSize?.linkSize}}</p>
                     </div>
                   </div>
                 </div>
@@ -340,4 +274,126 @@
       </div>
     </div>
   </div>
+</div>
+
+
+<!-- Modal -->
+<div bsModal #newContactModal="bs-modal" class="modal fade" id="newContactModal" tabindex="-1"
+  aria-labelledby="newContactModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{editMode ? 'Edit':'Add New'}}</h5>
+        <button type="button" class="btn-close" (click)="newContactModal.hide()"></button>
+      </div>
+      <div class="modal-body">
+
+        <form (ngSubmit)="create()" [formGroup]="fileManagerForm" autocomplete="off"
+          class="needs-validation createContact-form" id="createContact-form" novalidate>
+          <div class="row">
+         
+            <div class="col-lg-9 mb-3">
+              <label for="name" class="form-label"> File Name *</label>
+              <input type="text" id="name" class="form-control" placeholder="Enter File Name" formControlName="name"
+                [ngClass]="{'is-invalid': submitted && fileManagerForm.controls.name.invalid}" required />
+              <div *ngIf="submitted && fileManagerForm.controls.name.invalid" class="invalid-feedback">
+                <small *ngIf="fileManagerForm.controls.name.errors.required">Please enter File Name.</small>
+              </div>
+            </div>
+
+            <div class="col-lg-3 mb-3">
+              <label for="address" class="form-label">Attachement Type *</label>
+              <ng-select [items]="attachmentTypesList" bindLabel="name" bindValue="value" 
+                placeholder="Select Group"
+                formControlName="attachmentType" 
+                (change)="changeFileType($event)"
+                [ngClass]="{'is-invalid': submitted && fileManagerForm.controls.attachmentType.invalid}"
+                required></ng-select>
+              <div *ngIf="submitted && fileManagerForm.controls.attachmentType.invalid" class="invalid-feedback">
+                <small *ngIf="fileManagerForm.controls.attachmentType.errors.required">Please select group.</small>
+              </div>
+            </div>
+          @if(fileManagerForm.controls.attachmentType.value == 5){
+            <div class="col-lg-12 mb-3">
+              <label for="link" class="form-label">link *</label>
+              <input type="text" id="link" class="form-control" placeholder="Enter link" formControlName="link"
+                [ngClass]="{'is-invalid': submitted && fileManagerForm.controls.link.invalid}" required />
+              <div *ngIf="submitted && fileManagerForm.controls.link.invalid" class="invalid-feedback">
+                <small *ngIf="fileManagerForm.controls.link.errors.required">Please enter a last name.</small>
+              </div>
+            </div>
+          }@else{
+            @if(!editMode){
+            <div class="col-lg-12 mb-3">
+              @if(uploadedFiles.length <= 0){ <dropzone class="dropzone" [config]="dropzoneConfig"
+                [message]="'Drop files here or click to upload.'" (addedFile)="onUploadSuccess($event)"
+                class="form-control"
+                 [ngClass]="{'is-invalid': submitted && fileManagerForm.controls.path.invalid}"
+                >
+                </dropzone>
+                <div *ngIf="submitted && fileManagerForm.controls.path.invalid" class="invalid-feedback">
+                  <small *ngIf="fileManagerForm.controls.path.errors.required">Please select file.</small>
+                </div>
+                }
+                @if(uploadedFiles){
+                <ul class="list-unstyled mb-0" id="dropzone-preview">
+                  @for(file of uploadedFiles;track $index){
+                  <li class="mt-2" id="dropzone-preview-list">
+                    <!-- This is used as the file preview template -->
+                    <div class="border rounded">
+                      <div class="d-flex p-2">
+                        <div class="flex-shrink-0 me-3">
+                          <div class="avatar-md rounded d-flex align-items-center justify-content-center font-size-24">
+                            @if(file.dataURL){
+                            <img class="img-fluid rounded d-block mh-100" [src]="file?.dataURL" alt="Dropzone-Image" />
+                            }@else{
+                            <i [ngClass]="getIconClass(file.type)"></i>
+                            }
+                          </div>
+                        </div>
+                        <div class="flex-grow-1  d-flex align-items-center">
+                          <div class="pt-1">
+                            @if(file.name){
+                            <h5 class="fs-md mb-1">{{ file.name }}</h5>
+                            }
+                            @if(file.size){
+                            <p class="fs-sm text-muted mb-0">{{ file.size }}</p>
+                            }
+                            <strong class="error text-danger" data-dz-errormessage></strong>
+                          </div>
+                        </div>
+                        <div class="flex-shrink-0 ms-3  d-flex align-items-center">
+                          <button (click)="removeFile(file)" class="btn btn btn-danger">Delete</button>
+                        </div>
+                      </div>
+                    </div>
+                  </li>}
+                </ul>
+                }
+            </div>
+          }
+          }
+
+            <div class="col-lg-12">
+              <div class="text-end">
+                <button type="button" class="btn btn-outline-secondary me-1"
+                  (click)="newContactModal.hide()">Cancel</button>
+                <button type="submit" class="btn btn-success">{{editMode ? 'Update':'Add New'}}</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <!-- end modal body -->
+    </div>
+    <!-- end modal-content -->
+  </div>
+  <!-- end modal-dialog -->
+</div>
+
+<!-- removeItemModal -->
+<div bsModal #removeItemModal="bs-modal" class="modal fade" id="removeItemModal" tabindex="-1" aria-hidden="true">
+  <platx-confirm-model [title]="'Are you sure you want to remove this row?'" (confirm)="confirmDelete(deleteId)"
+    (cancel)="removeItemModal.hide()" />
+
 </div>
