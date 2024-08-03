@@ -10,7 +10,12 @@ import {
   CreateFilePayload,
   GetAllFilesResponse,
   GetAllFilesSizeResponse,
+  UpdateFilePayload,
 } from "../types";
+import {
+  IGeneralErrorMessageResponse,
+  IGeneralSuccessMessageResponse,
+} from "src/app/shared/general-types";
 
 @Injectable({
   providedIn: "root",
@@ -19,7 +24,7 @@ export class FilemanagerService {
   constructor(private http: HttpClient) {}
 
   // STUDENTS
-  createFile(payload: CreateFilePayload): Observable<any> {
+  createFile(payload: any): Observable<any> {
     return new Observable((observer: Observer<any>) => {
       this.http.post(FILE_MANAGER_URLS.CREATE, payload).subscribe(
         (responseData: any) => {
@@ -59,18 +64,20 @@ export class FilemanagerService {
     });
   }
 
-  // updateStudent(id: string, payload: Student): Observable<Student> {
-  //   return new Observable((observer: Observer<Student>) => {
-  //     this.http.put<Student>(FILE_MANAGER_URLS.UPDATE, payload).subscribe(
-  //       (responseData: Student) => {
-  //         observer.next(responseData);
-  //       },
-  //       (error) => {
-  //         observer.error(error);
-  //       }
-  //     );
-  //   });
-  // }
+  updateStudent(payload: UpdateFilePayload ): Observable<IGeneralSuccessMessageResponse> {
+    return new Observable(
+      (observer: Observer<IGeneralSuccessMessageResponse>) => {
+        this.http.put(FILE_MANAGER_URLS.UPDATE, payload).subscribe(
+          (responseData: IGeneralSuccessMessageResponse) => {
+            observer.next(responseData);
+          },
+          (error: IGeneralErrorMessageResponse) => {
+            observer.error(error);
+          }
+        );
+      }
+    );
+  }
 
   deleteFile(id: string): Observable<void> {
     return new Observable((observer: Observer<void>) => {

@@ -75,5 +75,6 @@ export const FILE_MANAGER_URLS = {
   GET_ALL: `${environment.apiURL.concat(FILE_MANAGER_BASE)}`,
   GET_SIZE: `${environment.apiURL.concat(FILE_MANAGER_BASE)}/GetAttachementsSize`,
   UPDATE: `${environment.apiURL.concat(FILE_MANAGER_BASE)}`,
+  GET_DOWNLOAD_FILE: (id: number) =>`${environment.apiURL.concat(FILE_MANAGER_BASE)}/DownloadFile/${id}`,
   DELETE: (id: string) =>`${environment.apiURL.concat(FILE_MANAGER_BASE)}/${id}`,
 };

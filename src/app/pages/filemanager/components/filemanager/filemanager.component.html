@@ -17,9 +17,9 @@
             </div>
             <div class="col-sm-8">
               <div class="text-sm-end">
-                <button type="button" data-bs-toggle="modal" (click)="newContactModal.show()"
+                <button type="button" data-bs-toggle="modal" (click)="newContent(newContactModal)"
                   class="btn btn-success btn-rounded waves-effect waves-light addContact-modal mb-2">
-                  <i class="mdi mdi-plus me-1"></i> New Contact
+                  <i class="mdi mdi-plus me-1"></i> New Content
                 </button>
               </div>
             </div>
@@ -93,11 +93,10 @@
 
                     <td>{{ item.name }}</td>
                     <td>{{ item.creationTime | date : "medium"}}</td>
-                    <td>{{ item.size }}</td>
+                    <td>{{ item.size ? item.size : '1.0 KB' }}</td>
 
                     <td>
                       <ul class="list-inline font-size-20 contact-links mb-0">
-
                         <li class="list-inline-item">
                           <div dropdown class="dropdown">
                             <a dropdownToggle href="javascript: void(0);" class="dropdown-toggle card-drop px-2 show"
@@ -110,15 +109,26 @@
                               margin: 0px;
                               transform: translate(0px, 31.25px);
                             " placement="bottom-end">
+                             <li>
+                              @if(item.attachementType == 5){
+                              <a  (click)="copyURLToClipboard(item.link)" class="d-flex align-items-center dropdown-item edit-list"
+                                data-edit-id="8"><i class="bx bx-copy font-size-18  me-2"></i>
+                                Copy</a>
+                              }@else{
+                                <a  (click)="download(item)" class="d-flex align-items-center dropdown-item edit-list"
+                                data-edit-id="8"><i class="bx bx-cloud-download font-size-18  me-2"></i>
+                                Download</a>
+                              }
+                            </li>
                               <li>
-                                <a href="javascript:void(0);" (click)="edit(item)" class="dropdown-item edit-list"
-                                  data-edit-id="8"><i class="mdi mdi-pencil font-size-16 text-success me-1"></i>
+                                <a  (click)="edit(item)" class="d-flex align-items-center dropdown-item edit-list"
+                                  data-edit-id="8"><i class="mdi mdi-pencil font-size-18  me-2"></i>
                                   Edit</a>
                               </li>
                               <li>
-                                <a href="javascript:void(0);" (click)="openDeleteModel(item.id)"
-                                  class="dropdown-item remove-list" data-remove-id="8"><i
-                                    class="mdi mdi-trash-can font-size-16 text-danger me-1"></i>
+                                <a  (click)="openDeleteModel(item)"
+                                  class="d-flex align-items-center dropdown-item remove-list" data-remove-id="8"><i
+                                    class="mdi mdi-trash-can font-size-18 text-danger me-2"></i>
                                   Delete</a>
                               </li>
                             </ul>
@@ -153,7 +163,11 @@
               [labels]="radialoptions.labels" [colors]="radialoptions.colors" [grid]="radialoptions.grid"
               [plotOptions]="radialoptions.plotOptions" [stroke]="radialoptions.stroke">
             </apx-chart>
-            <p class="text-muted mt-4">48.02 GB (76%) of 64 GB used</p>
+            <p class="text-muted mt-4">
+              {{formatStorageUsage(filesSize?.usedSizeGB,10).usedSizeDisplay}}
+              {{formatStorageUsage(filesSize?.usedSizeGB,10).usedPercentage.toFixed(2)}}% 
+               of 10 GB used
+              </p>
           </div>
 
           <div class="mt-4">
@@ -307,6 +321,7 @@
                 placeholder="Select Group"
                 formControlName="attachmentType" 
                 (change)="changeFileType($event)"
+                [readonly]="editMode"
                 [ngClass]="{'is-invalid': submitted && fileManagerForm.controls.attachmentType.invalid}"
                 required></ng-select>
               <div *ngIf="submitted && fileManagerForm.controls.attachmentType.invalid" class="invalid-feedback">
@@ -328,11 +343,11 @@
               @if(uploadedFiles.length <= 0){ <dropzone class="dropzone" [config]="dropzoneConfig"
                 [message]="'Drop files here or click to upload.'" (addedFile)="onUploadSuccess($event)"
                 class="form-control"
-                 [ngClass]="{'is-invalid': submitted && fileManagerForm.controls.path.invalid}"
+                 [ngClass]="{'is-invalid': submitted && fileManagerForm.controls.fileContent.invalid}"
                 >
                 </dropzone>
-                <div *ngIf="submitted && fileManagerForm.controls.path.invalid" class="invalid-feedback">
-                  <small *ngIf="fileManagerForm.controls.path.errors.required">Please select file.</small>
+                <div *ngIf="submitted && fileManagerForm.controls.fileContent.invalid" class="invalid-feedback">
+                  <small *ngIf="fileManagerForm.controls.fileContent.errors.required">Please select file.</small>
                 </div>
                 }
                 @if(uploadedFiles){
@@ -393,7 +408,7 @@
 
 <!-- removeItemModal -->
 <div bsModal #removeItemModal="bs-modal" class="modal fade" id="removeItemModal" tabindex="-1" aria-hidden="true">
-  <platx-confirm-model [title]="'Are you sure you want to remove this row?'" (confirm)="confirmDelete(deleteId)"
+  <platx-confirm-model [title]="'Are you sure you want to remove this row?'" (confirm)="confirmDelete()"
     (cancel)="removeItemModal.hide()" />
 
 </div>

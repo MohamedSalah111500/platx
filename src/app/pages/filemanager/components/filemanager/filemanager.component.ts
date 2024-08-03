@@ -1,10 +1,5 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import {
-  FormGroup,
-  FormBuilder,
-  Validators,
-  FormControl,
-} from "@angular/forms";
+import { FormGroup, Validators, FormControl } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { ModalDirective } from "ngx-bootstrap/modal";
 import { PageChangedEvent } from "ngx-bootstrap/pagination";
@@ -14,13 +9,21 @@ import { Student, Group } from "src/app/pages/groups/types";
 import { FilemanagerService } from "../../services/filemanager.service";
 import {
   CreateFileForm,
-  CreateFilePayload,
   FileItem,
   GetAllFilesSizeResponse,
+  UpdateFilePayload,
 } from "../../types";
 import { DropzoneConfigInterface } from "ngx-dropzone-wrapper";
 import { ATTACHMENT_NAMES, ATTACHMENTS_TYPES } from "src/app/utiltis/lookups";
-import { convertObjectToArray, getIconClass } from "src/app/utiltis/functions";
+import {
+  calculateTotalSizeInGB,
+  convertObjectToArray,
+  copyToClipboard,
+  downloadFileUseURL,
+  formatStorageUsage,
+  getIconClass,
+} from "src/app/utiltis/functions";
+import { FILE_MANAGER_URLS } from "src/app/utiltis/urls";
 
 @Component({
   selector: "app-filemanager",
@@ -37,10 +40,8 @@ export class FilemanagerComponent implements OnInit {
   endItem: any;
   editMode: boolean = false;
   editItem!: Student;
-  @ViewChild("newContactModal", { static: false })
-  newContactModal?: ModalDirective;
-  @ViewChild("removeItemModal", { static: false })
-  removeItemModal?: ModalDirective;
+  @ViewChild("newContactModal") newContactModal?: ModalDirective;
+  @ViewChild("removeItemModal") removeItemModal?: ModalDirective;
   deleteId: any;
   returnedArray: any;
   loading: boolean = false;
@@ -52,6 +53,9 @@ export class FilemanagerComponent implements OnInit {
   pageSize: number = 10;
 
   getIconClass = getIconClass;
+  formatStorageUsage = formatStorageUsage;
+  copyToClipboard = copyToClipboard;
+
   submitted = false;
   attachmentTypesList = convertObjectToArray(ATTACHMENT_NAMES);
   radialoptions!: any;
@@ -62,12 +66,11 @@ export class FilemanagerComponent implements OnInit {
   uploadedFiles: any[] = [];
   fileManagerForm: FormGroup<CreateFileForm> = new FormGroup<CreateFileForm>({
     name: new FormControl("", [Validators.required]),
-    attachmentType: new FormControl(this.attachmentTypesList[0].value, [
-      Validators.required,
-    ]),
-    path: new FormControl("", []),
+    attachmentType: new FormControl("", [Validators.required]),
+    fileContent: new FormControl(null, []),
     link: new FormControl("", []),
   });
+
   constructor(
     public store: Store,
     public toastr: ToastrService,
@@ -128,39 +131,35 @@ export class FilemanagerComponent implements OnInit {
     this.getAllFilesSizeHandler();
   }
 
+  newContent(model: ModalDirective) {
+    this.editMode = false;
+    this.submitted = false;
+    this.uploadedFiles = [];
+    this.fileManagerForm.reset();
+    model.show();
+  }
   changeFileType(event) {
     if (!event?.value) return;
     if (event.value == 5) {
       this.fileManagerForm.controls.link.setValidators([]);
-      this.fileManagerForm.controls.path.clearValidators();
+      this.fileManagerForm.controls.fileContent.clearValidators();
 
       this.fileManagerForm.controls.link.updateValueAndValidity();
-      this.fileManagerForm.controls.path.updateValueAndValidity();
+      this.fileManagerForm.controls.fileContent.updateValueAndValidity();
     } else {
-      this.fileManagerForm.controls.path.setValidators([]);
+      this.fileManagerForm.controls.fileContent.setValidators([]);
       this.fileManagerForm.controls.link.clearValidators();
 
       this.fileManagerForm.controls.link.updateValueAndValidity();
-      this.fileManagerForm.controls.path.updateValueAndValidity();
+      this.fileManagerForm.controls.fileContent.updateValueAndValidity();
     }
   }
 
   onUploadSuccess(file: any) {
     setTimeout(() => {
       this.uploadedFiles.push(file);
-      this.getBase64(file).then((data) => {
-        this.fileManagerForm.controls.path.setValue(data);
-      });
+      this.fileManagerForm.controls.fileContent.setValue(file);
     }, 100);
-  }
-
-  getBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
   }
 
   removeFile(event: any) {
@@ -184,12 +183,20 @@ export class FilemanagerComponent implements OnInit {
 
   getAllFilesSizeHandler() {
     this.filemanagerService.getAllFilesSize().subscribe(
-      (response) => (this.filesSize = response),
-      (error) => {}
+      (response) => {
+        this.filesSize = response;
+        this.filesSize.usedSizeGB = calculateTotalSizeInGB(response);
+        this.radialoptions.series = [
+          formatStorageUsage(
+            this.filesSize.usedSizeGB,
+            10
+          ).usedPercentage.toFixed(2),
+        ];
+      },
+      () => {}
     );
   }
 
-  // fiter job
   search() {
     if (this.term) {
       this.list = this.returnedArray.filter((data: any) => {
@@ -205,13 +212,20 @@ export class FilemanagerComponent implements OnInit {
     this.page = event.page;
   }
 
-  openDeleteModel(id: any) {
-    this.deleteId = id;
+  copyURLToClipboard(text: string): void {
+    this.copyToClipboard(text)
+      .then(() => this.toastr.success("Text copied to clipboard", "Copied"))
+      .catch((err) =>
+        this.toastr.error("Could not copy text: " + err, "Copied")
+      );
+  }
+  openDeleteModel(item: any) {
+    this.deleteId = item.id;
     this.removeItemModal?.show();
   }
 
-  confirmDelete(id: any) {
-    this.filemanagerService.deleteFile(id).subscribe(() => {
+  confirmDelete() {
+    this.filemanagerService.deleteFile(this.deleteId).subscribe(() => {
       this.toastr.success("deleted successfully", "File");
       this.getAllData(this.page, this.pageSize);
     });
@@ -223,38 +237,47 @@ export class FilemanagerComponent implements OnInit {
     this.submitted = false;
     this.editItem = item;
     this.fileManagerForm.patchValue(item);
-    console.log(item)
+    this.fileManagerForm.controls.attachmentType.setValue(item.attachementType);
+    this.fileManagerForm.updateValueAndValidity();
     this.newContactModal?.show();
+  }
+
+  download(item: FileItem) {
+    downloadFileUseURL(FILE_MANAGER_URLS.GET_DOWNLOAD_FILE(item.id));
   }
 
   create(): void {
     this.submitted = true;
-    console.log(this.fileManagerForm, "payload");
     if (this.fileManagerForm.valid) {
-      const payload: CreateFilePayload = {
-        name: this.fileManagerForm.value.name,
-        attachementType: this.fileManagerForm.value.attachmentType,
-        link: this.fileManagerForm.value.link,
-        path: this.fileManagerForm.value.path,
-      };
-
-      console.log(payload, "payload");
       if (this.editMode) {
-        // payload["id"] = this.fileManagerForm.value.id;
-        // this.filemanagerService
-        //   .updateStudent(this.editItem.id, payload)
-        //   .subscribe((response) => {
-        //     this.toastr.success("Student updated successfully", "Successfully");
-        //     this.fileManagerForm.reset();
-        //     this.newContactModal?.hide();
-        //     this.getAllData(this.page, this.pageSize);
-        //   });
+        let payload: UpdateFilePayload = {
+          id: this.editItem.id,
+          name: this.fileManagerForm.value.name,
+          link: this.fileManagerForm.value.link,
+        };
+
+        this.filemanagerService.updateStudent(payload).subscribe((res) => {
+          this.toastr.success("File updated successfully", "Successfully");
+          this.fileManagerForm.reset();
+          this.newContactModal?.hide();
+          this.getAllData(this.page, this.pageSize);
+        });
       } else {
-        this.filemanagerService.createFile(payload).subscribe((response) => {
+        let fdPayload = new FormData();
+        fdPayload.append("name", this.fileManagerForm.value.name);
+        fdPayload.append(
+          "attachementType",
+          this.fileManagerForm.value.attachmentType
+        );
+        fdPayload.append("link", this.fileManagerForm.value.link);
+        fdPayload.append("fileContent", this.fileManagerForm.value.fileContent);
+
+        this.filemanagerService.createFile(fdPayload).subscribe((res) => {
           this.toastr.success("File created successfully", "Successfully");
           this.fileManagerForm.reset();
           this.newContactModal?.hide();
           this.getAllData(this.page, this.pageSize);
+          this.getAllFilesSizeHandler();
         });
       }
     }
