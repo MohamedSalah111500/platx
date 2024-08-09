@@ -34,6 +34,7 @@ export class FilemanagerComponent implements OnInit {
   // bread crumb items
   breadCrumbItems: Array<{}>;
   term: any;
+
   // Table data
   total: Observable<number>;
   files: File[] = [];
@@ -52,10 +53,6 @@ export class FilemanagerComponent implements OnInit {
   page: number = 1;
   pageSize: number = 10;
 
-  getIconClass = getIconClass;
-  formatStorageUsage = formatStorageUsage;
-  copyToClipboard = copyToClipboard;
-
   submitted = false;
   attachmentTypesList = convertObjectToArray(ATTACHMENT_NAMES);
   radialoptions!: any;
@@ -64,6 +61,7 @@ export class FilemanagerComponent implements OnInit {
     previewsContainer: false,
   };
   uploadedFiles: any[] = [];
+
   fileManagerForm: FormGroup<CreateFileForm> = new FormGroup<CreateFileForm>({
     name: new FormControl("", [Validators.required]),
     attachmentType: new FormControl("", [Validators.required]),
@@ -76,6 +74,11 @@ export class FilemanagerComponent implements OnInit {
     public toastr: ToastrService,
     private filemanagerService: FilemanagerService
   ) {}
+
+
+  getIconClass = getIconClass;
+  formatStorageUsage = formatStorageUsage;
+  copyToClipboard = copyToClipboard;
 
   ngOnInit() {
     this.breadCrumbItems = [
@@ -219,6 +222,7 @@ export class FilemanagerComponent implements OnInit {
         this.toastr.error("Could not copy text: " + err, "Copied")
       );
   }
+
   openDeleteModel(item: any) {
     this.deleteId = item.id;
     this.removeItemModal?.show();

@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild, TemplateRef, ViewEncapsulation } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  TemplateRef,
+  ViewEncapsulation,
+} from "@angular/core";
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 import interactionPlugin from "@fullcalendar/interaction";
 import { CalendarOptions, EventClickArg, EventApi } from "@fullcalendar/core";
@@ -6,11 +12,15 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
-import { category, calendarEvents, createEventId } from "./data";
-import Swal from "sweetalert2";
+import { category, calendarEvents } from "../../data";
+import { EventService } from "../../services/event.service";
+import { CalendarViewType, EventsLookups } from "../../types";
+import { formatDateCustomForCalender } from "src/app/utiltis/functions";
+import { GroupsService } from "src/app/pages/groups/services/groupsService.service";
+import { ManageService } from "src/app/pages/manage/services/manageService.service";
 
 @Component({
-  selector: "app-calendar",
+  selector: "platx-calendar",
   templateUrl: "./calendar.component.html",
   styleUrls: ["./calendar.component.scss"],
   encapsulation: ViewEncapsulation.None,
@@ -20,16 +30,30 @@ export class CalendarComponent implements OnInit {
 
   breadCrumbItems: Array<{}>;
   @ViewChild("modalShow") modalShow: TemplateRef<any>;
-  @ViewChild("editmodalShow") editmodalShow: TemplateRef<any>;
+  @ViewChild("editModalShow") editModalShow: TemplateRef<any>;
 
   category: any[];
   newEventDate: any;
   editEvent: any;
   calendarEvents: any[];
-
   calendarOptions: CalendarOptions;
-
   currentEvents: EventApi[] = [];
+
+  calendarViewType: CalendarViewType = CalendarViewType.Month;
+  calendarViewStartDate: string;
+
+  lookups: EventsLookups = {
+    groups: [],
+    students: [],
+    staff: [],
+  };
+
+  constructor(
+    private modalService: BsModalService,
+    private eventService: EventService,
+    private groupsService: GroupsService,
+    private manageService: ManageService
+  ) {}
 
   ngOnInit(): void {
     this.breadCrumbItems = [
@@ -38,13 +62,14 @@ export class CalendarComponent implements OnInit {
     ];
     this._fetchData();
     this.initializeCalendarOptions();
+    this.getAllLookups();
   }
 
   initializeCalendarOptions() {
     const today = new Date();
     const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months start at 0!
-    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, "0"); // Months start at 0!
+    const dd = String(today.getDate()).padStart(2, "0");
     const todayStr = `${yyyy}-${mm}-${dd}`;
 
     this.calendarOptions = {
@@ -65,6 +90,7 @@ export class CalendarComponent implements OnInit {
       dateClick: this.openModal.bind(this),
       eventClick: this.handleformEdit.bind(this),
       eventsSet: this.handleEvents.bind(this),
+      datesSet: this.handleViewChange.bind(this),
       eventTimeFormat: {
         hour: "2-digit",
         minute: "2-digit",
@@ -72,21 +98,67 @@ export class CalendarComponent implements OnInit {
         hour12: true,
       },
       validRange: {
-      //  start: todayStr, // Disable all dates before today
+        //  start: todayStr, // Disable all dates before today
       },
     };
   }
 
+  getAllEventsDetailsHandler(date: string, viewType: number) {
+    this.eventService.getAllEventsDetails(date, viewType).subscribe(
+      (res) => {
+        this.calendarOptions.events = res;
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+  getAllLookups() {
+    this.groupsService
+      .getAllGroups(1, 100000)
+      .subscribe((res) => (this.lookups.groups = res.items));
+
+    this.manageService
+      .getAllStaff(1, 100000)
+      .subscribe((res) => (this.lookups.staff = res.items));
+
+    this.manageService
+      .getAllStudents(1, 100000)
+      .subscribe((res) => (this.lookups.students = res.items));
+  }
+
+  handleViewChange(arg: any) {
+    this.calendarViewStartDate = formatDateCustomForCalender(arg.startStr);
+    switch (arg.view.type) {
+      case "dayGridMonth":
+        this.calendarViewType = CalendarViewType.Month;
+        break;
+      case "dayGridWeek":
+        this.calendarViewType = CalendarViewType.Week;
+        break;
+      case "dayGridDay":
+        this.calendarViewType = CalendarViewType.Month;
+        break;
+      default:
+        this.calendarViewType = CalendarViewType.Day;
+        break;
+    }
+
+    this.getAllEventsDetailsHandler(
+      this.calendarViewStartDate,
+      this.calendarViewType
+    );
+  }
+
   handleformEdit(clickInfo: EventClickArg) {
+    
     this.editEvent = clickInfo.event;
-    this.modalRef = this.modalService.show(this.editmodalShow);
+    this.modalRef = this.modalService.show(this.editModalShow);
   }
 
   handleEvents(events: EventApi[]) {
     this.currentEvents = events;
   }
-
-  constructor(private modalService: BsModalService) {}
 
   openModal(event?: any) {
     this.newEventDate = event;
@@ -101,8 +173,10 @@ export class CalendarComponent implements OnInit {
   dropList(event: CdkDragDrop<string[]>): void {
     moveItemInArray(this.listItems, event.previousIndex, event.currentIndex);
   }
+
   listItems = ["Event 1", "Event 2", "Event 3"];
   handleDrop(event: any): void {
+    console.log(event);
     this.calendarEvents.push({
       title: event.item.data,
       date: event.dateStr,

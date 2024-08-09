@@ -21,17 +21,20 @@
   <app-create-edit-event
     [modalRef]="modalRef"
     [newEventDate]="newEventDate"
+    [editEvent]="editEvent"
     [category]="category"
+    [lookups]="lookups"
     (eventSaved)="handleEvents(currentEvents)"
   ></app-create-edit-event>
 </ng-template>
 
-<ng-template #editmodalShow>
+<ng-template #editModalShow>
   <app-create-edit-event
     [modalRef]="modalRef"
     [editEvent]="editEvent"
     [category]="category"
     (eventSaved)="handleEvents(currentEvents)"
+    
   ></app-create-edit-event>
 </ng-template>
 

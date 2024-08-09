@@ -1,4 +1,4 @@
-<div class="modal-header">
+<div class="modal-header modal-lg">
   <h5 class="modal-title">
     {{ editEvent ? "Edit Event" : "Create Event" }}
   </h5>
@@ -16,7 +16,7 @@
   }
 </div>
 <div class="modal-body">
-  <form [formGroup]="formData">
+  <form [formGroup]="createEventForm">
     <div class="row">
       <div class="mb-3">
         <label for="title" class="form-label"
@@ -25,48 +25,37 @@
         </label>
         <input
           type="text"
-          id="title"
+          id="name"
           class="form-control"
-          formControlName="title"
+          formControlName="name"
         />
         <div
           *ngIf="
-            formData.controls.title.dirty && formData.controls.title.errors
+            createEventForm.controls.name.dirty && createEventForm.controls.name.errors
           "
           class="text-danger"
         >
           Event name must be between 3 and 70 characters.
         </div>
       </div>
-      <!-- <div class="mb-3">
-        <label for="category" class="form-label"
-          >Category
-          <span class="text-danger">*</span>
-        </label>
-        <ng-select
-          [items]="category"
-          bindLabel="name"
-          bindValue="value"
-          formControlName="category"
-        ></ng-select>
-      </div> -->
+    
       <div class="col-4">
         <div class="mb-3">
-          <label for="groupIds" class="form-label"
+          <label for="groups" class="form-label"
             >Groups
             <span class="text-danger">*</span>
           </label>
           <ng-select
-            [items]="groups"
+            [items]="lookups?.groups"
             bindLabel="name"
             bindValue="id"
-            formControlName="groupIds"
+            formControlName="groups"
             multiple="true"
           ></ng-select>
           <div
             *ngIf="
-              formData.controls.groupIds.dirty &&
-              formData.controls.groupIds.errors
+              createEventForm.controls.groups.dirty &&
+              createEventForm.controls.groups.errors
             "
             class="text-danger"
           >
@@ -76,103 +65,110 @@
       </div>
       <div class="col-4">
         <div class="mb-3">
-          <label for="studentIds" class="form-label"
+          <label for="students" class="form-label"
             >Students
             <span class="text-danger">*</span>
           </label>
           <ng-select
-            [items]="students"
-            bindLabel="name"
+          [items]="lookups?.students"
+          bindLabel="firstName"
             bindValue="id"
-            formControlName="studentIds"
+            formControlName="students"
             multiple="true"
           ></ng-select>
         </div>
       </div>
       <div class="col-4">
         <div class="mb-3">
-          <label for="staffIds" class="form-label"
+          <label for="staffs" class="form-label"
             >Staff
             <span class="text-danger">*</span>
           </label>
           <ng-select
-            [items]="staff"
-            bindLabel="name"
+          [items]="lookups?.staff"
+            bindLabel="firstName"
             bindValue="id"
-            formControlName="staffIds"
+            formControlName="staffs"
             multiple="true"
           ></ng-select>
         </div>
       </div>
       <div class="mb-3">
-        <label for="repeat" class="form-label"
+        <label for="frequency" class="form-label"
           >Frequency
           <span class="text-danger">*</span>
         </label>
         <ng-select
-          [items]="repeatFrequency"
+          [items]="frequencyFrequencyLookups"
           bindLabel="name"
           bindValue="id"
-          formControlName="repeat"
-          (change)="onRepeatFrequencyChange($event)"
+          formControlName="frequency"
+          (change)="onFrequencyFrequencyChange($event)"
         ></ng-select>
       </div>
       <div class="mb-3">
-        <label for="WeekDays" class="form-label"
-          >Week Days
-          <span class="text-danger">*</span>
-        </label>
-
+       
+      @if(createEventForm.controls.frequency.value == 1){
+        <label for="onceDate" class="form-label"> Event Date (Select Single Day)
+         <span class="text-danger">*</span>
+       </label>
         <input
-          *ngIf="formData.controls.repeat.value == 0"
           class="form-control"
           #datepickerYMD="bsDatepicker"
           bsDatepicker
-          formControlName="WeekDays"
-          id="WeekDays"
+          formControlName="onceDate"
+          id="onceDate"
           [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
           [minDate]="minDate"
         />
+      }
+
+      @if(createEventForm.controls.frequency.value == 2){
+        <label for="weeklyFrequencyDays" class="form-label">Event Weekly Days (Select One or multi Days)
+          <span class="text-danger">*</span>
+        </label>
         <ng-select
-          *ngIf="formData.controls.repeat.value == 1"
-          [items]="weekdays"
+          [items]="weeklyFrequencyDays"
           bindLabel="name"
           bindValue="id"
-          id="WeekDays"
-          formControlName="WeekDays"
+          id="weeklyFrequencyDays"
+          formControlName="weeklyFrequencyDays"
           multiple="true"
         ></ng-select>
+      }
+        @if(createEventForm.controls.frequency.value == 3){
+          <label for="weeklyFrequencyDays" class="form-label">Event Month Day (Select One Day)
+            <span class="text-danger">*</span>
+          </label>
+
         <ng-select
-          *ngIf="formData.controls.repeat.value == 2"
           [items]="daysOfMonth"
           bindLabel="name"
           bindValue="id"
-          id="WeekDays"
-          formControlName="WeekDays"
+          id="monthlyDay"
+          formControlName="monthlyDay"
         ></ng-select>
+      }
       </div>
 
-      <div *ngIf="formData.controls.repeat.value !== 0" class="mb-3">
-        <label for="dateTo" class="form-label"
-          >End Date
-          <span class="text-danger" *ngIf="formData.controls.repeat.value !== 0"
-            >*</span
-          >
+      <div *ngIf="createEventForm.controls.endDate.value !== 0" class="mb-3">
+        <label for="endDate" class="form-label">End Date
+          <span class="text-danger" *ngIf="createEventForm.controls.endDate.value !== 0">*</span>
         </label>
 
         <input
           class="form-control"
           #datepickerYMD="bsDatepicker"
           bsDatepicker
-          formControlName="dateTo"
-          id="dateTo"
+          formControlName="endDate"
+          id="endDate"
           [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
-          [maxDate]="minDate"
+          [minDate]="minDate"
         />
         <div
           *ngIf="
-            formData.controls.dateTo.dirty &&
-            formData.controls.dateTo.errors?.max
+            createEventForm.controls.endDate.dirty &&
+            createEventForm.controls.endDate.errors?.max
           "
           class="text-danger"
         >
@@ -180,34 +176,34 @@
         </div>
       </div>
       <div class="mb-3">
-        <label for="eventStartTime" class="form-label"
+        <label for="startTime" class="form-label"
           >Event Start Time
           <span class="text-danger">*</span>
         </label>
 
         <timepicker
-          id="eventStartTime"
-          [formControlName]="'eventStartTime'"
+          id="startTime"
+          [formControlName]="'startTime'"
         ></timepicker>
       </div>
       <div class="mb-3">
-        <label for="eventDuration" class="form-label"
+        <label for="duration" class="form-label"
           >Event Duration (hours)
           <span class="text-danger">*</span>
         </label>
         <input
           type="number"
-          id="eventDuration"
+          id="duration"
           class="form-control"
-          formControlName="eventDuration"
+          formControlName="duration"
         />
         <!-- step="0.15"
           min="0.15"
           max="24" -->
         <div
           *ngIf="
-            formData.controls.eventDuration.dirty &&
-            formData.controls.eventDuration.errors?.max
+            createEventForm.controls.duration.dirty &&
+            createEventForm.controls.duration.errors?.max
           "
           class="text-danger"
         >
@@ -223,12 +219,27 @@
           rows="3"
         ></textarea>
         <div
-          *ngIf="formData.controls.description.errors?.maxlength"
+          *ngIf="createEventForm.controls.description.errors?.maxlength"
           class="text-danger"
         >
           Description cannot exceed 1000 characters.
         </div>
       </div>
+
+      <div class="mb-3">
+        <span class="form-label me-3">Is Online Meeting</span>
+        <ui-switch
+          color="#556ee6"
+          id="isOnline"
+          uncheckedLabel="off"
+          checkedLabel="on"
+          size="small"
+          class="me-1"
+          formControlName="isOnline"
+        ></ui-switch>
+      </div>
+
+
       <div class="mb-3">
         <label for="locationLink" class="form-label">Location Link</label>
         <input
@@ -238,59 +249,59 @@
           formControlName="locationLink"
         />
         <div
-          *ngIf="formData.controls.locationLink.errors?.pattern"
+          *ngIf="createEventForm.controls.locationLink.errors?.pattern"
           class="text-danger"
         >
           Please enter a valid URL.
         </div>
       </div>
       <div class="mb-3">
-        <label for="Onlinemeetinglink" class="form-label"
+        <label for="onlineMeetingLink" class="form-label"
           >Online Meeting Link</label
         >
         <input
           type="url"
-          id="Onlinemeetinglink"
+          id="onlineMeetingLink"
           class="form-control"
-          formControlName="Onlinemeetinglink"
+          formControlName="onlineMeetingLink"
         />
         <div
-          *ngIf="formData.controls.Onlinemeetinglink.errors?.pattern"
+          *ngIf="createEventForm.controls.onlineMeetingLink.errors?.pattern"
           class="text-danger"
         >
           Please enter a valid URL.
         </div>
       </div>
-      <!-- hasReminder: eventData.hasReminder,
+      <!-- isReminder: eventData.hasReminder,
       reminderTime: eventData.reminderTime,
-      extraNoteintheReminder: eventData.extraNoteintheReminder, -->
+      reminderDescription: eventData.reminderDescription, -->
 
       <div class="mb-3">
         <span class="form-label me-3">Has Reminder</span>
         <ui-switch
           color="#556ee6"
-          id="hasReminder"
+          id="isReminder"
           uncheckedLabel="off"
           checkedLabel="on"
           size="small"
           class="me-1"
-          formControlName="hasReminder"
+          formControlName="isReminder"
         ></ui-switch>
       </div>
-      @if (formData.controls.hasReminder.value== true) {
 
+      @if (createEventForm.controls.isReminder.value== true) {
       <div class="mb-3">
-        <label for="extraNoteintheReminder" class="form-label"
+        <label for="reminderDescription" class="form-label"
           >Extra Note in the Reminder</label
         >
         <textarea
-          id="extraNoteintheReminder"
+          id="reminderDescription"
           class="form-control"
-          formControlName="extraNoteintheReminder"
+          formControlName="reminderDescription"
           rows="3"
         ></textarea>
         <div
-          *ngIf="formData.controls.extraNoteintheReminder.errors?.maxlength"
+          *ngIf="createEventForm.controls.reminderDescription.errors?.maxlength"
           class="text-danger"
         >
           Extra Note cannot exceed 1000 characters.
@@ -316,7 +327,7 @@
             type="button"
             class="btn btn-primary"
             (click)="saveEvent()"
-            [disabled]="formData.invalid"
+           
           >
             <!--  -->
             {{ editEvent ? "Save Changes" : "Create Event" }}

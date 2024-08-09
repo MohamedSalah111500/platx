@@ -114,3 +114,49 @@ export function formatStorageUsage(
 export function copyToClipboard(text: string): Promise<void> {
   return navigator.clipboard.writeText(text);
 }
+
+export function formatDateCustomForCalender(dateString: string): string {
+  // Parse the date string to a Date object
+  const date = new Date(dateString);
+
+  // Format the date as "dd-MM-yyyy"
+  const formattedDate = date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+  const [month, day, year] = formattedDate.split("/");
+  return `${day}-${month}-${year}`;
+}
+
+export function convertBackendEventToFullCalendarEvent(backendEvent: any): any {
+  const { id, name, date, startTime, duration, status, statusText } =
+    backendEvent;
+
+  // Construct the start datetime from date and startTime
+  const startDateTime = new Date(`${date.split("T")[0]}T${startTime}`);
+
+  // Calculate the end datetime by adding the duration (in hours) to the start time
+  const endDateTime = new Date(
+    startDateTime.getTime() + duration * 60 * 60 * 1000
+  );
+
+  // Return the FullCalendar event object
+  return {
+    id: id.toString(),
+    title: name,
+    start: startDateTime,
+    end: endDateTime,
+    description: backendEvent.description, // Optionally include more details
+  };
+}
+
+export function getKeysFromEnum(enumObj: any): string[] {
+  return Object.keys(enumObj).filter((key) => isNaN(Number(key)));
+}
+
+export function getHourAndMinuteFromDate(date: Date): string {
+  const hour = date.getHours().toString().padStart(2, '0');
+  const minute = date.getMinutes().toString().padStart(2, '0');
+  return `${hour}:${minute}`;
+}

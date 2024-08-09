@@ -26,9 +26,9 @@
             <!-- end col-->
           </div>
           <!-- end row -->
-          @if(list && list.length < 1){ <platx-empty-state type="emptyRecords"></platx-empty-state>
+          @if(list && list.length < 1){ 
+            <platx-empty-state type="emptyRecords"></platx-empty-state>
             }@else{
-
             <div class="table-responsive">
               <table class="table align-middle table-nowrap table-hover dt-responsive nowrap w-100" id="userList-table">
                 <thead class="table-light">
@@ -46,55 +46,32 @@
                   <tr>
                     <td>{{ i + 1 + (page - 1) * pageSize }}</td>
                     <td>
-                      @if(item.attachementType == 1){
+                      
                       <div class="avatar-xs align-self-center me-2">
-                        <div class="avatar-title rounded bg-transparent text-primary font-size-20">
-                          <i class="mdi mdi-file-document"></i>
+                      
+                        <div class="avatar-title rounded bg-transparent ">
+                        @if(item.attachementType == 1){
+                          <i class="mdi mdi-file-document text-primary font-size-20"></i>
+                        }
+                        @if(item.attachementType == 2){
+                          <i class="mdi mdi-file-pdf text-danger font-size-20"></i>
+                        }
+                        @if(item.attachementType == 3){
+                          <i class="mdi mdi-image text-success font-size-20"></i>
+                        }
+                        @if(item.attachementType == 4){
+                          <i class="mdi mdi-play-circle-outline text-danger font-size-20"></i>
+                        }
+                        @if(item.attachementType == 5){
+                          <i class="mdi mdi-link text-info font-size-20"></i>
+                        }
                         </div>
                       </div>
-                      }
-
-                      @if(item.attachementType == 2){
-                      <div class="avatar-xs align-self-center me-2">
-                        <div class="avatar-title rounded bg-transparent text-danger font-size-20">
-                          <i class="mdi mdi-file-pdf"></i>
-                        </div>
-                      </div>
-                      }
-
-                      @if(item.attachementType == 3){
-                      <div class="avatar-xs align-self-center me-2">
-                        <div class="avatar-title rounded bg-transparent text-success font-size-20">
-                          <i class="mdi mdi-image"></i>
-                        </div>
-                      </div>
-                      }
-
-                      @if(item.attachementType == 4){
-                      <div>
-                        <div class="avatar-xs align-self-center me-2">
-                          <div class="avatar-title rounded bg-transparent text-danger font-size-20">
-                            <i class="mdi mdi-play-circle-outline"></i>
-                          </div>
-                        </div>
-                      </div>
-                      }
-
-                      @if(item.attachementType == 5){
-                      <div>
-                        <div class="avatar-xs align-self-center me-2">
-                          <div class="avatar-title rounded bg-transparent text-info font-size-20">
-                            <i class="mdi mdi-link"></i>
-                          </div>
-                        </div>
-                      </div>
-                      }
+                     
                     </td>
-
                     <td>{{ item.name }}</td>
                     <td>{{ item.creationTime | date : "medium"}}</td>
                     <td>{{ item.size ? item.size : '1.0 KB' }}</td>
-
                     <td>
                       <ul class="list-inline font-size-20 contact-links mb-0">
                         <li class="list-inline-item">
