@@ -13,7 +13,7 @@ import {
   convertBackendEventToFullCalendarEvent,
   pagination,
 } from "src/app/utiltis/functions";
-import { ICreateEventPayload, IEvent } from "../types";
+import {  ICreateUpdateEventPayload, IEvent, IGetEventResponse } from "../types";
 import {
   IGeneralErrorMessageResponse,
   IGeneralSuccessMessageResponse,
@@ -45,15 +45,40 @@ export class EventService {
     });
   }
 
+  getEventsDetails(id: number): Observable<IGetEventResponse> {
+    return new Observable((observer: Observer<IGetEventResponse>) => {
+      this.http.get(EVENT_DETAILS_URLS.GET_EVENT(id)).subscribe(
+        (res: IGetEventResponse) => observer.next(res),
+        (error) => observer.error(error)
+      );
+    });
+  }
+
   postCreateEvent(
-    payload: ICreateEventPayload
+    payload: ICreateUpdateEventPayload
   ): Observable<IGeneralSuccessMessageResponse> {
     return new Observable(
       (observer: Observer<IGeneralSuccessMessageResponse>) => {
         this.http.post(EVENT_URLS.CREATE, payload).subscribe(
           (res: IGeneralSuccessMessageResponse) => {
             observer.next(res);
-            this.toastr.success(res.message, "Event");
+          },
+          (error) => {
+            observer.error(error);
+          }
+        );
+      }
+    );
+  }
+
+  putUpdateEvent(
+    payload: ICreateUpdateEventPayload
+  ): Observable<IGeneralSuccessMessageResponse> {
+    return new Observable(
+      (observer: Observer<IGeneralSuccessMessageResponse>) => {
+        this.http.put(EVENT_DETAILS_URLS.UPDATE, payload).subscribe(
+          (res: IGeneralSuccessMessageResponse) => {
+            observer.next(res);
           },
           (error) => {
             observer.error(error);
@@ -89,16 +114,18 @@ export class EventService {
   //   );
   // }
 
-  // deleteFile(id: string): Observable<void> {
-  //   return new Observable((observer: Observer<void>) => {
-  //     this.http.delete<void>(FILE_MANAGER_URLS.DELETE(id)).subscribe(
-  //       () => {
-  //         observer.next();
-  //       },
-  //       (error) => {
-  //         observer.error(error);
-  //       }
-  //     );
-  //   });
-  // }
+  deleteEvent(mainEventId: number, eventDetailsId: number): Observable<void> {
+    return new Observable((observer: Observer<void>) => {
+      this.http
+        .delete<void>(EVENT_DETAILS_URLS.DELETE(mainEventId, eventDetailsId))
+        .subscribe(
+          () => {
+            observer.next();
+          },
+          (error) => {
+            observer.error(error);
+          }
+        );
+    });
+  }
 }

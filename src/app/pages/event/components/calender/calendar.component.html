@@ -8,7 +8,7 @@
         <div class="card-body">
           <div class="app-calendar">
             <!-- calendar -->
-            <full-calendar [options]="calendarOptions" cdkDropList (cdkDropListDropped)="handleDrop($event)"></full-calendar>
+            <full-calendar [options]="calendarOptions" cdkDropList></full-calendar>
           </div>
         </div>
       </div>
@@ -20,21 +20,12 @@
 <ng-template #modalShow>
   <app-create-edit-event
     [modalRef]="modalRef"
-    [newEventDate]="newEventDate"
     [editEvent]="editEvent"
+    [editMode]="editMode"
     [category]="category"
     [lookups]="lookups"
-    (eventSaved)="handleEvents(currentEvents)"
+    (eventAction)="eventAction(currentEvents)"
   ></app-create-edit-event>
 </ng-template>
 
-<ng-template #editModalShow>
-  <app-create-edit-event
-    [modalRef]="modalRef"
-    [editEvent]="editEvent"
-    [category]="category"
-    (eventSaved)="handleEvents(currentEvents)"
-    
-  ></app-create-edit-event>
-</ng-template>
 

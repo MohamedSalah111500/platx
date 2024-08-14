@@ -12,7 +12,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
-import { category, calendarEvents } from "../../data";
+import { category } from "../../data";
 import { EventService } from "../../services/event.service";
 import { CalendarViewType, EventsLookups } from "../../types";
 import { formatDateCustomForCalender } from "src/app/utiltis/functions";
@@ -26,22 +26,17 @@ import { ManageService } from "src/app/pages/manage/services/manageService.servi
   encapsulation: ViewEncapsulation.None,
 })
 export class CalendarComponent implements OnInit {
-  modalRef?: BsModalRef;
-
-  breadCrumbItems: Array<{}>;
   @ViewChild("modalShow") modalShow: TemplateRef<any>;
-  @ViewChild("editModalShow") editModalShow: TemplateRef<any>;
-
+  modalRef?: BsModalRef;
+  breadCrumbItems: Array<{}>;
   category: any[];
-  newEventDate: any;
   editEvent: any;
   calendarEvents: any[];
   calendarOptions: CalendarOptions;
   currentEvents: EventApi[] = [];
-
   calendarViewType: CalendarViewType = CalendarViewType.Month;
   calendarViewStartDate: string;
-
+  editMode: boolean = false;
   lookups: EventsLookups = {
     groups: [],
     students: [],
@@ -88,14 +83,13 @@ export class CalendarComponent implements OnInit {
       selectMirror: true,
       dayMaxEvents: true,
       dateClick: this.openModal.bind(this),
-      eventClick: this.handleformEdit.bind(this),
-      eventsSet: this.handleEvents.bind(this),
+      eventClick: this.openModal.bind(this),
       datesSet: this.handleViewChange.bind(this),
       eventTimeFormat: {
         hour: "2-digit",
         minute: "2-digit",
-        meridiem: false,
-        hour12: true,
+        meridiem: true,
+        hour12: false,
       },
       validRange: {
         //  start: todayStr, // Disable all dates before today
@@ -137,7 +131,7 @@ export class CalendarComponent implements OnInit {
         this.calendarViewType = CalendarViewType.Week;
         break;
       case "dayGridDay":
-        this.calendarViewType = CalendarViewType.Month;
+        this.calendarViewType = CalendarViewType.Day;
         break;
       default:
         this.calendarViewType = CalendarViewType.Day;
@@ -149,37 +143,24 @@ export class CalendarComponent implements OnInit {
       this.calendarViewType
     );
   }
-
-  handleformEdit(clickInfo: EventClickArg) {
-    
-    this.editEvent = clickInfo.event;
-    this.modalRef = this.modalService.show(this.editModalShow);
+  eventAction(actionName: string) {
+    this.modalService.hide();
+    this.getAllEventsDetailsHandler(
+      this.calendarViewStartDate,
+      this.calendarViewType
+    );
   }
 
-  handleEvents(events: EventApi[]) {
-    this.currentEvents = events;
-  }
-
-  openModal(event?: any) {
-    this.newEventDate = event;
-    this.modalRef = this.modalService.show(this.modalShow);
+  openModal(clickInfo?: any) {
+    clickInfo?.el ? (this.editMode = true) : (this.editMode = false);
+    console.log(clickInfo);
+    this.editEvent = clickInfo;
+    this.modalRef = this.modalService.show(this.modalShow, {
+      class: "modal-lg",
+    });
   }
 
   private _fetchData() {
     this.category = category;
-    this.calendarEvents = calendarEvents;
-  }
-
-  dropList(event: CdkDragDrop<string[]>): void {
-    moveItemInArray(this.listItems, event.previousIndex, event.currentIndex);
-  }
-
-  listItems = ["Event 1", "Event 2", "Event 3"];
-  handleDrop(event: any): void {
-    console.log(event);
-    this.calendarEvents.push({
-      title: event.item.data,
-      date: event.dateStr,
-    });
   }
 }

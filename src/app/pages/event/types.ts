@@ -1,5 +1,5 @@
 import { Group } from "../groups/types";
-import { Staff,Student } from "../manage/types";
+import { Staff, Student } from "../manage/types";
 
 // Event Data
 export interface Event {
@@ -26,19 +26,64 @@ export interface IEvent {
   groupCount: number;
   studentCount: number;
   staffCount: number;
+  onceDate?:number[];
+  monthlyDay?:number[];
   mainEventId: number;
+  weeklyFrequencyDays?: number[];
+
+
 }
 
-export interface ICreateEventPayload {
+export interface IGetEventResponse {
+  id: number;
+  name: string;
+  description: string;
+  locationLink: string;
+  startTime: string;
+  duration: number;
+  date: string;
+  endDate: string;
+  oldDate: null;
+  onlineMeetingLink: string;
+  status: number;
+  statusText: string;
+  frequencyText: string;
+  onceDate:number[];
+  isReminder: boolean;
+  isOnline: boolean;
+  reminderDescription: string;
+  groupCount: number;
+  studentCount: number;
+  staffCount: number;
+  groups: EventGroup[];
+  students: EventStudent[];
+  staffs: EventStudent[];
+  mainEventId: number;
+  weeklyFrequencyDays?: number[];
+}
+
+interface EventStudent {
+  id: number;
+  fullName: string;
+}
+
+interface EventGroup {
+  id: number;
+  name: string;
+}
+
+export interface ICreateUpdateEventPayload {
+  id?:number;
   name: string;
   description: string;
   locationLink: string;
   frequency: number;
-  onceDate: null;
-  monthlyDay: null;
+  onceDate: number[];
+  monthlyDay: number[];
   startTime: string;
   duration: number;
   startDate: string;
+  date?: string;
   endDate: string;
   onlineMeetingLink: string;
   isOnline: boolean;
@@ -49,6 +94,8 @@ export interface ICreateEventPayload {
   students: number[];
   staffs: number[];
 }
+
+
 export enum EventFrequencyType {
   Once = 1,
   Weekly,

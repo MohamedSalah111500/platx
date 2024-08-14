@@ -98,9 +98,15 @@ export const EVENT_DETAILS_URLS = {
       EVENT_DETAILS_BASE
     )}?date=${date}&viewType=${viewType}`,
 
-  // CREATE: `${environment.apiURL.concat(FILE_MANAGER_BASE)}`,
-  // GET_SIZE: `${environment.apiURL.concat(FILE_MANAGER_BASE)}/GetAttachementsSize`,
-  // UPDATE: `${environment.apiURL.concat(FILE_MANAGER_BASE)}`,
-  // GET_DOWNLOAD_FILE: (id: number) =>`${environment.apiURL.concat(FILE_MANAGER_BASE)}/DownloadFile/${id}`,
-  // DELETE: (id: string) =>`${environment.apiURL.concat(FILE_MANAGER_BASE)}/${id}`,
+  GET_EVENT: (id: number) =>
+    `${environment.apiURL.concat(EVENT_DETAILS_BASE)}/${id}`,
+  DELETE: (mainEventId: number, eventDetailsId: number) =>
+    `${environment.apiURL.concat(
+      EVENT_DETAILS_BASE
+    )}/${mainEventId}/${eventDetailsId}`,
+  UPDATE: `${environment.apiURL.concat(EVENT_DETAILS_BASE)}`,
+
+  // CREATE: `${environment.apiURL.concat(EVENT_DETAILS_BASE)}`,
+  // GET_SIZE: `${environment.apiURL.concat(EVENT_DETAILS_BASE)}/GetAttachementsSize`,
+  // GET_DOWNLOAD_FILE: (id: number) =>`${environment.apiURL.concat(EVENT_DETAILS_BASE)}/DownloadFile/${id}`,
 };

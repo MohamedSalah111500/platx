@@ -1,4 +1,11 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  ViewChild,
+} from "@angular/core";
 import {
   UntypedFormBuilder,
   Validators,
@@ -6,17 +13,25 @@ import {
   FormControl,
   FormGroup,
 } from "@angular/forms";
-import { BsModalRef } from "ngx-bootstrap/modal";
+import { BsModalRef, ModalDirective } from "ngx-bootstrap/modal";
 import Swal from "sweetalert2";
 import { CreateEventForm } from "./types";
 import { createEventId } from "../../data";
-import { getHourAndMinuteFromDate, getKeysFromEnum } from "src/app/utiltis/functions";
+import {
+  generateDaysOfMonth,
+  getHourAndMinuteFromDate,
+  getKeysFromEnum,
+} from "src/app/utiltis/functions";
 import {
   EventFrequencyType,
   EventsLookups,
-  ICreateEventPayload,
+  ICreateUpdateEventPayload,
+  IEvent,
+  IGetEventResponse,
 } from "../../types";
 import { EventService } from "../../services/event.service";
+import { mapEvent } from "../../Dto";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: "app-create-edit-event",
@@ -25,15 +40,20 @@ import { EventService } from "../../services/event.service";
 })
 export class CreateEditEventComponent implements OnInit {
   @Input() modalRef?: BsModalRef;
-  @Input() newEventDate: any;
   @Input() editEvent: any;
   @Input() category: any[];
   @Input() lookups: EventsLookups;
+  @Input() editMode: boolean = false;
+  disableFormView: boolean = false;
 
-  eventFrequencyTypes = EventFrequencyType;
+  @ViewChild("removeItemModal", { static: false })
+  removeItemModal?: ModalDirective;
+  @Output() eventAction = new EventEmitter<string>();
 
+  targetEvent!: IEvent;
   getKeysFromEnum = getKeysFromEnum;
-
+  daysOfMonth = generateDaysOfMonth();
+  eventFrequencyTypes = EventFrequencyType;
   frequencyFrequencyLookups = [
     {
       id: EventFrequencyType.Once,
@@ -49,21 +69,14 @@ export class CreateEditEventComponent implements OnInit {
     },
   ];
   weeklyFrequencyDays = [
-    { id: 0, name: "Saturday" },
-    { id: 1, name: "Sunday" },
-    { id: 2, name: "Monday" },
-    { id: 3, name: "Tuesday" },
-    { id: 4, name: "Wednesday" },
-    { id: 5, name: "Thursday" },
-    { id: 6, name: "Friday" },
+    { id: 6, name: "Saturday" },
+    { id: 0, name: "Sunday" },
+    { id: 1, name: "Monday" },
+    { id: 2, name: "Tuesday" },
+    { id: 3, name: "Wednesday" },
+    { id: 4, name: "Thursday" },
+    { id: 5, name: "Friday" },
   ];
-
-  daysOfMonth = Array.from({ length: 31 }, (_, i) => ({
-    id: i + 1,
-    name: (i + 1).toString(),
-  }));
-
-  @Output() eventSaved = new EventEmitter<void>();
 
   createEventForm: FormGroup<CreateEventForm> = new FormGroup<CreateEventForm>({
     name: new FormControl("", [
@@ -90,17 +103,20 @@ export class CreateEditEventComponent implements OnInit {
     duration: new FormControl("", [
       Validators.required,
       Validators.min(0.15),
-      Validators.max(24),
+      Validators.max(10),
     ]),
-    isReminder: new FormControl(null),
-    reminderDescription: new FormControl(null),
+    isReminder: new FormControl(false, []),
+    reminderDescription: new FormControl("", []),
   });
+
   submitted = false;
   minDate: Date;
   maxDate: Date;
-  editMode: boolean = false;
 
-  constructor(private eventService: EventService) {
+  constructor(
+    private eventService: EventService,
+    public toastr: ToastrService
+  ) {
     this.minDate = new Date();
     this.maxDate = new Date();
     this.minDate.setDate(this.minDate.getDate());
@@ -108,38 +124,27 @@ export class CreateEditEventComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.createEventForm.controls.startDate.setValue(this.newEventDate?.dateStr);
-    
-    if (this.editEvent) {
-      // const editEventStart = this.formatDate(this.editEvent.start);
+    if (this.editMode) {
       const editEventEnd = this.formatDate(this.editEvent.end);
-      this.createEventForm.patchValue({
-        name: this.editEvent.name,
-        groups: this.editEvent.extendedProps.groups,
-        students: this.editEvent.extendedProps.students,
-        staffs: this.editEvent.extendedProps.staffs,
-        frequency: this.editEvent.extendedProps.frequency,
-        endDate: editEventEnd,
-        description: this.editEvent.extendedProps.description,
-        weeklyFrequencyDays: this.editEvent.extendedProps.weeklyFrequencyDays,
-        locationLink: this.editEvent.extendedProps.locationLink,
-        onlineMeetingLink: this.editEvent.extendedProps.onlineMeetingLink,
-        startTime: this.editEvent.extendedProps.startTime,
-        duration: this.editEvent.extendedProps.duration,
-        isReminder: this.editEvent.extendedProps.isReminder,
-        reminderDescription: this.editEvent.extendedProps.reminderDescription,
-      });
-      // this.createEventForm.controls.frequency.disable();
-      if (!this.editMode) this.createEventForm.disable();
-      else {
-        this.createEventForm.enable();
-        this.createEventForm.controls.frequency.disable();
-      }
+      this.getEventsDetailsHandler(this.editEvent.event.id);
+      this.createEventForm.controls.frequency.disable();
+    } else {
+      this.createEventForm.enable();
+      this.createEventForm.controls.startDate.setValue(this.editEvent?.dateStr);
     }
+
+    if (this.disableFormView) this.createEventForm.disable();
   }
 
-  get form() {
-    return this.createEventForm.controls;
+  getEventsDetailsHandler(eventId: number) {
+    this.eventService
+      .getEventsDetails(eventId)
+      .subscribe((res: IGetEventResponse) => {
+        if (res) mapEvent(this.createEventForm, res);
+        this.targetEvent = res;
+        this.disableFormView = true;
+        this.createEventForm.disable();
+      });
   }
 
   private formatDate(date: Date): string {
@@ -163,84 +168,61 @@ export class CreateEditEventComponent implements OnInit {
     this.submitted = true;
     // if (this.createEventForm.valid) {
     const { value, valid } = this.createEventForm;
-
-    if (this.editEvent) {
-      this.editEvent.setProp("title", value.name);
-      // this.editEvent.setProp("classNames", [value.category]);
-      // this.editEvent.setStart(value.dateFrom);
-      this.editEvent.setEnd(value.endDate);
-      this.editEvent.setExtendedProp("groups", value.groups);
-      this.editEvent.setExtendedProp("students", value.students);
-      this.editEvent.setExtendedProp("staffs", value.staffs);
-      this.editEvent.setExtendedProp("frequency", value.frequency);
-      this.editEvent.setExtendedProp("description", value.description);
-      this.editEvent.setExtendedProp(
-        "weeklyFrequencyDays",
-        value.weeklyFrequencyDays
-      );
-      this.editEvent.setExtendedProp("locationLink", value.locationLink);
-      this.editEvent.setExtendedProp(
-        "onlineMeetingLink",
-        value.onlineMeetingLink
-      );
-      this.editEvent.setExtendedProp("startTime", value.startTime);
-      this.editEvent.setExtendedProp("duration", value.duration);
-      this.editEvent.setExtendedProp("isReminder", value.isReminder);
-      this.editEvent.setExtendedProp(
-        "reminderDescription",
-        value.reminderDescription
-      );
+    let payload: ICreateUpdateEventPayload = {
+      name: value.name,
+      description: value.description,
+      locationLink: value.locationLink,
+      endDate: this.formatDate(value.endDate),
+      groups: value.groups,
+      students: value.students,
+      staffs: value.staffs,
+      isOnline: value.isOnline,
+      onlineMeetingLink: value.onlineMeetingLink,
+      startTime: value?.startTime,
+      duration: value.duration,
+      isReminder: value.isReminder,
+      reminderDescription: value.reminderDescription,
+      frequency: value.frequency,
+      onceDate: value.onceDate,
+      monthlyDay: value.monthlyDay,
+      weeklyFrequencyDays: value.weeklyFrequencyDays,
+      startDate: value.startDate,
+    };
+    if (this.editMode) {
+      let eventId = this.editEvent.event.id;
+      eventId ? (payload.id = eventId) : (payload.id = null);
+      payload.onceDate = this.targetEvent?.onceDate;
+      payload.monthlyDay = this.targetEvent?.monthlyDay;
+      payload.weeklyFrequencyDays = this.targetEvent.weeklyFrequencyDays;
+      payload.startDate = this.targetEvent.date;
+      payload.date = this.targetEvent.date;
+      this.eventService.putUpdateEvent(payload).subscribe();
     } else {
-      let payload: ICreateEventPayload = {
-        name: value.name,
-        description: value.description,
-        locationLink: value.locationLink,
-        frequency: value.frequency,
-        onceDate: value.onceDate,
-        monthlyDay: value.monthlyDay,
-        weeklyFrequencyDays: value.weeklyFrequencyDays,
-        startDate: value.startDate,
-        endDate: this.formatDate(value.endDate),
-        groups: value.groups,
-        students: value.students,
-        staffs: value.staffs,
-        isOnline: value.isOnline,
-        onlineMeetingLink: value.onlineMeetingLink,
-        startTime: getHourAndMinuteFromDate(value.startTime),
-        duration: value.duration,
-        isReminder: value.isReminder,
-        reminderDescription: value.reminderDescription,
-      };
-      this.eventService.postCreateEvent(payload).subscribe((res) => {
-        console.log(res);
-      });
+      this.eventService.postCreateEvent(payload).subscribe();
     }
 
-    // this.resetForm();
-    // this.modalRef.hide();
-    // this.eventSaved.emit();
+    this.createEventForm.reset();
+    this.modalRef.hide();
+    this.eventAction.emit("save");
     // } else {
     //   this.createEventForm.markAllAsTouched();
     // }
   }
 
+  deleteEventHandler(mainEventId: number, eventDetailsId: number) {}
+
+  openDeleteModel() {
+    this.removeItemModal?.show();
+  }
+
   confirmDelete() {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#34c38f",
-      cancelButtonColor: "#f46a6a",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.value) {
-        this.editEvent.remove();
-        this.modalRef.hide();
-        Swal.fire("Deleted!", "Event has been deleted.", "success");
-        this.eventSaved.emit();
-      }
+    let { mainEventId, id } = this.targetEvent;
+    this.eventService.deleteEvent(mainEventId, id).subscribe((res) => {
+      this.toastr.success("deleted successfully", "Event");
+      this.eventAction.emit("delete");
     });
+
+    this.removeItemModal?.hide();
   }
 
   closeModal() {
@@ -251,11 +233,15 @@ export class CreateEditEventComponent implements OnInit {
   onFrequencyFrequencyChange(event: any) {}
 
   toggleEditMode() {
-    this.editMode = !this.editMode;
-    if (!this.editMode) this.createEventForm.disable();
-    else {
+    this.disableFormView = !this.disableFormView;
+    if (this.disableFormView) {
+      this.createEventForm.disable();
+    } else {
       this.createEventForm.enable();
       this.createEventForm.controls.frequency.disable();
+      this.createEventForm.controls.onceDate.disable();
+      this.createEventForm.controls.weeklyFrequencyDays.disable();
+      this.createEventForm.controls.endDate.disable();
     }
   }
 }

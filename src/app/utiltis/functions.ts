@@ -156,7 +156,15 @@ export function getKeysFromEnum(enumObj: any): string[] {
 }
 
 export function getHourAndMinuteFromDate(date: Date): string {
-  const hour = date.getHours().toString().padStart(2, '0');
-  const minute = date.getMinutes().toString().padStart(2, '0');
+  debugger;
+  const hour = date.getHours().toString().padStart(2, "0");
+  const minute = date.getMinutes().toString().padStart(2, "0");
   return `${hour}:${minute}`;
+}
+
+export function generateDaysOfMonth() {
+  return Array.from({ length: 31 }, (_, i) => ({
+    id: i + 1,
+    name: (i + 1).toString(),
+  }));
 }
