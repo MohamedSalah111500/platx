@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { ChatComponent } from './chat/chat.component';
 import { DefaultComponent } from './dashboards/default/default.component';
-import { ClassesComponent } from './classes/classes.component';
+import { CourseComponent } from './course/course.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard' },
@@ -17,7 +17,7 @@ const routes: Routes = [
   { path: 'groups', loadChildren: () => import('./groups/groups.module').then(m => m.GroupsModule) },
   { path: 'exams', loadChildren: () => import('./exams/exams.module').then(m => m.ExamsModule) },
   { path: 'chat', component: ChatComponent },
-  { path: 'courses-content', component: ClassesComponent },
+  { path: 'courses-content', component: CourseComponent },
   { path: 'filemanager', loadChildren: () => import('./filemanager/filemanager.module').then(m => m.FileManagereModule) },
   { path: 'profile', loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule) },
   { path: 'manage', loadChildren: () => import('./manage/manage.module').then(m => m.ManageModule) },

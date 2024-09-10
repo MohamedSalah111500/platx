@@ -1,15 +1,15 @@
 import { Component, OnInit } from "@angular/core";
 
 @Component({
-  selector: "app-classes",
-  templateUrl: "./classes.component.html",
-  styleUrls: ["./classes.component.scss"],
+  selector: "app-course",
+  templateUrl: "./course.component.html",
+  styleUrls: ["./course.component.scss"],
 })
 
 /**
- * Utility classes component
+ * Utility course component
  */
-export class ClassesComponent implements OnInit {
+export class CourseComponent implements OnInit {
   // bread crumb items
   breadCrumbItems: Array<{}>;
   subjectList = [{}, {}, {}, {}, {}, {}];
@@ -18,7 +18,7 @@ export class ClassesComponent implements OnInit {
   ngOnInit() {
     this.breadCrumbItems = [
       { label: "platx" },
-      { label: "classes", active: true },
+      { label: "course", active: true },
     ];
   }
 }

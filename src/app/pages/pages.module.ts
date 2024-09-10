@@ -40,13 +40,13 @@ import { MapsModule } from "./maps/maps.module";
 import { HttpClientModule } from "@angular/common/http";
 import { ChatComponent } from "./chat/chat.component";
 
-import { ClassesComponent } from "./classes/classes.component";
+import { CourseComponent } from "./course/course.component";
 import { NgSelectModule } from "@ng-select/ng-select";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { TimepickerModule } from "ngx-bootstrap/timepicker";
 
 @NgModule({
-  declarations: [ChatComponent, ClassesComponent],
+  declarations: [ChatComponent, CourseComponent],
   imports: [
     CommonModule,
     FormsModule,
