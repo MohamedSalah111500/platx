@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { ChatComponent } from './chat/chat.component';
+import { ChatComponent } from './chat/components/chat.component';
 import { DefaultComponent } from './dashboards/default/default.component';
 import { CourseComponent } from './course/course.component';
 
@@ -16,7 +16,7 @@ const routes: Routes = [
   { path: 'events', loadChildren: () => import('./event/event.module').then(m => m.EventModule)   },
   { path: 'groups', loadChildren: () => import('./groups/groups.module').then(m => m.GroupsModule) },
   { path: 'exams', loadChildren: () => import('./exams/exams.module').then(m => m.ExamsModule) },
-  { path: 'chat', component: ChatComponent },
+  { path: 'chat', loadChildren: () => import('./chat/chat.module').then(m => m.ChatModule) },
   { path: 'courses-content', component: CourseComponent },
   { path: 'filemanager', loadChildren: () => import('./filemanager/filemanager.module').then(m => m.FileManagereModule) },
   { path: 'profile', loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule) },

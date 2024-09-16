@@ -9,6 +9,7 @@ const QUALIFICATIONS_BASE = "api/Qualifications";
 const FILE_MANAGER_BASE = "api/Attachements";
 const EVENTS_BASE = "api/Events";
 const EVENT_DETAILS_BASE = "api/EventDetails";
+const CHAT_BASE = "api/Messages";
 
 export const AUTH_URLS = {
   LOGIN: `${environment.apiURL.concat(AUTH_BASE)}login`,
@@ -92,6 +93,7 @@ export const EVENT_URLS = {
   // GET_DOWNLOAD_FILE: (id: number) =>`${environment.apiURL.concat(FILE_MANAGER_BASE)}/DownloadFile/${id}`,
   // DELETE: (id: string) =>`${environment.apiURL.concat(FILE_MANAGER_BASE)}/${id}`,
 };
+
 export const EVENT_DETAILS_URLS = {
   GET_ALL: (date: string, viewType: number) =>
     `${environment.apiURL.concat(
@@ -109,4 +111,20 @@ export const EVENT_DETAILS_URLS = {
   // CREATE: `${environment.apiURL.concat(EVENT_DETAILS_BASE)}`,
   // GET_SIZE: `${environment.apiURL.concat(EVENT_DETAILS_BASE)}/GetAttachementsSize`,
   // GET_DOWNLOAD_FILE: (id: number) =>`${environment.apiURL.concat(EVENT_DETAILS_BASE)}/DownloadFile/${id}`,
+};
+
+export const CHAT_URLS = {
+  GET_MESSAGE_WITH_STUDENT: (studentId: number, groupId: number) =>
+    `${environment.apiURL.concat(
+      CHAT_BASE
+    )}/GetMessagesWithStudent?studentId=${studentId}&groupId=${groupId}`,
+
+  GET_MESSAGE_FOR_TEACHER_IN_GROUP: (groupId: number) =>
+    `${environment.apiURL.concat(
+      CHAT_BASE
+    )}/GetMessagesForTeacherInGroup?groupId=${groupId}`,
+
+  POST_TEACHER_SEND_MESSAGE_TO_GROUP: `${environment.apiURL.concat(CHAT_BASE)}/SendMessageToGroup`,
+  POST_STUDENT_SEND_MESSAGE_TO_GROUP: `${environment.apiURL.concat(CHAT_BASE)}/SendMessageToGroupFromStudent`,
+
 };

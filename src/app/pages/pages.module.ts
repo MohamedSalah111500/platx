@@ -38,7 +38,6 @@ import { IconsModule } from "./icons/icons.module";
 import { ChartModule } from "./chart/chart.module";
 import { MapsModule } from "./maps/maps.module";
 import { HttpClientModule } from "@angular/common/http";
-import { ChatComponent } from "./chat/chat.component";
 
 import { CourseComponent } from "./course/course.component";
 import { NgSelectModule } from "@ng-select/ng-select";
@@ -46,7 +45,7 @@ import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { TimepickerModule } from "ngx-bootstrap/timepicker";
 
 @NgModule({
-  declarations: [ChatComponent, CourseComponent],
+  declarations: [ CourseComponent],
   imports: [
     CommonModule,
     FormsModule,
