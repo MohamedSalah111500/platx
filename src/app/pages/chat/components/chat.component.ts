@@ -1,23 +1,22 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+import { Location } from "@angular/common";
 import {
   UntypedFormBuilder,
   Validators,
   UntypedFormGroup,
 } from "@angular/forms";
-
 import { Store } from "@ngrx/store";
-import {
-  fetchchatMessageData,
-  fetchchatdata,
-} from "src/app/store/Chat/chat.action";
-import { selectData, selectchatData } from "src/app/store/Chat/chat-selector";
 import { GroupsService } from "../../groups/services/groupsService.service";
-import { Group } from "../../groups/types";
+import { Group, Student } from "../../groups/types";
 import { ChatService } from "../services/chat.service";
 import {
   GetMessagesForTeacherInGroup,
+  GetStudentsHaveMessagesResponse,
+  SenderStudent,
   SendMessageToGroupPayload,
+  SendMessageToStudentPayload,
 } from "../types";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: "app-chat",
@@ -28,7 +27,6 @@ export class ChatComponent implements OnInit, AfterViewInit {
   @ViewChild("scrollEle") scrollEle;
   @ViewChild("scrollRef") scrollRef;
 
-  username = "Steven Franklin";
   // bread crumb items
   breadCrumbItems: Array<{}>;
   chatData: any;
@@ -42,13 +40,19 @@ export class ChatComponent implements OnInit, AfterViewInit {
   chatName: string = "Start new Chat";
   groups!: Group[];
   selectedGroup!: Group;
+  selectedStudent: SenderStudent = {};
+  chatActiveType: string = "student";
+
   chatMessages!: GetMessagesForTeacherInGroup[];
+  studentsChats!: GetStudentsHaveMessagesResponse[];
 
   constructor(
     public formBuilder: UntypedFormBuilder,
     public store: Store,
     private groupsService: GroupsService,
-    private chatService: ChatService
+    private chatService: ChatService,
+    private location: Location,
+    public toastr: ToastrService
   ) {}
 
   ngOnInit() {
@@ -61,20 +65,16 @@ export class ChatComponent implements OnInit, AfterViewInit {
       message: ["", [Validators.required]],
     });
 
-    /**
-     * fetches data
-     */
-    this.store.dispatch(fetchchatdata());
-    this.store.select(selectData).subscribe((data) => {
-      this.chatData = data;
-    });
-    this.store.dispatch(fetchchatMessageData());
-    this.store.select(selectchatData).subscribe((data) => {
-      this.chatMessagesData = data;
-      console.log(this.chatMessagesData);
-    });
-
     this.getAllGroups(1, 100);
+    this.getStudentsHaveMessages();
+
+    if (history.state.groupId) {
+      this.startNewChatWithStudent(
+        history.state.groupId,
+        history.state.studentData
+      );
+      this.location.replaceState(this.location.path(), "", {});
+    }
   }
 
   ngAfterViewInit() {
@@ -99,6 +99,26 @@ export class ChatComponent implements OnInit, AfterViewInit {
         this.onListScroll();
       });
   }
+
+  getMessagesWithStudent(studentId: number, groupId: number) {
+    this.chatService
+      .getMessagesWithStudent(studentId, groupId)
+      .subscribe((response) => {
+        this.chatMessages = response;
+        this.onListScroll();
+      });
+  }
+
+  getStudentsHaveMessages() {
+    let teacherId = 10;
+    return this.chatService.getStudentsHaveMessages(teacherId).subscribe(
+      (res) => {
+        this.studentsChats = res;
+      },
+      (err) => console.log(err)
+    );
+  }
+
   sendMessagesForTeacherToGroup(content: string) {
     if (!this.selectedGroup) return;
     let payload: SendMessageToGroupPayload = {
@@ -109,38 +129,63 @@ export class ChatComponent implements OnInit, AfterViewInit {
     return this.chatService.postMessagesForTeacherToGroup(payload);
   }
 
-  groupClicked(group: Group) {
-    this.selectedGroup = group;
-    this.chatName = group.description;
-    this.getMessagesForTeacherInGroup(group.id);
+  startNewChatWithStudent(groupId: number, chatOwner: Student) {
+    this.chatActiveType = "student";
+    this.selectedStudent.id = chatOwner.id;
+    this.selectedStudent.firstName = chatOwner.firstName;
+    this.selectedStudent.lastName = chatOwner.lastName;
+    this.chatName = chatOwner.firstName + " " + chatOwner.lastName;
+    this.getMessagesWithStudent(this.selectedStudent.id, groupId);
   }
-  /**
-   * Returns form
-   */
+
+  sendMessagesToStudent(content: string) {
+    if (!this.selectedStudent) return;
+    //@TODO return group id with student
+    let payload: SendMessageToStudentPayload = {
+      content: content,
+      studentId: this.selectedStudent.id,
+      groupId: 1,
+      teacherId: 10,
+    };
+    return this.chatService.postMessagesToStudent(payload);
+  }
+
+  chatClicked(chatOwner: Group | SenderStudent, type: string) {
+    if (!chatOwner) return;
+    if (type == "group") {
+      this.chatActiveType = "group";
+      this.selectedGroup = chatOwner as Group;
+      this.chatName = this.selectedGroup.description;
+      this.getMessagesForTeacherInGroup(this.selectedGroup.id);
+    }
+
+    if (type == "student") {
+      this.chatActiveType = "student";
+      this.selectedStudent = chatOwner as SenderStudent;
+      this.chatName =
+        this.selectedStudent.firstName + " " + this.selectedStudent.lastName;
+      //@TODO
+      this.getMessagesWithStudent(this.selectedStudent.id, 1);
+    }
+  }
+
   get form() {
     return this.formData.controls;
   }
-
+  get now() {
+    return new Date();
+  }
   onListScroll() {
-    if (this.scrollRef !== undefined) {
+    if (
+      this.scrollRef !== undefined &&
+      this.scrollRef.SimpleBar !== undefined
+    ) {
       setTimeout(() => {
+        if (!this.scrollRef.SimpleBar?.getScrollElement()) return;
         this.scrollRef.SimpleBar.getScrollElement().scrollTop =
           this.scrollRef.SimpleBar.getScrollElement().scrollHeight + 1500;
       }, 500);
     }
-  }
-
-  chatUsername(name) {
-    this.username = name;
-    this.usermessage = "Hello";
-    this.chatMessagesData = [];
-    const currentDate = new Date();
-
-    this.chatMessagesData.push({
-      name: this.username,
-      message: this.usermessage,
-      time: currentDate.getHours() + ":" + currentDate.getMinutes(),
-    });
   }
 
   /**
@@ -150,25 +195,24 @@ export class ChatComponent implements OnInit, AfterViewInit {
     const message = this.formData.get("message").value;
     const currentDate = new Date();
     if (this.formData.valid && message) {
-      this.sendMessagesForTeacherToGroup(message)
-      .subscribe((response) => {
-        console.log(response);
-        // this.chatMessages = response;
-        // this.onListScroll();
+      let functionCall;
+      this.chatActiveType == "group"
+        ? (functionCall = this.sendMessagesForTeacherToGroup.bind(this))
+        : (functionCall = this.sendMessagesToStudent.bind(this));
 
+      functionCall(message).subscribe((response) => {
         this.chatMessages.push({
           align: "right",
-          senderStaff:{firstName: "Mohamed Salah",lastName: "Salah",id:10},
-          content:message,
+          senderStaff: {
+            firstName: "Mohamed",
+            lastName: "Ibrahem",
+            id: 10,
+          },
+          content: message,
           sentAt: new Date(),
-          
         });
         this.onListScroll();
       });
-      // Message Push in Chat
-     
-
-      // Set Form Data Reset
       this.formData = this.formBuilder.group({
         message: null,
       });
@@ -177,21 +221,40 @@ export class ChatComponent implements OnInit, AfterViewInit {
     this.chatSubmit = true;
   }
 
-  // Copy Message
   copyMessage(event: any) {
-    navigator.clipboard.writeText(
-      event.target.closest("li").querySelector("p").innerHTML
-    );
+    navigator.clipboard
+      .writeText(event.target.closest("li").querySelector("p").innerHTML)
+      .then(() => this.toastr.success("copied to clipboard", "Copied"));
   }
 
-  // Delete All Message
-  deleteAllMessage(event: any) {
-    var allMsgDelete: any = document
-      .querySelector(".chat-conversation")
-      ?.querySelectorAll("li");
-    allMsgDelete.forEach((item: any) => {
-      item.remove();
+  deleteMessage(messageId: string) {
+    this.chatService.deleteSingleMessages(+messageId).subscribe(() => {
+      this.chatMessages = this.chatMessages.filter(
+        (mes) => mes.id != +messageId
+      );
     });
+  }
+
+  deleteGroupMessages(groupId: number) {
+    this.chatService.deleteGroupMessages(+groupId).subscribe(() => {
+      this.chatMessages = [];
+    });
+  }
+
+  deleteStudentMessages(studentId: number) {
+    this.chatService.deleteGroupMessages(+studentId).subscribe(() => {
+      this.chatMessages = [];
+    });
+  }
+
+  deleteAllMessage() {
+    if (!this.chatActiveType) return;
+    if (this.chatActiveType == "student") {
+      this.deleteStudentMessages(+this.selectedGroup.id);
+    }
+    if (this.chatActiveType == "group") {
+      this.deleteGroupMessages(+this.selectedGroup.id);
+    }
   }
 
   // Emoji Picker

@@ -80,11 +80,8 @@
                                 <td>{{ item.firstName }}  {{ item.lastName }}</td>
                                 <td>  {{ (item.email.length>15)? (item.email  | slice:0:15)+' ...':(item.email ) }}</td>
                                 <td>{{ item.dateOfBirth | date : "short" }}</td>
-
-
                                 <td>
                                   <ul class="list-inline font-size-20 contact-links mb-0">
-
                                     <li class="list-inline-item">
                                       <div dropdown class="dropdown">
                                         <a dropdownToggle href="javascript: void(0);" class="dropdown-toggle card-drop px-2 show" aria-expanded="true"> <i class="mdi mdi-dots-horizontal font-size-18"></i> </a>
@@ -102,7 +99,7 @@
                                             </a>
                                           </li>
                                           <li>
-                                            <a  (click)="edit(item)" class="dropdown-item edit-list" >
+                                            <a  (click)="startChatWithStudent(item)" class="dropdown-item edit-list" >
                                               <i class="bx bx-message-square-dots font-size-16  me-2"></i> Message
                                             </a>
                                           </li>

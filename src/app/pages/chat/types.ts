@@ -9,15 +9,14 @@ export interface GetMessagesForTeacherOrStudentInGroupResponse {
   content?: string;
   sentAt?: string | Date;
   isSendToGroup?: boolean;
-  align?:string
-
+  align?: string;
 }
 
-interface SenderStudent {
-  id: number;
-  firstName: string;
-  lastName: string;
-  profileImage: null;
+export interface SenderStudent {
+  id?: number;
+  firstName?: string;
+  lastName?: string;
+  profileImage?: null;
 }
 
 interface SenderStaff {
@@ -36,9 +35,14 @@ export interface SendMessageToGroupPayload {
   content: string;
 }
 
+export interface SendMessageToStudentPayload extends SendMessageToGroupPayload {
+  studentId: number;
+}
+
 export interface StudentSendMessageToGroupPayload {
   groupId: number;
   studentId: number;
   content: string;
 }
 
+export interface GetStudentsHaveMessagesResponse extends SenderStudent {}

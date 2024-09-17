@@ -124,7 +124,34 @@ export const CHAT_URLS = {
       CHAT_BASE
     )}/GetMessagesForTeacherInGroup?groupId=${groupId}`,
 
-  POST_TEACHER_SEND_MESSAGE_TO_GROUP: `${environment.apiURL.concat(CHAT_BASE)}/SendMessageToGroup`,
-  POST_STUDENT_SEND_MESSAGE_TO_GROUP: `${environment.apiURL.concat(CHAT_BASE)}/SendMessageToGroupFromStudent`,
+  GET_STUDENT_HAVE_MESSAGES: (teacherId: number) =>
+    `${environment.apiURL.concat(
+      CHAT_BASE
+    )}/GetStudentsHaveMessages?teacherId=${teacherId}`,
 
+  POST_TEACHER_SEND_MESSAGE_TO_GROUP: `${environment.apiURL.concat(
+    CHAT_BASE
+  )}/SendMessageToGroup`,
+
+  POST_TEACHER_SEND_MESSAGE_TO_STUDENT: `${environment.apiURL.concat(
+    CHAT_BASE
+  )}/SendMessageToStudent`,
+
+  POST_STUDENT_SEND_MESSAGE_TO_GROUP: `${environment.apiURL.concat(
+    CHAT_BASE
+  )}/SendMessageToGroupFromStudent`,
+  DELETE_MESSAGES: (messageId: number) =>
+    `${environment.apiURL.concat(
+      CHAT_BASE
+    )}/DeleteMessage/${messageId}`,
+
+  DELETE_MESSAGES_WITH_GROUP: (groupId: number) =>
+    `${environment.apiURL.concat(
+      CHAT_BASE
+    )}/DeleteMessageWithGroup/${groupId}`,
+
+  DELETE_MESSAGES_WITH_STUDENT: (studentId: number) =>
+    `${environment.apiURL.concat(
+      CHAT_BASE
+    )}/DeleteMessageWithStudent/${studentId}`,
 };

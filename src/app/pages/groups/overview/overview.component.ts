@@ -25,9 +25,10 @@ import {
 import { selectchatData } from "src/app/store/Chat/chat-selector";
 import { GroupsService } from "../services/groupsService.service";
 import { Student } from "../types";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Group } from "../../groups/types";
 import { ToastrService } from "ngx-toastr";
+import { ChatService } from "../../chat/services/chat.service";
 
 @Component({
   selector: "app-overview",
@@ -113,7 +114,9 @@ export class OverviewComponent implements OnInit {
     public store: Store,
     private groupsService: GroupsService,
     private route: ActivatedRoute,
-    public toastr: ToastrService
+    public toastr: ToastrService,
+    private router: Router,
+    private chatService: ChatService
   ) {
     this.groupId = this.route.snapshot.params["id"];
     // You can use the 'id' value as needed
@@ -464,19 +467,29 @@ export class OverviewComponent implements OnInit {
   }
 
   removeStudentFromGroup(removeStudentModel) {
-    this.groupsService.removeStudentFromGroup(this.groupId, this.selectedStudent.id).subscribe(
-      (response) => {
-        this.toastr.success("Student Removed successfully", "Remove Student");
-        this.getGroupStudents(this.groupId, 1, 10);
-        removeStudentModel.hide()
-      },
-      (err) => console.log(err)
-    );
+    this.groupsService
+      .removeStudentFromGroup(this.groupId, this.selectedStudent.id)
+      .subscribe(
+        (response) => {
+          this.toastr.success("Student Removed successfully", "Remove Student");
+          this.getGroupStudents(this.groupId, 1, 10);
+          removeStudentModel.hide();
+        },
+        (err) => console.log(err)
+      );
   }
   removeStudentHandler(item: Student, moveStudentModel) {
     this.selectedStudent = item;
     moveStudentModel.show();
   }
 
+  startChatWithStudent(item: Student) {
+    let userChatInfo = {
+      groupId: this.groupId,
+      studentData: item,
+    };
+    this.router.navigateByUrl("/chat" , { state: userChatInfo });
+    this.chatService.emitStudentChatData(userChatInfo);
+  }
   ngOnDestroy() {}
 }

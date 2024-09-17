@@ -1,9 +1,9 @@
 export interface IGeneralSuccessMessageResponse {
-  success: boolean;
+  success: boolean | string;
   message: string;
 }
 
 export interface IGeneralErrorMessageResponse {
-  errors: boolean;
+  errors: boolean | string;
   message: string;
 }

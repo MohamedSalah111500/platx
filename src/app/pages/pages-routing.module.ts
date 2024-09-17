@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { ChatComponent } from './chat/components/chat.component';
 import { DefaultComponent } from './dashboards/default/default.component';
 import { CourseComponent } from './course/course.component';
 

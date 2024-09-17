@@ -10,8 +10,6 @@ import { ChatRoutingModule } from "./chat-routing.module";
 import { PickerModule } from "@ctrl/ngx-emoji-mart";
 import { SimplebarAngularModule } from "simplebar-angular";
 import { TabsModule } from "ngx-bootstrap/tabs";
-import { UiModule } from "../ui/ui.module";
-import { SharedModule } from "src/app/shared/shared.module";
 import { UIModule } from "src/app/shared/ui/ui.module";
 
 @NgModule({
