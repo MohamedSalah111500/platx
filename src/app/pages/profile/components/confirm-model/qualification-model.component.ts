@@ -39,13 +39,12 @@ export class QualificationModelComponent {
   }
 
   ngOnInit(): void {
-    console.log(this.model);
     this.model.onShow.subscribe(() => {
       if (this.profileData.qualification) {
         this.updateForm(this.profileData);
       } else {
-        this.addQualificationDocument(); // Add one document by default
-        this.addQualificationExperience(); // Add one experience by default
+      if(this.qualificationDocuments.length < 1)  this.addQualificationDocument(); // Add one document by default
+      if(this.qualificationExperiences.length < 1)  this.addQualificationExperience(); // Add one experience by default
       }
     });
   }
@@ -58,16 +57,17 @@ export class QualificationModelComponent {
       description: data.qualification?.description || "",
     });
 
+    this.qualificationDocuments.clear();
     data.qualification?.qualificationDocuments.forEach((document: any) => {
       this.addQualificationDocument(document);
     });
 
+    this.qualificationExperiences.clear();
     data.qualification?.qualificationExperiences.forEach(
       (experience: any) => {
         this.addQualificationExperience(experience);
       }
     );
-    console.log(data);
   }
 
   get qualificationDocuments(): FormArray {
@@ -145,16 +145,13 @@ export class QualificationModelComponent {
       );
     payload.qualificationExperiences = newExperiences;
     payload.staffId = this.profileId;
-    console.log(this.qualificationForm);
     if (this.qualificationForm.valid) {
       this.profileService.createQualification(payload).subscribe(
         (res) => {
-          console.log(res);
           this.toastr.success(res.message, "Qualification");
           this.model.hide();
         },
         (err) => {
-          console.log(err);
           this.toastr.error(err.message, "Qualification");
         }
       );
@@ -180,17 +177,13 @@ export class QualificationModelComponent {
     payload.qualificationExperiences = newExperiences;
     payload.staffId = +this.profileId;
     payload.id = this.profileData.qualification.id;
-
-    console.log(this.qualificationForm);
     if (this.qualificationForm.valid) {
       this.profileService.updateQualification(payload).subscribe(
         (res) => {
-          console.log(res);
           this.toastr.success(res.message, "Qualifications");
           this.model.hide();
         },
         (err) => {
-          console.log(err);
           this.toastr.error(err.message, "Qualifications");
         }
       );

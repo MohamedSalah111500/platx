@@ -110,6 +110,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
   }
 
   getStudentsHaveMessages() {
+    //@TODO Replace static id
     let teacherId = 10;
     return this.chatService.getStudentsHaveMessages(teacherId).subscribe(
       (res) => {
@@ -124,6 +125,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
     let payload: SendMessageToGroupPayload = {
       content: content,
       groupId: this.selectedGroup?.id,
+      //@TODO Replace static id
       teacherId: 10,
     };
     return this.chatService.postMessagesForTeacherToGroup(payload);
@@ -144,6 +146,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
     let payload: SendMessageToStudentPayload = {
       content: content,
       studentId: this.selectedStudent.id,
+      //@TODO Replace static id
       groupId: 1,
       teacherId: 10,
     };

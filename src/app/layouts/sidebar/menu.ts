@@ -48,7 +48,7 @@ export const MENU: MenuItem[] = [
     id: 12,
     label: "Course",
     icon: "bx-task",
-    link: "/courses-content",
+    link: "/courses",
   },
   {
     id: 13,

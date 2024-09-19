@@ -1,0 +1,141 @@
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 id="staticBackdropLabel" class="modal-title">{{ title }}</h5>
+      <button
+        type="button"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+        class="btn-close"
+        (click)="model.hide()"
+      ></button>
+    </div>
+    <div class="modal-body p-4">
+      <form
+        [formGroup]="unitForm"
+        (ngSubmit)="onSubmit()"
+        class="needs-validation"
+        novalidate
+      >
+        <div class="mb-3">
+          <div class="mb-2">
+            <label for="name" class="form-label font-size-16 font-bold m-0"
+              >Unit title *</label
+            >
+          </div>
+          <input id="name" class="form-control" formControlName="name" />
+        </div>
+
+        <div class="mb-3">
+          <div class="mb-2">
+            <label
+              for="description"
+              class="form-label font-size-16 font-bold m-0"
+              >Unit Description</label
+            >
+            <p class="font-size-10 m-0">
+              You can write about your Unit Description
+            </p>
+          </div>
+          <textarea
+            id="description"
+            class="form-control"
+            formControlName="description"
+          ></textarea>
+        </div>
+
+        <div formArrayName="subjects">
+          <div
+            *ngFor="let experience of subjects.controls; let i = index"
+            [formGroupName]="i"
+            class="mb-3 border p-3 rounded"
+          >
+            <div class="mb-3 row">
+              <div class="row justify-content-between mb-3 p-0">
+                <div class="form-check ms-4 w-50"></div>
+                <button
+                  (click)="removeUnitSubject(i)"
+                  class="btn-close"
+                ></button>
+              </div>
+              <label for="subjectTitle{{ i }}" class="col-md-3 col-form-label"
+                >Subject Title</label
+              >
+              <div class="col-md-9">
+                <input
+                  type="text"
+                  placeholder="subject title Example 'math'"
+                  id="subjectTitle{{ i }}"
+                  formControlName="subjectTitle"
+                  class="form-control"
+                  required
+                />
+                <div
+                  class="invalid-feedback"
+                  *ngIf="
+                    experience.get('subjectTitle').invalid &&
+                    experience.get('subjectTitle').touched
+                  "
+                >
+                  Job Title is required.
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3 row">
+              <label for="document{{ i }}" class="col-md-3 col-form-label"
+                >Document / Link
+              </label>
+              <div class="col-md-9">
+                <ng-select
+                  [items]="orderList"
+                  bindLabel="number"
+                  bindValue="number"
+                  placeholder="Select Document for Subject"
+                  formControlName="document"
+                ></ng-select>
+                <div *ngIf="submitted && unitForm.controls.document.invalid" class="invalid-feedback">
+                  <small *ngIf="unitForm.controls.document.errors.required">Please select Document.</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-1 row">
+              <label for="order{{ i }}" class="col-md-3 col-form-label"
+                >Order In Subject List</label
+              >
+              <div class="col-md-9">
+                <ng-select
+                  [items]="orderList"
+                  bindLabel="number"
+                  bindValue="number"
+                  placeholder="Select Order of Subject"
+                  formControlName="order"
+                ></ng-select>
+                <div *ngIf="submitted && unitForm.controls.order.invalid" class="invalid-feedback">
+                  <small *ngIf="unitForm.controls.order.errors.required">Please select group.</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-grid gap-2">
+            <button
+              type="button"
+              class="btn btn-light"
+              (click)="addUnitSubject()"
+            >
+              <i class="fa fa-plus text-success"></i>
+              Add Subject
+            </button>
+          </div>
+        </div>
+        <hr class="mb-3 mt-3" />
+
+        <div class="d-grid gap-2">
+          <button type="submit" class="btn btn-success">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

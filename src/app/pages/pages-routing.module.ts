@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { DefaultComponent } from './dashboards/default/default.component';
-import { CourseComponent } from './course/course.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard' },
@@ -16,7 +15,7 @@ const routes: Routes = [
   { path: 'groups', loadChildren: () => import('./groups/groups.module').then(m => m.GroupsModule) },
   { path: 'exams', loadChildren: () => import('./exams/exams.module').then(m => m.ExamsModule) },
   { path: 'chat', loadChildren: () => import('./chat/chat.module').then(m => m.ChatModule) },
-  { path: 'courses-content', component: CourseComponent },
+  { path: 'courses',loadChildren: () => import('./course/course.module').then(m => m.CourseModule) },
   { path: 'filemanager', loadChildren: () => import('./filemanager/filemanager.module').then(m => m.FileManagereModule) },
   { path: 'profile', loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule) },
   { path: 'manage', loadChildren: () => import('./manage/manage.module').then(m => m.ManageModule) },
