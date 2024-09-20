@@ -1,3 +1,5 @@
+import { FormControl } from "@angular/forms";
+
 export interface Subject {
   id: string;
   subjectTitle: string;
@@ -13,6 +15,10 @@ export interface Unit {
 
 export interface Grid {
   id: number;
-  gridTitle: string;
-  units: Unit[];
+  name: string;
+  units?: Unit[];
+}
+
+export interface CreateGridForm {
+  name: FormControl;
 }

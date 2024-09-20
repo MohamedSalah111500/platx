@@ -168,3 +168,7 @@ export function generateDaysOfMonth() {
     name: (i + 1).toString(),
   }));
 }
+
+export function generateFileTypesIcons(documentType: string, fontSize = 16) {
+  return `<i class="mdi mdi-${documentType} font-size-${fontSize} text-primary me-2"></i>`;
+}

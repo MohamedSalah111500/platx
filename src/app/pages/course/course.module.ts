@@ -12,9 +12,10 @@ import { ListComponent } from "./components/list/list";
 import { CourseRoutingModule } from "./course-routing.module";
 import { AddUnitModelComponent } from "./components/add-unit-model/add-unit-model.component";
 import { NgSelectModule } from '@ng-select/ng-select';
+import { AddGridModelComponent } from "./components/add-grid-model/add-grid-model.component";
 
 @NgModule({
-  declarations: [ListComponent,AddUnitModelComponent],
+  declarations: [ListComponent,AddUnitModelComponent,AddGridModelComponent],
   imports: [
     CommonModule,
     CourseRoutingModule,

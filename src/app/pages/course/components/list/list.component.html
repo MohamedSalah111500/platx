@@ -15,12 +15,11 @@
               [vertical]="true"
               class="nav-pills custom-vertical-tab d-block d-md-flex gap-4"
             >
+              @for (grid of grids; track $index){
               <tab>
                 <ng-template tabHeading class="mb-2">
-                  <span class="d-block d-sm-none"
-                    ><i class="fas fa-home"></i
-                  ></span>
-                  <span class="d-none d-sm-block">Grid 1</span>
+                  <span class="d-none d-sm-block">{{grid.name}}</span>
+                  
                 </ng-template>
                 <div class="tab-page-content mt-3">
                   <ul class="verti-timeline list-unstyled">
@@ -45,6 +44,11 @@
                                   <span>Subject {{ i + 1 }}</span>
                                 </div>
                                 <div class="references">
+                                  <span
+                                    [innerHTML]="
+                                      generateFileTypesIcons('file-document')
+                                    "
+                                  ></span>
                                   <i
                                     class="mdi mdi-file-document font-size-16 text-primary me-2"
                                   ></i>
@@ -75,9 +79,19 @@
                   </ul>
                 </div>
               </tab>
-               
-              
+              }
             </tabset>
+
+            <div class="pt-3">
+              <button
+                type="button"
+                class="btn btn-light w-100"
+                (click)="addGridModal?.show()"
+              >
+                <i class="fa fa-plus text-success"></i>
+                Add Grid
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -216,5 +230,21 @@
     [profileData]="{}"
     [model]="addUnitModal"
     [hasQualification]="false"
+  />
+</div>
+
+<div
+  bsModal
+  #addGridModal="bs-modal"
+  class="modal fade modal-lg"
+  id="addGridModal"
+  tabindex="-1"
+  aria-hidden="true"
+>
+  <platx-add-grid-model
+    [title]="'Add Grid'"
+    [gridId]="'10'"
+    [model]="addGridModal"
+    (eventAction)="gridModalHandler($event)"
   />
 </div>
