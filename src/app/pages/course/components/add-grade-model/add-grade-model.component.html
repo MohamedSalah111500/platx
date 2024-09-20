@@ -1,18 +1,18 @@
-<div class="modal-dialog modal-dialog-centered">
+<div class="modal-dialog modal-dialog-centered m-0">
   <div class="modal-content">
     <div class="modal-header">
-      <h5 id="staticBackdropLabel" class="modal-title">{{ title }}</h5>
+      <h5 id="staticBackdropLabel" class="modal-title">{{modalData.mode == "edit" ? 'Edit grade' : 'Add grade'}}</h5>
       <button
         type="button"
         data-bs-dismiss="modal"
         aria-label="Close"
         class="btn-close"
-        (click)="model.hide()"
+        (click)="bsModalRef.hide()"
       ></button>
     </div>
     <div class="modal-body p-4">
       <form
-        [formGroup]="gridForm"
+        [formGroup]="gradeForm"
         (ngSubmit)="onSubmit()"
         class="needs-validation"
         novalidate
@@ -25,7 +25,7 @@
           </div>
           <input id="name" class="form-control" formControlName="name" />
         </div>
-        <div class="d-grid gap-2">
+        <div class="d-grade gap-2">
           <button type="submit" class="btn btn-success">Submit</button>
         </div>
       </form>

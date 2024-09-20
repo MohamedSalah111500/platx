@@ -15,39 +15,53 @@
               [vertical]="true"
               class="nav-pills custom-vertical-tab d-block d-md-flex gap-4"
             >
-              @for (grid of grids; track $index){
+              @for (grade of grades; track $index){
               <tab>
                 <ng-template tabHeading class="mb-2">
-                  <span class="d-none d-sm-block">{{grid.name}}</span>
-                  
+                  <span class="d-none d-sm-block">{{ grade.name }}</span>
                 </ng-template>
-                <div class="tab-page-content mt-3">
+                <div class="tab-page-content mt-3 mt-md-0">
+                  <div
+                    class="d-flex justify-content-between align-items-center mb-3"
+                  >
+                    <h4 class="m-0">{{ grade.name }}</h4>
+                    <button
+                      type="button"
+                      class="btn btn-light mx-3 edit-btn"
+                      (click)="openGradeModal('edit')"
+                    >
+                      <i class="fa fa-pen font-size-10"></i>
+                    </button>
+                  </div>
+
                   <ul class="verti-timeline list-unstyled">
                     <li class="event-list">
                       <div class="d-flex">
                         <div class="flex-grow-1">
-                          <h5 class="font-size-15">
+                          <h5
+                            class="font-size-16 unit-title d-flex align-items-center"
+                          >
                             <a href="javascript: void(0);" class="text-dark"
-                              >Unite One for Grid 1</a
+                              >Unite One for grade 1</a
                             >
+                            <button
+                              type="button"
+                              class="btn btn-light mx-3 edit-btn"
+                              (click)="openUnitModal('edit')"
+                            >
+                              <i class="fa fa-pen font-size-10"></i>
+                            </button>
                           </h5>
                           <div class="card border-0 shadow-none mb-0">
                             <ul class="list-unstyled mb-0 subject-list">
-                              <li
-                                class="d-flex align-items-center mb-1"
-                                *ngFor="let subject of subjectList; index as i"
-                              >
+                              @for (subject of subjectList; track $index){
+                              <li class="d-flex align-items-center mb-1">
                                 <div>
-                                  <i
-                                    class="bx bx-book-bookmark h5 my-0 me-1"
-                                  ></i>
-                                  <span>Subject {{ i + 1 }}</span>
+                                  <i class="bx bx-book-bookmark h5 my-0 me-1"></i>
+                                  <span>Subject {{ $index + 1 }}</span>
                                 </div>
                                 <div class="references">
-                                  <span
-                                    [innerHTML]="
-                                      generateFileTypesIcons('file-document')
-                                    "
+                                  <span [innerHTML]=" generateFileTypesIcons('file-document')"
                                   ></span>
                                   <i
                                     class="mdi mdi-file-document font-size-16 text-primary me-2"
@@ -60,18 +74,18 @@
                                   ></i>
                                 </div>
                               </li>
+                            }
                             </ul>
                           </div>
                         </div>
                       </div>
                     </li>
 
-                    <div class="d-grid gap-2 p-1">
+                    <div class="d-grade gap-2 p-1">
                       <button
                         type="button"
                         class="btn btn-light"
-                        (click)="addUnitModal?.show()"
-                      >
+                        (click)="openUnitModal('add')">
                         <i class="fa fa-plus text-success"></i>
                         Add Unit
                       </button>
@@ -80,16 +94,16 @@
                 </div>
               </tab>
               }
+
             </tabset>
 
             <div class="pt-3">
               <button
                 type="button"
                 class="btn btn-light w-100"
-                (click)="addGridModal?.show()"
-              >
+                (click)="openGradeModal('add')">
                 <i class="fa fa-plus text-success"></i>
-                Add Grid
+                Add grade
               </button>
             </div>
           </div>
@@ -107,26 +121,21 @@
                 <tr>
                   <td style="width: 45px">
                     <div class="avatar-sm">
-                      <span
-                        class="avatar-title rounded-circle bg-primary-subtle text-primary font-size-24"
-                      >
+                      <span class="avatar-title rounded-circle bg-primary-subtle text-primary font-size-24">
                         <i class="bx bxs-file-doc"></i>
                       </span>
                     </div>
                   </td>
                   <td>
                     <h5 class="font-size-14 mb-1">
-                      <a href="javascript: void(0);" class="text-dark"
-                        >platx Landing.Zip</a
-                      >
+                      <a href="javascript: void(0);" class="text-dark">platx Landing.Zip</a>
                     </h5>
                     <small>Size : 3.25 MB</small>
                   </td>
                   <td>
                     <div class="text-center">
-                      <a href="javascript: void(0);" class="text-dark"
-                        ><i class="bx bx-download h3 m-0"></i
-                      ></a>
+                      <a href="javascript: void(0);" class="text-dark">
+                        <i class="bx bx-download h3 m-0"></i></a>
                     </div>
                   </td>
                 </tr>
@@ -215,36 +224,4 @@
       </div>
     </div>
   </div>
-</div>
-<div
-  bsModal
-  #addUnitModal="bs-modal"
-  class="modal fade modal-lg"
-  id="addUnitModal"
-  tabindex="-1"
-  aria-hidden="true"
->
-  <platx-add-unit-model
-    [title]="'Add Unit'"
-    [unitId]="'10'"
-    [profileData]="{}"
-    [model]="addUnitModal"
-    [hasQualification]="false"
-  />
-</div>
-
-<div
-  bsModal
-  #addGridModal="bs-modal"
-  class="modal fade modal-lg"
-  id="addGridModal"
-  tabindex="-1"
-  aria-hidden="true"
->
-  <platx-add-grid-model
-    [title]="'Add Grid'"
-    [gridId]="'10'"
-    [model]="addGridModal"
-    (eventAction)="gridModalHandler($event)"
-  />
 </div>

@@ -2,17 +2,15 @@ import { HttpClient } from "@angular/common/http";
 import { Component, Input } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ToastrService } from "ngx-toastr";
+import { ModalData } from "src/app/shared/general-types";
+import { BsModalRef } from "ngx-bootstrap/modal";
 
 @Component({
   selector: "platx-add-unit-model",
   templateUrl: "./add-unit-model.component.html",
 })
 export class AddUnitModelComponent {
-  @Input() title: string;
-  @Input() unitId: string;
-  @Input() model: any;
-  @Input() hasQualification: boolean;
-  @Input() profileData: any;
+  modalData: ModalData;
 
   unitForm: FormGroup;
   orderList = [
@@ -22,7 +20,8 @@ export class AddUnitModelComponent {
     { number: "4" },
     { number: "5" },
   ];
-  constructor(private fb: FormBuilder, public toastr: ToastrService) {
+
+  constructor(private fb: FormBuilder, public toastr: ToastrService,public bsModalRef: BsModalRef) {
     this.unitForm = this.fb.group({
       name: [""],
       staffId: [0, Validators.required],
@@ -32,15 +31,14 @@ export class AddUnitModelComponent {
   }
 
   ngOnInit(): void {
-    this.model.onShow.subscribe(() => {
-      if (this.profileData.qualification) {
-        this.updateForm(this.profileData);
-      } else {
-        if (this.subjects.length > 0) return;
-        this.addUnitSubject(); // Add one subject by default
-      }
-    });
+    if (this.modalData.mode == "edit") {
+      this.updateForm({});
+    } else {
+      if (this.subjects.length > 0) return;
+      this.addUnitSubject(); // Add one subject by default
+    }
   }
+ 
 
   updateForm(data: any): void {
     this.unitForm.patchValue({
@@ -83,7 +81,6 @@ export class AddUnitModelComponent {
       responsibility: qualifiction.responsibility,
     }));
     payload.subjects = newExperiences;
-    payload.staffId = this.unitId;
     // if (this.unitForm.valid) {
     //   this.profileService.createQualification(payload).subscribe(
     //     (res) => {
@@ -108,8 +105,6 @@ export class AddUnitModelComponent {
     }));
 
     payload.subjects = newExperiences;
-    payload.staffId = +this.unitId;
-    payload.id = this.profileData.qualification.id;
     // if (this.unitForm.valid) {
     //   this.profileService.updateQualification(payload).subscribe(
     //     (res) => {
@@ -124,7 +119,7 @@ export class AddUnitModelComponent {
   }
 
   onSubmit(): void {
-    this.hasQualification
+    this.modalData.mode == "edit"
       ? this.updateQualificationHandler()
       : this.createQualificationHandler();
   }

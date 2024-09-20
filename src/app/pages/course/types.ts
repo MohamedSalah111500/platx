@@ -13,12 +13,12 @@ export interface Unit {
   subjects: Subject[];
 }
 
-export interface Grid {
+export interface Grade {
   id: number;
   name: string;
   units?: Unit[];
 }
 
-export interface CreateGridForm {
+export interface CreateGradeForm {
   name: FormControl;
 }

@@ -18,7 +18,19 @@
   }
 }
 
-.event-list{
-  padding: 0px 0px 30px 30px
- 
+.event-list {
+  padding: 0px 0px 30px 30px;
+}
+
+.unit-title {
+  height: 30px;
+  .edit-btn {
+    display: none;
+  }
+
+  &:hover {
+    .edit-btn {
+      display: inline-block;
+    }
+  }
 }

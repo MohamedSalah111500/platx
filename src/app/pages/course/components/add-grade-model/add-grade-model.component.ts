@@ -7,49 +7,52 @@ import {
   Validators,
 } from "@angular/forms";
 import { ToastrService } from "ngx-toastr";
-import { CreateGridForm } from "../../types";
+import { CreateGradeForm } from "../../types";
+import { BsModalRef } from "ngx-bootstrap/modal";
+import { ModalData } from "src/app/shared/general-types";
 
 @Component({
-  selector: "platx-add-grid-model",
-  templateUrl: "./add-grid-model.component.html",
+  selector: "platx-add-grade-model",
+  templateUrl: "./add-grade-model.component.html",
 })
-export class AddGridModelComponent {
-  @Input() title: string;
-  @Input() gridId: string;
-  @Input() model: any;
+export class AddGradeModelComponent {
+  modalData: ModalData;
   @Output() eventAction = new EventEmitter<{}>();
 
-  gridForm: FormGroup<CreateGridForm> = new FormGroup<CreateGridForm>({
+  gradeForm: FormGroup<CreateGradeForm> = new FormGroup<CreateGradeForm>({
     name: new FormControl("", [Validators.required]),
   });
 
-  constructor(private fb: FormBuilder, public toastr: ToastrService) {
-    this.gridForm = this.fb.group({
+  constructor(
+    private fb: FormBuilder,
+    public toastr: ToastrService,
+    public bsModalRef: BsModalRef
+  ) {
+    this.gradeForm = this.fb.group({
       name: [""],
     });
   }
 
   ngOnInit(): void {
-    this.model.onShow.subscribe(() => {
-      if (this.gridId) {
-        this.updateForm(this.gridId);
-      }
-    });
+    this.updateForm({});
+  }
+
+  closeModal() {
+    this.bsModalRef.hide(); // Close the modal
   }
 
   updateForm(data: any): void {
-    // this.gridForm.patchValue({
+    // this.gradeForm.patchValue({
     //   id: data.qualification?.id || 0,
     //   name: data.qualification?.name || "",
     // });
   }
 
-  createGridHandler() {
-    let payload: any = this.gridForm.value;
-    payload.id = this.gridId;
-    this.eventAction.emit(payload);
-    this.model.hide();
-    // if (this.gridForm.valid) {
+  creategradeHandler() {
+    let payload: any = this.gradeForm.value;
+    this.modalData.dataBack = this.gradeForm.value;
+    this.closeModal();
+    // if (this.gradeForm.valid) {
     //   this.profileService.createQualification(payload).subscribe(
     //     (res) => {
     //       this.toastr.success(res.message, "Qualification");
@@ -62,13 +65,12 @@ export class AddGridModelComponent {
     // }
   }
 
-  updateGridHandler() {
-    let payload: any = this.gridForm.value;
-    payload.id = this.gridId;
-    this.eventAction.emit(payload);
+  updategradeHandler() {
+    let payload: any = this.gradeForm.value;
+    this.modalData.dataBack = this.gradeForm.value;
+    this.closeModal();
 
-    this.model.hide();
-    // if (this.gridForm.valid) {
+    // if (this.gradeForm.valid) {
     //   this.profileService.updateQualification(payload).subscribe(
     //     (res) => {
     //       this.toastr.success(res.message, "Qualifications");
@@ -82,6 +84,8 @@ export class AddGridModelComponent {
   }
 
   onSubmit(): void {
-    this.gridId ? this.updateGridHandler() : this.createGridHandler();
+    this.modalData.mode == "edit"
+      ? this.updategradeHandler()
+      : this.creategradeHandler();
   }
 }

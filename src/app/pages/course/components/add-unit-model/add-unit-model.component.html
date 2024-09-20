@@ -1,13 +1,13 @@
-<div class="modal-dialog modal-dialog-centered">
+<div class="modal-dialog modal-dialog-centered m-0">
   <div class="modal-content">
     <div class="modal-header">
-      <h5 id="staticBackdropLabel" class="modal-title">{{ title }}</h5>
+      <h5 id="staticBackdropLabel" class="modal-title">{{modalData.mode == "edit" ? 'Edit Unit' : 'Add Unit'}}</h5>
       <button
         type="button"
         data-bs-dismiss="modal"
         aria-label="Close"
         class="btn-close"
-        (click)="model.hide()"
+        (click)="bsModalRef.hide()"
       ></button>
     </div>
     <div class="modal-body p-4">
