@@ -102,7 +102,7 @@
                               {{ chat.firstName }} {{ chat.lastName }}
                             </h5>
                             <p class="text-truncate mb-0">
-                              {{ now | date : "MMM d, h:mm a" }}
+                              {{ convertDateToLocalDate(chat.lastUpdateDate) | date : "MMM d, h:mm a" }}
                             </p>
                           </div>
 
@@ -277,7 +277,8 @@
                       </p>
                       <p class="chat-time mb-0">
                         <i class="bx bx-time-five align-middle me-1"></i>
-                        {{ data.sentAt | date : "MMM d, h:mm a" }}
+                        {{ convertDateToLocalDate(data.sentAt) | date : "MMM d, h:mm a" }}
+
                       </p>
                     </div>
                   </div>

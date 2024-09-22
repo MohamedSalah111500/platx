@@ -17,6 +17,7 @@ import { DropzoneConfigInterface } from "ngx-dropzone-wrapper";
 import { ATTACHMENT_NAMES, ATTACHMENTS_TYPES } from "src/app/utiltis/lookups";
 import {
   calculateTotalSizeInGB,
+  convertDateToLocalDate,
   convertObjectToArray,
   copyToClipboard,
   downloadFileUseURL,
@@ -31,6 +32,8 @@ import { FILE_MANAGER_URLS } from "src/app/utiltis/urls";
   styleUrls: ["./filemanager.component.scss"],
 })
 export class FilemanagerComponent implements OnInit {
+
+  convertDateToLocalDate = convertDateToLocalDate;
   // bread crumb items
   breadCrumbItems: Array<{}>;
   term: any;

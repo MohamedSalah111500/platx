@@ -1,9 +1,33 @@
 import { FormControl } from "@angular/forms";
 
+export interface Grade {
+  id: number;
+  name: string;
+  description: string;
+  units?: Unit[];
+}
+export interface CreateGradeForm {
+  name: FormControl;
+  description: FormControl;
+}
+
+export interface CreateGrades {
+  Name: string;
+  Description: string;
+}
+
+export interface CreateGradePayload extends CreateGrades {}
+export interface GetGradeResponse {
+  items: Grade[];
+}
+
 export interface Subject {
-  id: string;
-  subjectTitle: string;
-  orderNumber: number;
+  id: number;
+  name: string;
+  orderNo: number;
+  unitId: number;
+  attachementId: number;
+  creationTime: string;
 }
 
 export interface Unit {
@@ -13,12 +37,14 @@ export interface Unit {
   subjects: Subject[];
 }
 
-export interface Grade {
+export interface Units {
   id: number;
   name: string;
-  units?: Unit[];
+  orderNo: number;
+  description: string;
+  gridId: number;
+  creationTime: string;
+  subjects: Subject[];
 }
 
-export interface CreateGradeForm {
-  name: FormControl;
-}
+export interface GetUnitsInGradeResponse extends Units {}

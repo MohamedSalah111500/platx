@@ -70,7 +70,7 @@
                      
                     </td>
                     <td>{{ item.name }}</td>
-                    <td>{{ item.creationTime | date : "medium"}}</td>
+                    <td>{{ convertDateToLocalDate(item.creationTime) | date : "medium"}}</td>
                     <td>{{ item.size ? item.size : '1.0 KB' }}</td>
                     <td>
                       <ul class="list-inline font-size-20 contact-links mb-0">

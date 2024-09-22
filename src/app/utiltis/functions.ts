@@ -172,3 +172,8 @@ export function generateDaysOfMonth() {
 export function generateFileTypesIcons(documentType: string, fontSize = 16) {
   return `<i class="mdi mdi-${documentType} font-size-${fontSize} text-primary me-2"></i>`;
 }
+
+export function convertDateToLocalDate(date: string) {
+  const utcDate = new Date(date + "Z"); // Date from server (UTC)
+  return utcDate.toLocaleString();
+}

@@ -185,7 +185,7 @@ export class ChatService {
   ): Observable<IGeneralSuccessMessageResponse> {
     return new Observable(
       (observer: Observer<IGeneralSuccessMessageResponse>) => {
-        this.http.delete(CHAT_URLS.DELETE_MESSAGES(studentId)).subscribe(
+        this.http.delete(CHAT_URLS.DELETE_MESSAGES_WITH_STUDENT(studentId)).subscribe(
           (res: IGeneralSuccessMessageResponse) => {
             this.toastr.success(res.message, "Delete Message");
             observer.next(res);

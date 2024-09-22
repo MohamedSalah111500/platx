@@ -7,16 +7,18 @@ export interface GetMessagesForTeacherOrStudentInGroupResponse {
   senderStaff?: SenderStaff;
   recipientStudentId?: null | number;
   content?: string;
-  sentAt?: string | Date;
+  sentAt?: string ;
   isSendToGroup?: boolean;
   align?: string;
 }
 
 export interface SenderStudent {
   id?: number;
+  groupId?: number;
   firstName?: string;
   lastName?: string;
   profileImage?: null;
+  lastUpdateDate?: string;
 }
 
 interface SenderStaff {

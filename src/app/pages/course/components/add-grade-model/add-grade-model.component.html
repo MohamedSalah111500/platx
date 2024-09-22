@@ -1,7 +1,9 @@
 <div class="modal-dialog modal-dialog-centered m-0">
   <div class="modal-content">
     <div class="modal-header">
-      <h5 id="staticBackdropLabel" class="modal-title">{{modalData.mode == "edit" ? 'Edit grade' : 'Add grade'}}</h5>
+      <h5 id="staticBackdropLabel" class="modal-title">
+        {{ modalData.mode == "edit" ? "Edit grade" : "Add grade" }}
+      </h5>
       <button
         type="button"
         data-bs-dismiss="modal"
@@ -17,14 +19,29 @@
         class="needs-validation"
         novalidate
       >
-        <div class="mb-3">
-          <div class="mb-2">
-            <label for="name" class="form-label font-size-16 font-bold m-0"
-              >Grad Name *</label
-            >
+        <div class="row">
+          <div class="col-lg-12 mb-3">
+            <label for="address" class="form-label"> Grad Name *</label>
+            <input id="name" class="form-control" formControlName="name" />
+            @if(submitted && gradeForm.controls.name.invalid){
+            <div class="invalid-feedback">
+              <small *ngIf="gradeForm.controls.name.errors.required"
+                >Please add name .</small
+              >
+            </div>
+            }
           </div>
-          <input id="name" class="form-control" formControlName="name" />
+
+          <div class="col-lg-12 mb-3">
+            <label for="address" class="form-label"> Description *</label>
+            <textarea
+              id="description"
+              class="form-control"
+              formControlName="description"
+            ></textarea>
+          </div>
         </div>
+
         <div class="d-grade gap-2">
           <button type="submit" class="btn btn-success">Submit</button>
         </div>

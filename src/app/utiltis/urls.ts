@@ -10,6 +10,8 @@ const FILE_MANAGER_BASE = "api/Attachements";
 const EVENTS_BASE = "api/Events";
 const EVENT_DETAILS_BASE = "api/EventDetails";
 const CHAT_BASE = "api/Messages";
+const GRADES_BASE = "api/Grades";
+const UNIT_BASE = "api/Unit";
 
 export const AUTH_URLS = {
   LOGIN: `${environment.apiURL.concat(AUTH_BASE)}login`,
@@ -141,17 +143,27 @@ export const CHAT_URLS = {
     CHAT_BASE
   )}/SendMessageToGroupFromStudent`,
   DELETE_MESSAGES: (messageId: number) =>
-    `${environment.apiURL.concat(
-      CHAT_BASE
-    )}/DeleteMessage/${messageId}`,
+    `${environment.apiURL.concat(CHAT_BASE)}/DeleteMessage/${messageId}`,
 
   DELETE_MESSAGES_WITH_GROUP: (groupId: number) =>
-    `${environment.apiURL.concat(
-      CHAT_BASE
-    )}/DeleteMessageWithGroup/${groupId}`,
+    `${environment.apiURL.concat(CHAT_BASE)}/DeleteMessageWithGroup/${groupId}`,
 
   DELETE_MESSAGES_WITH_STUDENT: (studentId: number) =>
     `${environment.apiURL.concat(
       CHAT_BASE
     )}/DeleteMessageWithStudent/${studentId}`,
+};
+
+export const GRADES_URLS = {
+  CREATE: `${environment.apiURL.concat(GRADES_BASE)}`,
+  GET: `${environment.apiURL.concat(GRADES_BASE)}`,
+
+  // DELETE: (id: string) =>`${environment.apiURL.concat(FILE_MANAGER_BASE)}/${id}`,
+};
+
+export const UNIT_URLS = {
+  CREATE: `${environment.apiURL.concat(UNIT_BASE)}`,
+  GET_UNITES_IN_GRADE: (gradeId: number) =>
+    `${environment.apiURL.concat(UNIT_BASE)}/GetUnitsInGrade/${gradeId}`,
+  DELETE: (id: string) => `${environment.apiURL.concat(UNIT_BASE)}/${id}`,
 };

@@ -17,6 +17,7 @@ import {
   SendMessageToStudentPayload,
 } from "../types";
 import { ToastrService } from "ngx-toastr";
+import { convertDateToLocalDate } from "src/app/utiltis/functions";
 
 @Component({
   selector: "app-chat",
@@ -26,7 +27,7 @@ import { ToastrService } from "ngx-toastr";
 export class ChatComponent implements OnInit, AfterViewInit {
   @ViewChild("scrollEle") scrollEle;
   @ViewChild("scrollRef") scrollRef;
-
+  convertDateToLocalDate = convertDateToLocalDate;
   // bread crumb items
   breadCrumbItems: Array<{}>;
   chatData: any;
@@ -146,8 +147,8 @@ export class ChatComponent implements OnInit, AfterViewInit {
     let payload: SendMessageToStudentPayload = {
       content: content,
       studentId: this.selectedStudent.id,
+      groupId: this.selectedStudent.groupId,
       //@TODO Replace static id
-      groupId: 1,
       teacherId: 10,
     };
     return this.chatService.postMessagesToStudent(payload);
@@ -168,7 +169,10 @@ export class ChatComponent implements OnInit, AfterViewInit {
       this.chatName =
         this.selectedStudent.firstName + " " + this.selectedStudent.lastName;
       //@TODO
-      this.getMessagesWithStudent(this.selectedStudent.id, 1);
+      this.getMessagesWithStudent(
+        this.selectedStudent.id,
+        this.selectedStudent.groupId
+      );
     }
   }
 
@@ -212,7 +216,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
             id: 10,
           },
           content: message,
-          sentAt: new Date(),
+          sentAt: new Date().toDateString(),
         });
         this.onListScroll();
       });
@@ -245,7 +249,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
   }
 
   deleteStudentMessages(studentId: number) {
-    this.chatService.deleteGroupMessages(+studentId).subscribe(() => {
+    this.chatService.deleteStudentMessages(+studentId).subscribe(() => {
       this.chatMessages = [];
     });
   }
@@ -253,7 +257,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
   deleteAllMessage() {
     if (!this.chatActiveType) return;
     if (this.chatActiveType == "student") {
-      this.deleteStudentMessages(+this.selectedGroup.id);
+      this.deleteStudentMessages(+this.selectedStudent.id);
     }
     if (this.chatActiveType == "group") {
       this.deleteGroupMessages(+this.selectedGroup.id);
