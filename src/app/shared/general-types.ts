@@ -10,5 +10,7 @@ export interface IGeneralErrorMessageResponse {
 
 export interface ModalData {
   mode?: string;
+  gradeId?:number;
+  dataPass?: any;
   dataBack?: any;
 }

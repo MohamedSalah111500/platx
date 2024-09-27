@@ -1,7 +1,9 @@
 <div class="modal-dialog modal-dialog-centered m-0">
   <div class="modal-content">
     <div class="modal-header">
-      <h5 id="staticBackdropLabel" class="modal-title">{{modalData.mode == "edit" ? 'Edit Unit' : 'Add Unit'}}</h5>
+      <h5 id="staticBackdropLabel" class="modal-title">
+        {{ modalData.mode == "edit" ? "Edit Unit" : "Add Unit" }}
+      </h5>
       <button
         type="button"
         data-bs-dismiss="modal"
@@ -17,13 +19,41 @@
         class="needs-validation"
         novalidate
       >
-        <div class="mb-3">
-          <div class="mb-2">
-            <label for="name" class="form-label font-size-16 font-bold m-0"
-              >Unit title *</label
-            >
+        <div class="row mb-3">
+          <div class="col-9">
+            <div class="mb-2">
+              <label for="name" class="form-label font-size-16 font-bold m-0"
+                >Unit title *</label
+              >
+            </div>
+            <input id="name" class="form-control" formControlName="name" />
+
+            <div class="errors">
+              @if( submitted && unitForm.controls.name?.errors?.required){
+              <small class="error">this field is required</small>
+              }
+            </div>
           </div>
-          <input id="name" class="form-control" formControlName="name" />
+
+          <div class="col-3">
+            <div class="mb-2">
+              <label for="name" class="form-label font-size-16 font-bold m-0"
+                >Unit Order *</label
+              >
+            </div>
+            <ng-select
+              [items]="orderList"
+              bindLabel="number"
+              bindValue="number"
+              placeholder="Order Number For this Unit"
+              formControlName="orderNo"
+            ></ng-select>
+            <div class="errors">
+              @if(submitted && unitForm.controls.orderNo?.errors?.required){
+              <small class="error">this field is required</small>
+              }
+            </div>
+          </div>
         </div>
 
         <div class="mb-3">
@@ -45,63 +75,60 @@
         </div>
 
         <div formArrayName="subjects">
-          <div
-            *ngFor="let experience of subjects.controls; let i = index"
-            [formGroupName]="i"
-            class="mb-3 border p-3 rounded"
-          >
+          @for (subject of subjects.controls; track $index){
+          <div [formGroupName]="$index" class="mb-3 border p-3 rounded">
             <div class="mb-3 row">
               <div class="row justify-content-between mb-3 p-0">
                 <div class="form-check ms-4 w-50"></div>
                 <button
-                  (click)="removeUnitSubject(i)"
+                  (click)="removeUnitSubject($index)"
                   class="btn-close"
                 ></button>
               </div>
-              <label for="subjectTitle{{ i }}" class="col-md-3 col-form-label"
-                >Subject Title</label
+              <label for="name" class="col-md-3 col-form-label"
+                >Subject Name</label
               >
               <div class="col-md-9">
                 <input
                   type="text"
-                  placeholder="subject title Example 'math'"
-                  id="subjectTitle{{ i }}"
-                  formControlName="subjectTitle"
+                  placeholder="subject name Example 'math'"
+                  id="name"
+                  formControlName="name"
                   class="form-control"
                   required
                 />
-                <div
-                  class="invalid-feedback"
-                  *ngIf="
-                    experience.get('subjectTitle').invalid &&
-                    experience.get('subjectTitle').touched
-                  "
-                >
-                  Job Title is required.
+                <div class="errors">
+                  @if( submitted && subject.get('name').invalid){
+                  <small class="error">this field is required</small>
+                  }
                 </div>
               </div>
             </div>
 
             <div class="mb-3 row">
-              <label for="document{{ i }}" class="col-md-3 col-form-label"
+              <label for="attachementId" class="col-md-3 col-form-label"
                 >Document / Link
               </label>
               <div class="col-md-9">
                 <ng-select
-                  [items]="orderList"
-                  bindLabel="number"
-                  bindValue="number"
+                  [items]="files"
+                  bindLabel="name"
+                  bindValue="id"
                   placeholder="Select Document for Subject"
-                  formControlName="document"
+                  formControlName="attachementId"
+                  (search)="search($event)"
                 ></ng-select>
-                <div *ngIf="submitted && unitForm.controls.document.invalid" class="invalid-feedback">
-                  <small *ngIf="unitForm.controls.document.errors.required">Please select Document.</small>
+                <div class="errors">
+                  @if(submitted &&
+                  subject.get('attachementId').errors?.required){
+                  <small class="error">this field is required</small>
+                  }
                 </div>
               </div>
             </div>
 
             <div class="mb-1 row">
-              <label for="order{{ i }}" class="col-md-3 col-form-label"
+              <label for="orderNo" class="col-md-3 col-form-label"
                 >Order In Subject List</label
               >
               <div class="col-md-9">
@@ -110,15 +137,21 @@
                   bindLabel="number"
                   bindValue="number"
                   placeholder="Select Order of Subject"
-                  formControlName="order"
+                  formControlName="orderNo"
+                  [ngClass]="{
+                    'is-invalid': submitted && subject.get('orderNo').invalid
+                  }"
+                  required
                 ></ng-select>
-                <div *ngIf="submitted && unitForm.controls.order.invalid" class="invalid-feedback">
-                  <small *ngIf="unitForm.controls.order.errors.required">Please select group.</small>
+                <div class="errors">
+                  @if(submitted && subject.get('orderNo').errors?.required){
+                  <small class="error">this field is required</small>
+                  }
                 </div>
               </div>
             </div>
           </div>
-
+          }
           <div class="d-grid gap-2">
             <button
               type="button"

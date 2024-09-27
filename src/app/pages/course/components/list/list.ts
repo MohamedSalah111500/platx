@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { Grade, Units } from "../../types";
+import { Grade, Unit } from "../../types";
 import { generateFileTypesIcons } from "src/app/utiltis/functions";
 import { BsModalRef, BsModalService, ModalOptions } from "ngx-bootstrap/modal";
 import { ModalData } from "src/app/shared/general-types";
@@ -25,7 +25,7 @@ export class ListComponent implements OnInit {
   modalRef: BsModalRef;
   bsModalRef?: BsModalRef;
   grades!: Grade[];
-  unites!: Units[];
+  unites!: Unit[];
   modalData!: ModalData;
 
   constructor(
@@ -59,24 +59,29 @@ export class ListComponent implements OnInit {
     this.getUnitsByGradeId(tabId);
   }
 
-  openUnitModal(mode: string) {
+  openUnitModal(mode: string, gradeId?: number, unit?: Unit) {
     const initialState: ModalOptions = {
       class: "modal-lg",
       initialState: {
-        modalData: { mode },
+        modalData: { mode, gradeId, dataPass: unit },
       },
     };
     this.bsModalRef = this.modalService.show(
       AddUnitModelComponent,
       initialState
     );
+
+    this.bsModalRef.onHide.subscribe((res) => {
+      if (!res["initialState"]) return;
+      this.getAllGrades();
+    });
   }
 
-  openGradeModal(mode: string) {
+  openGradeModal(mode: string, grade?: Grade) {
     const initialState: ModalOptions = {
       class: "modal-lg",
       initialState: {
-        modalData: { mode },
+        modalData: { mode, dataPass: grade },
       },
     };
     this.bsModalRef = this.modalService.show(
@@ -86,6 +91,7 @@ export class ListComponent implements OnInit {
 
     this.bsModalRef.onHide.subscribe((res) => {
       if (!res["initialState"]) return;
+      this.getAllGrades();
       let modalData: ModalData = res["initialState"].modalData;
       // this.grades.push({ id: 2, name: modalData.dataBack.name });
     });

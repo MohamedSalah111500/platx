@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from "@angular/core";
+import { Component, EventEmitter, Output, ViewChild } from "@angular/core";
 import {
   FormBuilder,
   FormControl,
@@ -6,8 +6,8 @@ import {
   Validators,
 } from "@angular/forms";
 import { ToastrService } from "ngx-toastr";
-import { CreateGradeForm } from "../../types";
-import { BsModalRef } from "ngx-bootstrap/modal";
+import { CreateGradeForm, Grade, PutGradesPayload } from "../../types";
+import { BsModalRef, ModalDirective } from "ngx-bootstrap/modal";
 import { ModalData } from "src/app/shared/general-types";
 import { CourseService } from "../../services/course.service";
 
@@ -17,10 +17,13 @@ import { CourseService } from "../../services/course.service";
 })
 export class AddGradeModelComponent {
   @Output() eventAction = new EventEmitter<{}>();
+  @ViewChild("removeItemModal", { static: false })
+  removeItemModal?: ModalDirective;
   modalData: ModalData;
   submitted: boolean = false;
 
   gradeForm: FormGroup<CreateGradeForm> = new FormGroup<CreateGradeForm>({
+    id: new FormControl(null, []),
     name: new FormControl("", [Validators.required]),
     description: new FormControl("", []),
   });
@@ -32,18 +35,19 @@ export class AddGradeModelComponent {
   ) {}
 
   ngOnInit(): void {
-    this.updateForm({});
+    this.updateForm(this.modalData.dataPass);
   }
 
   closeModal() {
-    this.bsModalRef.hide(); // Close the modal
+    this.bsModalRef.hide();
   }
- 
-  updateForm(data: any): void {
-    // this.gradeForm.patchValue({
-    //   id: data.qualification?.id || 0,
-    //   name: data.qualification?.name || "",
-    // });
+
+  updateForm(data: Grade): void {
+    this.gradeForm.patchValue({
+      id: data?.id || 0,
+      name: data?.name || "",
+      description: data?.description || "",
+    });
   }
 
   createGradeHandler() {
@@ -54,7 +58,7 @@ export class AddGradeModelComponent {
     this.modalData.dataBack = this.gradeForm.value;
 
     if (this.gradeForm.valid) {
-      this.courseService.postCreateGrades(formData).subscribe(
+      this.courseService.postCreateGrade(formData).subscribe(
         (res) => {
           this.closeModal();
           this.submitted = false;
@@ -67,27 +71,47 @@ export class AddGradeModelComponent {
     }
   }
 
-  updategradeHandler() {
-    let payload: any = this.gradeForm.value;
-    this.modalData.dataBack = this.gradeForm.value;
-    this.closeModal();
+  updateGradeHandler() {
+    let payload: PutGradesPayload = {
+      id: this.gradeForm.value.id,
+      Name: this.gradeForm.value.name,
+      Description: this.gradeForm.value.description,
+    };
 
-    // if (this.gradeForm.valid) {
-    //   this.profileService.updateQualification(payload).subscribe(
-    //     (res) => {
-    //       this.toastr.success(res.message, "Qualifications");
-    //       this.model.hide();
-    //     },
-    //     (err) => {
-    //       this.toastr.error(err.message, "Qualifications");
-    //     }
-    //   );
-    // }
+    if (this.gradeForm.valid) {
+      this.courseService.putGrade(payload).subscribe(
+        (res) => {
+          this.toastr.success(res.message, "Grade");
+          this.closeModal();
+        },
+        (err) => {
+          this.toastr.error(err.message, "Grade");
+        }
+      );
+    }
+  }
+
+  openDeleteModel() {
+    this.removeItemModal?.show();
+  }
+
+  confirmDelete() {
+    this.deleteGradeHandler(this.gradeForm.value.id);
+  }
+
+  deleteGradeHandler(gradeId) {
+    this.courseService.deleteGrade(gradeId).subscribe(
+      (res) => {
+        this.removeItemModal?.hide();
+        this.closeModal();
+      },
+      (err) => {}
+    );
   }
 
   onSubmit(): void {
     this.modalData.mode == "edit"
-      ? this.updategradeHandler()
+      ? this.updateGradeHandler()
       : this.createGradeHandler();
   }
 }

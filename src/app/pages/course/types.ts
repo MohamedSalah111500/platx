@@ -1,4 +1,4 @@
-import { FormControl } from "@angular/forms";
+import { FormArray, FormBuilder, FormControl } from "@angular/forms";
 
 export interface Grade {
   id: number;
@@ -7,6 +7,7 @@ export interface Grade {
   units?: Unit[];
 }
 export interface CreateGradeForm {
+  id?: FormControl;
   name: FormControl;
   description: FormControl;
 }
@@ -16,9 +17,22 @@ export interface CreateGrades {
   Description: string;
 }
 
+export interface PutGradesPayload extends CreateGrades {
+  id?: string;
+}
+
 export interface CreateGradePayload extends CreateGrades {}
 export interface GetGradeResponse {
   items: Grade[];
+}
+
+export interface CreateUpdateUnitPayload {
+  id?: number;
+  name: string;
+  description: string;
+  orderNo: number;
+  gridId: number;
+  subjects: Subject[];
 }
 
 export interface Subject {
@@ -37,7 +51,7 @@ export interface Unit {
   subjects: Subject[];
 }
 
-export interface Units {
+export interface Unit {
   id: number;
   name: string;
   orderNo: number;
@@ -47,4 +61,13 @@ export interface Units {
   subjects: Subject[];
 }
 
-export interface GetUnitsInGradeResponse extends Units {}
+export interface GetUnitsInGradeResponse extends Unit {}
+
+export interface CreateUnitForm {
+  id?: FormControl;
+  name: FormControl;
+  orderNo: FormControl;
+  gridId: FormControl;
+  description: FormControl;
+  subjects: FormArray;
+}

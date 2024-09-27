@@ -157,8 +157,7 @@ export const CHAT_URLS = {
 export const GRADES_URLS = {
   CREATE: `${environment.apiURL.concat(GRADES_BASE)}`,
   GET: `${environment.apiURL.concat(GRADES_BASE)}`,
-
-  // DELETE: (id: string) =>`${environment.apiURL.concat(FILE_MANAGER_BASE)}/${id}`,
+  DELETE: (id: number) => `${environment.apiURL.concat(GRADES_BASE)}/${id}`,
 };
 
 export const UNIT_URLS = {

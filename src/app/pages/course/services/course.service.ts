@@ -7,7 +7,15 @@ import {
   IGeneralErrorMessageResponse,
   IGeneralSuccessMessageResponse,
 } from "src/app/shared/general-types";
-import { CreateGradePayload, GetGradeResponse, GetUnitsInGradeResponse, Grade, Units } from "../types";
+import {
+  CreateGradePayload,
+  CreateUpdateUnitPayload,
+  GetGradeResponse,
+  GetUnitsInGradeResponse,
+  Grade,
+  PutGradesPayload,
+  Unit,
+} from "../types";
 
 @Injectable({
   providedIn: "root",
@@ -15,7 +23,7 @@ import { CreateGradePayload, GetGradeResponse, GetUnitsInGradeResponse, Grade, U
 export class CourseService {
   constructor(private http: HttpClient, private toasty: ToastrService) {}
 
-  postCreateGrades(
+  postCreateGrade(
     payload: FormData | CreateGradePayload
   ): Observable<IGeneralSuccessMessageResponse> {
     return new Observable(
@@ -28,6 +36,79 @@ export class CourseService {
           (error) => {
             this.toasty.error(error.message, "Grade");
             observer.error(error);
+          }
+        );
+      }
+    );
+  }
+
+  postCreateUnit(
+    payload: CreateUpdateUnitPayload
+  ): Observable<IGeneralSuccessMessageResponse> {
+    return new Observable(
+      (observer: Observer<IGeneralSuccessMessageResponse>) => {
+        this.http.post(UNIT_URLS.CREATE, payload).subscribe(
+          (res: any) => {
+            this.toasty.success(res.message, "Unit");
+            observer.next(res);
+          },
+          (error) => {
+            this.toasty.error(error.message, "Unit");
+            observer.error(error);
+          }
+        );
+      }
+    );
+  }
+
+  putUpdateUnit(
+    payload: CreateUpdateUnitPayload
+  ): Observable<IGeneralSuccessMessageResponse> {
+    return new Observable(
+      (observer: Observer<IGeneralSuccessMessageResponse>) => {
+        this.http.put(UNIT_URLS.CREATE, payload).subscribe(
+          (res: any) => {
+            this.toasty.success(res.message, "Unit");
+            observer.next(res);
+          },
+          (error) => {
+            this.toasty.error(error.message, "Unit");
+            observer.error(error);
+          }
+        );
+      }
+    );
+  }
+
+  putGrade(
+    payload: PutGradesPayload
+  ): Observable<IGeneralSuccessMessageResponse> {
+    return new Observable(
+      (observer: Observer<IGeneralSuccessMessageResponse>) => {
+        this.http.put(GRADES_URLS.CREATE, payload).subscribe(
+          (res: any) => {
+            this.toasty.success(res.message, "Grade");
+            observer.next(res);
+          },
+          (error) => {
+            this.toasty.error(error.message, "Grade");
+            observer.error(error);
+          }
+        );
+      }
+    );
+  }
+
+  deleteGrade(gradeId: number): Observable<IGeneralSuccessMessageResponse> {
+    return new Observable(
+      (observer: Observer<IGeneralSuccessMessageResponse>) => {
+        this.http.delete(GRADES_URLS.DELETE(gradeId)).subscribe(
+          (res: IGeneralSuccessMessageResponse) => {
+            this.toasty.success(res.message, "Grade");
+            observer.next(res);
+          },
+          (error: IGeneralErrorMessageResponse) => {
+            this.toasty.success(error.message, "Grade");
           }
         );
       }
@@ -47,10 +128,10 @@ export class CourseService {
     });
   }
 
-  getUnitsByGradeId(gradeId: number): Observable<Units[]> {
-    return new Observable((observer: Observer<Units[]>) => {
+  getUnitsByGradeId(gradeId: number): Observable<Unit[]> {
+    return new Observable((observer: Observer<Unit[]>) => {
       this.http.get(UNIT_URLS.GET_UNITES_IN_GRADE(gradeId)).subscribe(
-        (res: Units[]) => {
+        (res: Unit[]) => {
           observer.next(res);
         },
         (error) => {

@@ -32,7 +32,6 @@ import { FILE_MANAGER_URLS } from "src/app/utiltis/urls";
   styleUrls: ["./filemanager.component.scss"],
 })
 export class FilemanagerComponent implements OnInit {
-
   convertDateToLocalDate = convertDateToLocalDate;
   // bread crumb items
   breadCrumbItems: Array<{}>;
@@ -77,7 +76,6 @@ export class FilemanagerComponent implements OnInit {
     public toastr: ToastrService,
     private filemanagerService: FilemanagerService
   ) {}
-
 
   getIconClass = getIconClass;
   formatStorageUsage = formatStorageUsage;
@@ -172,9 +170,9 @@ export class FilemanagerComponent implements OnInit {
     this.uploadedFiles.splice(this.uploadedFiles.indexOf(event), 1);
   }
 
-  getAllData(pageNumber: number, pageSize: number) {
+  getAllData(pageNumber: number, pageSize: number, search: string = "") {
     this.loading = true;
-    this.filemanagerService.getAllFiles(pageNumber, pageSize).subscribe(
+    this.filemanagerService.getAllFiles(pageNumber, pageSize, search).subscribe(
       (response) => {
         this.list = response.items;
         this.returnedArray = [...this.list];

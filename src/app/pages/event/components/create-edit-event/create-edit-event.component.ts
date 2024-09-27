@@ -48,6 +48,7 @@ export class CreateEditEventComponent implements OnInit {
 
   @ViewChild("removeItemModal", { static: false })
   removeItemModal?: ModalDirective;
+  
   @Output() eventAction = new EventEmitter<string>();
 
   targetEvent!: IEvent;

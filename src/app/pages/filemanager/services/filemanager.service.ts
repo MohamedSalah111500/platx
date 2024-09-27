@@ -5,7 +5,7 @@ import { HttpClient } from "@angular/common/http";
 import { Observable, Observer } from "rxjs";
 
 import { FILE_MANAGER_URLS } from "src/app/utiltis/urls";
-import { pagination } from "src/app/utiltis/functions";
+import { pagination, paginationWithSearch } from "src/app/utiltis/functions";
 import {
   CreateFilePayload,
   GetAllFilesResponse,
@@ -39,11 +39,19 @@ export class FilemanagerService {
 
   getAllFiles(
     pageNumber: number,
-    pageSize: number
+    pageSize: number,
+    search: string
   ): Observable<GetAllFilesResponse> {
     return new Observable((observer: Observer<GetAllFilesResponse>) => {
       this.http
-        .get(pagination(FILE_MANAGER_URLS.GET_ALL, pageNumber, pageSize))
+        .get(
+          paginationWithSearch(
+            FILE_MANAGER_URLS.GET_ALL,
+            search,
+            pageNumber,
+            pageSize
+          )
+        )
         .subscribe(
           (responseData: GetAllFilesResponse) => {
             observer.next(responseData);
@@ -64,7 +72,9 @@ export class FilemanagerService {
     });
   }
 
-  updateStudent(payload: UpdateFilePayload ): Observable<IGeneralSuccessMessageResponse> {
+  updateStudent(
+    payload: UpdateFilePayload
+  ): Observable<IGeneralSuccessMessageResponse> {
     return new Observable(
       (observer: Observer<IGeneralSuccessMessageResponse>) => {
         this.http.put(FILE_MANAGER_URLS.UPDATE, payload).subscribe(

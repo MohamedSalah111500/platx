@@ -1,9 +1,19 @@
 import { HttpClient } from "@angular/common/http";
 import { Component, Input } from "@angular/core";
-import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from "@angular/forms";
 import { ToastrService } from "ngx-toastr";
 import { ModalData } from "src/app/shared/general-types";
 import { BsModalRef } from "ngx-bootstrap/modal";
+import { CourseService } from "../../services/course.service";
+import { CreateUnitForm, CreateUpdateUnitPayload, Unit } from "../../types";
+import { FilemanagerService } from "src/app/pages/filemanager/services/filemanager.service";
+import { FileItem } from "src/app/pages/filemanager/types";
 
 @Component({
   selector: "platx-add-unit-model",
@@ -11,116 +21,153 @@ import { BsModalRef } from "ngx-bootstrap/modal";
 })
 export class AddUnitModelComponent {
   modalData: ModalData;
-
-  unitForm: FormGroup;
+  files: FileItem[];
+  debounceTimer: any = null;
   orderList = [
-    { number: "1" },
-    { number: "2" },
-    { number: "3" },
-    { number: "4" },
-    { number: "5" },
+    { id: 1, number: "1" },
+    { id: 2, number: "2" },
+    { id: 3, number: "3" },
+    { id: 4, number: "4" },
+    { id: 5, number: "5" },
+    { id: 6, number: "6" },
   ];
 
-  constructor(private fb: FormBuilder, public toastr: ToastrService,public bsModalRef: BsModalRef) {
-    this.unitForm = this.fb.group({
-      name: [""],
-      staffId: [0, Validators.required],
-      description: [""],
-      subjects: this.fb.array([]),
-    });
-  }
+  submitted: boolean = false;
+  unitForm: FormGroup<CreateUnitForm> = new FormGroup<CreateUnitForm>({
+    id: new FormControl(null, []),
+    name: new FormControl("", [Validators.required]),
+    description: new FormControl("", []),
+    orderNo: new FormControl(null, [Validators.required]),
+    gridId: new FormControl("", []),
+    subjects: new FormArray([]),
+  });
+
+  constructor(
+    private courseService: CourseService,
+    private fileService: FilemanagerService,
+    public toaster: ToastrService,
+    public bsModalRef: BsModalRef
+  ) {}
 
   ngOnInit(): void {
+    console.log(this.modalData);
     if (this.modalData.mode == "edit") {
-      this.updateForm({});
+      this.updateForm(this.modalData.dataPass);
     } else {
       if (this.subjects.length > 0) return;
-      this.addUnitSubject(); // Add one subject by default
+      this.addUnitSubject();
     }
+    this.unitForm.controls.gridId.setValue(this.modalData.gradeId);
+    this.getAllFileHandler(100);
   }
- 
 
-  updateForm(data: any): void {
+  closeModal() {
+    this.bsModalRef.hide();
+  }
+
+  updateForm(data: Unit): void {
     this.unitForm.patchValue({
-      id: data.qualification?.id || 0,
-      name: data.qualification?.name || "",
-      staffId: data.qualification.staffId || 0,
-      description: data.qualification?.description || "",
+      id: data?.id || 0,
+      name: data?.name || "",
+      description: data.description || "",
+      orderNo: data?.orderNo || null,
+      gridId: data?.gridId || null,
     });
+    data.subjects?.forEach((subject: any) => {
+      this.addUnitSubject(subject);
+    });
+  }
 
-    data.qualification?.subjects.forEach((experience: any) => {
-      this.addUnitSubject(experience);
-    });
+  addUnitSubject(subject?: any): void {
+    this.subjects.push(
+      new FormGroup({
+        name: new FormControl(
+          subject?.name ? subject.name : "",
+          Validators.required
+        ),
+        orderNo: new FormControl(
+          subject?.orderNo ? subject.orderNo : "",
+          Validators.required
+        ),
+        attachementId: new FormControl(
+          subject?.attachementId ? subject.attachementId : "",
+          Validators.required
+        ),
+      })
+    );
   }
 
   get subjects(): FormArray {
     return this.unitForm.get("subjects") as FormArray;
   }
 
-  addUnitSubject(subject?: any): void {
-    this.subjects.push(
-      this.fb.group({
-        id: [subject?.id || null],
-        subjectTitle: [subject?.subjectTitle || null],
-        document: [subject?.document || null, Validators.required],
-        order: [subject?.order || null],
-        qualificationId: [subject?.qualificationId || 0],
-      })
-    );
-  }
-
   removeUnitSubject(index: number): void {
     this.subjects.removeAt(index);
   }
 
-  createQualificationHandler() {
-    let payload: any = this.unitForm.value;
-    let newExperiences: any[] = payload.subjects.map((qualifiction: any) => ({
-      placeName: qualifiction.placeName,
-      subjectTitle: qualifiction.subjectTitle,
-      responsibility: qualifiction.responsibility,
-    }));
-    payload.subjects = newExperiences;
-    // if (this.unitForm.valid) {
-    //   this.profileService.createQualification(payload).subscribe(
-    //     (res) => {
-    //       this.toastr.success(res.message, "Qualification");
-    //       this.model.hide();
-    //     },
-    //     (err) => {
-    //       this.toastr.error(err.message, "Qualification");
-    //     }
-    //   );
-    // }
+  searchInFilesFn(searchKey: string): void {
+    if (this && this.debounceTimer) {
+      clearTimeout(this.debounceTimer);
+    }
+    // Set a new timeout
+    this.debounceTimer = setTimeout(() => {
+      this.getAllFileHandler(1000, searchKey);
+    }, 1000);
   }
 
-  updateQualificationHandler() {
-    let payload: any = this.unitForm.value;
-    let newExperiences: any[] = payload.subjects.map((qualifiction: any) => ({
-      id: qualifiction.id,
-      qualificationId: qualifiction.qualificationId,
-      placeName: qualifiction.placeName,
-      subjectTitle: qualifiction.subjectTitle,
-      responsibility: qualifiction.responsibility,
-    }));
+  search(event: any): void {
+    let term = event.term.toLocaleLowerCase();
+    this.searchInFilesFn(term);
+  }
 
-    payload.subjects = newExperiences;
-    // if (this.unitForm.valid) {
-    //   this.profileService.updateQualification(payload).subscribe(
-    //     (res) => {
-    //       this.toastr.success(res.message, "Qualifications");
-    //       this.model.hide();
-    //     },
-    //     (err) => {
-    //       this.toastr.error(err.message, "Qualifications");
-    //     }
-    //   );
-    // }
+  getAllFileHandler(number: number, searchKey: string = "") {
+    this.fileService.getAllFiles(1, number, searchKey).subscribe((res) => {
+      this.files = res.items;
+    });
+  }
+
+  postCreateUnitHandler() {
+    this.submitted = true;
+    let payload: CreateUpdateUnitPayload = this.unitForm
+      .value as CreateUpdateUnitPayload;
+    console.log(this.unitForm, "payload");
+    if (this.unitForm.valid) {
+      this.courseService.postCreateUnit(payload).subscribe(
+        (res) => {
+          this.toaster.success(res.message, "Unit");
+          this.closeModal();
+          this.submitted = false;
+        },
+        (err) => {
+          this.toaster.error(err.message, "Unit");
+          this.submitted = false;
+        }
+      );
+    }
+  }
+
+  updateUnitHandler() {
+    this.submitted = true;
+    let payload: CreateUpdateUnitPayload = this.unitForm
+      .value as CreateUpdateUnitPayload;
+    if (this.unitForm.valid) {
+      this.courseService.putUpdateUnit(payload).subscribe(
+        (res) => {
+          this.toaster.success(res.message, "Unit");
+          this.closeModal();
+          this.submitted = false;
+        },
+        (err) => {
+          this.toaster.error(err.message, "Unit");
+          this.submitted = false;
+        }
+      );
+    }
   }
 
   onSubmit(): void {
     this.modalData.mode == "edit"
-      ? this.updateQualificationHandler()
-      : this.createQualificationHandler();
+      ? this.updateUnitHandler()
+      : this.postCreateUnitHandler();
   }
 }

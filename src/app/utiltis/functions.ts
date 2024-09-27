@@ -15,6 +15,14 @@ export function pagination(
 ): string {
   return `${url}?page=${pageNumber}&size=${pageSize}`;
 }
+export function paginationWithSearch(
+  url: string,
+  search: string = "",
+  pageNumber: number = 1,
+  pageSize: number = 10
+): string {
+  return `${url}?search=${search}&?page=${pageNumber}&size=${pageSize}`;
+}
 
 export function convertObjectToArray(obj: { [key: number]: string }): any[] {
   return Object.entries(obj).map(([key, value]) => ({

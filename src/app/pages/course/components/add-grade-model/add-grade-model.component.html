@@ -41,11 +41,36 @@
             ></textarea>
           </div>
         </div>
-
-        <div class="d-grade gap-2">
+        <div class="d-flex justify-content-between">
           <button type="submit" class="btn btn-success">Submit</button>
+          @if(modalData.mode == "edit"){
+          <button
+            type="button"
+            (click)="openDeleteModel()"
+            class="btn btn-danger"
+          >
+            Delete
+          </button>
+          }
         </div>
       </form>
     </div>
   </div>
 </div>
+
+<!-- removeItemModal -->
+<div
+  bsModal
+  #removeItemModal="bs-modal"
+  class="modal fade"
+  id="removeItemModal"
+  tabindex="-1"
+  aria-hidden="true"
+>
+  <platx-confirm-model
+    [title]="'Are you sure you want to Delete !!'"
+    (confirm)="confirmDelete()"
+    (cancel)="removeItemModal.hide()"
+  />
+</div>
+<!-- end removeItemModal -->
