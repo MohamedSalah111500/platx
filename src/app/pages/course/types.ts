@@ -41,7 +41,9 @@ export interface Subject {
   orderNo: number;
   unitId: number;
   attachementId: number;
+  attachementType: number;
   creationTime: string;
+
 }
 
 export interface Unit {

@@ -177,8 +177,35 @@ export function generateDaysOfMonth() {
   }));
 }
 
-export function generateFileTypesIcons(documentType: string, fontSize = 16) {
-  return `<i class="mdi mdi-${documentType} font-size-${fontSize} text-primary me-2"></i>`;
+export function generateFileTypesIcons(attachementType: number, fontSize = 16) {
+  let icon: string, color: string;
+  switch (attachementType) {
+    case 1:
+      icon = "mdi-file-document";
+      color = "primary";
+      break;
+    case 2:
+      icon = "mdi-file-pdf";
+      color = "danger";
+      break;
+    case 3:
+      icon = "mdi-image";
+      color = "success";
+      break;
+    case 4:
+      icon = "mdi-play-circle-outline";
+      color = "danger";
+      break;
+    case 5:
+      icon = "mdi-link";
+      color = "info";
+      break;
+    default:
+      icon = "mdi-file-document";
+      color = "primary";
+      break;
+  }
+  return `<i class="mdi ${icon} font-size-${fontSize} text-${color} me-2"></i>`;
 }
 
 export function convertDateToLocalDate(date: string) {

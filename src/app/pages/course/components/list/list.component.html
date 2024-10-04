@@ -36,7 +36,7 @@
                     <button
                       type="button"
                       class="btn btn-light mx-3 edit-btn"
-                      (click)="openGradeModal('edit',grade)"
+                      (click)="openGradeModal('edit', grade)"
                     >
                       <i class="fa fa-pen font-size-10"></i>
                     </button>
@@ -56,7 +56,7 @@
                             <button
                               type="button"
                               class="btn btn-light mx-3 edit-btn"
-                              (click)="openUnitModal('edit',grade.id,unit)"
+                              (click)="openUnitModal('edit', grade.id, unit)"
                             >
                               <i class="fa fa-pen font-size-10"></i>
                             </button>
@@ -64,7 +64,7 @@
                           <div class="card border-0 shadow-none mb-0">
                             <ul class="list-unstyled mb-0 subject-list">
                               @for (subject of unit.subjects; track $index){
-                              <li class="d-flex align-items-center mb-1">
+                              <li class="d-flex align-items-center justify-content-between mb-1">
                                 <div>
                                   <i
                                     class="bx bx-book-bookmark h5 my-0 me-1"
@@ -74,18 +74,11 @@
                                 <div class="references">
                                   <span
                                     [innerHTML]="
-                                      generateFileTypesIcons('file-document')
+                                      generateFileTypesIcons(
+                                        subject.attachementType
+                                      )
                                     "
                                   ></span>
-                                  <i
-                                    class="mdi mdi-file-document font-size-16 text-primary me-2"
-                                  ></i>
-                                  <i
-                                    class="mdi mdi-file-pdf font-size-16 me-2 text-danger"
-                                  ></i>
-                                  <i
-                                    class="mdi mdi-link font-size-16 me-2 text-primary"
-                                  ></i>
                                 </div>
                               </li>
                               }
@@ -99,7 +92,7 @@
                       <button
                         type="button"
                         class="btn btn-light"
-                        (click)="openUnitModal('add',grade.id)"
+                        (click)="openUnitModal('add', grade.id)"
                       >
                         <i class="fa fa-plus text-success"></i>
                         Add Unit

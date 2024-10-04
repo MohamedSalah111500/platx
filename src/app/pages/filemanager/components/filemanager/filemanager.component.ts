@@ -22,6 +22,7 @@ import {
   copyToClipboard,
   downloadFileUseURL,
   formatStorageUsage,
+  generateFileTypesIcons,
   getIconClass,
 } from "src/app/utiltis/functions";
 import { FILE_MANAGER_URLS } from "src/app/utiltis/urls";
@@ -33,6 +34,7 @@ import { FILE_MANAGER_URLS } from "src/app/utiltis/urls";
 })
 export class FilemanagerComponent implements OnInit {
   convertDateToLocalDate = convertDateToLocalDate;
+  generateFileTypesIcons= generateFileTypesIcons;
   // bread crumb items
   breadCrumbItems: Array<{}>;
   term: any;
