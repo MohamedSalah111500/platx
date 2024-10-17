@@ -52,7 +52,6 @@ export class FilemanagerComponent implements OnInit {
   loading: boolean = false;
   list: FileItem[];
   filesSize: GetAllFilesSizeResponse;
-
   totalCount: number = 0;
   page: number = 1;
   pageSize: number = 10;
