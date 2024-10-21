@@ -12,6 +12,8 @@ const EVENT_DETAILS_BASE = "api/EventDetails";
 const CHAT_BASE = "api/Messages";
 const GRADES_BASE = "api/Grades";
 const UNIT_BASE = "api/Unit";
+const EXAM_BASE = "api/Exam";
+
 
 export const AUTH_URLS = {
   LOGIN: `${environment.apiURL.concat(AUTH_BASE)}login`,
@@ -165,4 +167,12 @@ export const UNIT_URLS = {
   GET_UNITES_IN_GRADE: (gradeId: number) =>
     `${environment.apiURL.concat(UNIT_BASE)}/GetUnitsInGrade/${gradeId}`,
   DELETE: (id: string) => `${environment.apiURL.concat(UNIT_BASE)}/${id}`,
+};
+
+export const EXAM_URLS = {
+  CREATE: `${environment.apiURL.concat(EXAM_BASE)}`,
+  GET_EXAMS:`${environment.apiURL.concat(EXAM_BASE)}`,
+  GET_EXAM: (examId: string) => `${environment.apiURL.concat(EXAM_BASE)}/${examId}`,
+  UPDATE:`${environment.apiURL.concat(EXAM_BASE)}`,
+  DELETE: (examId: string) => `${environment.apiURL.concat(EXAM_BASE)}/${examId}`,
 };

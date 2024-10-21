@@ -37,19 +37,21 @@
                 </tr>
               </thead>
               <tbody>
-                @for (data of contactsList; track $index) {
+                @for (item of filteredList; track $index) {
                 <tr>
                   <td>
                     <p class="text-muted mb-0">{{$index + 1}}</p>
                   </td>
                   <td>
-                    <a  href="javascript: void(0);" class="text-body d-flex align-items-center"><i  class="mdi mdi-file-pdf font-size-24 me-2 text-danger"></i><span  class="me-auto">PDF</span></a>
+                    <a  href="javascript: void(0);" class="text-body d-flex align-items-center">
+                      <i  class="mdi mdi-file-pdf font-size-24 me-2 text-danger"></i>
+                      <span  class="me-auto">PDF</span></a>
                   </td>
                   <td>
-                    <h5 class="font-size-14 mb-1"><a href="javascript: void(0);" class="text-dark">Arabic Example number 1 for Grid tow</a>
+                    <h5 class="font-size-14 mb-1"><a href="javascript: void(0);" class="text-dark">{{item.name}}</a>
                     </h5>
                   </td>
-                  <td>05/12/2023</td>
+                  <td>{{ convertDateToLocalDate(item.creationTime) | date : "medium"}}</td>
 
                   <td>
                     <ul class="list-inline font-size-20 contact-links mb-0">
@@ -59,7 +61,7 @@
                         </a>
                       </li>
                       <li class="list-inline-item px-2">
-                        <a href="javascript:void(0);" tooltip="Delete" (click)="removeUser(data.id)"><i class="mdi mdi-trash-can font-size-16 text-danger me-1"></i> </a>
+                        <a href="javascript:void(0);" tooltip="Delete" (click)="removeUser(item.id)"><i class="mdi mdi-trash-can font-size-16 text-danger me-1"></i> </a>
                       </li>
                     </ul>
                   </td>
@@ -70,7 +72,8 @@
           <div class="row">
             <div class="col-lg-12">
               <ul class="pagination pagination-rounded justify-content-center mt-4">
-                <pagination class="pagination-wrap hstack gap-2" [totalItems]="returnedArray?.length" [itemsPerPage]="10" (pageChanged)="pageChanged($event)"></pagination>
+                <pagination class="pagination-wrap hstack gap-2" [totalItems]="totalCount" [itemsPerPage]="pageSize"
+                  (pageChanged)="pageChanged($event)"></pagination>
               </ul>
             </div>
           </div>
@@ -80,91 +83,14 @@
   </div>
 </div>
 
-<!-- Modal -->
-<div bsModal #newContactModal="bs-modal" class="modal fade" id="newContactModal" tabindex="-1" aria-labelledby="newContactModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="newContactModalLabel">Add Contact</h5>
-        <button type="button" class="btn-close" (click)="newContactModal.hide()"></button>
-      </div>
-      <div class="modal-body">
-        <form (ngSubmit)="saveUser()" [formGroup]="createContactForm" autocomplete="off" class="needs-validation createContact-form" id="createContact-form" novalidate>
-          <div class="row">
-            <div class="col-lg-12">
-              <input type="hidden" class="form-control" id="userid-input">
-              <div class="text-center mb-4">
-                <div class="position-relative d-inline-block">
-                  <div class="position-absolute bottom-0 end-0">
-                    <label for="member-image-input" class="mb-0" data-bs-toggle="tooltip" data-bs-placement="right" title="Select Member Image">
-                      <div class="avatar-xs">
-                        <div class="avatar-title bg-light border rounded-circle text-muted cursor-pointer">
-                          <i class="bx bxs-image-alt"></i>
-                        </div>
-                      </div>
-                    </label>
-                    <input class="form-control d-none" value="" id="member-image-input" type="file" accept="image/png, image/gif, image/jpeg" (change)="fileChange($event)">
-                  </div>
-                  <div class="avatar-lg">
-                    <div class="avatar-title bg-light rounded-circle">
-                      <img src="assets/images/users/user-dummy-img.jpg" id="member-img" class="avatar-md rounded-circle h-auto" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="mb-3">
-                <label for="username-input" class="form-label">User Name</label>
-                <input type="text" id="username-input" class="form-control" placeholder="Enter name" formControlName="name" required />
-                <div class="invalid-feedback">Please enter a name.</div>
-              </div>
-              <div class="mb-3">
-                <label for="designation-input" class="form-label">Designation</label>
-                <input type="text" id="designation-input" class="form-control" placeholder="Enter Designation" formControlName="position" required />
-                <div class="invalid-feedback">Please enter a designation.</div>
-              </div>
-              <div class="mb-3">
-                <label for="email-input" class="form-label">Email</label>
-                <input type="email" id="email-input" class="form-control" placeholder="Enter email" formControlName="email" required />
-                <div class="invalid-feedback">Please enter email.</div>
-              </div>
-              <div class="mb-3">
-                <label for="tag-input" class="form-label">Tags</label>
-                <select class="select2 form-control select2-multiple" id="tag-input" multiple="multiple" formControlName="tags" data-placeholder="Choose ...">
-                  <option value="Photoshop">Photoshop</option>
-                  <option value="illustrator">illustrator</option>
-                  <option value="Html">Html</option>
-                  <option value="Css">Css</option>
-                  <option value="Javascript">Javascript</option>
-                  <option value="Php">Php</option>
-                  <option value="Java">Java</option>
-                  <option value="Ruby">Ruby</option>
-                  <option value="Python">Python</option>
-                </select>
-              </div>
-            </div>
 
-            <div class="col-lg-12">
-              <div class="text-end">
-                <button type="button" class="btn btn-outline-secondary me-1" (click)="newContactModal.hide()">Cancel</button>
-                <button type="submit" id="addContact-btn" class="btn btn-success">Add Customer</button>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-      <!-- end modal body -->
-    </div>
-    <!-- end modal-content -->
-  </div>
-  <!-- end modal-dialog -->
-</div>
-<!-- end newContactModal -->
+@if(loading){
 <div id="elmLoader" class="text-center">
   <div class="spinner-border text-primary avatar-sm" role="status">
     <span class="visually-hidden">Loading...</span>
   </div>
 </div>
-
+}
 <!-- removeItemModal -->
 <div bsModal #removeItemModal="bs-modal" class="modal fade" id="removeItemModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-sm">

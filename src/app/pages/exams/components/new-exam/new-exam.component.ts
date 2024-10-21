@@ -13,20 +13,8 @@ import {
   ValidatorFn,
   Validators,
 } from "@angular/forms";
-import { ModalDirective } from "ngx-bootstrap/modal";
 import { Store } from "@ngrx/store";
-import { selectData } from "src/app/store/Tasks/tasks-selector";
-import {
-  addtasklist,
-  fetchtasklistData,
-  updatetasklist,
-} from "src/app/store/Tasks/tasks.action";
-import { Task } from "src/app/store/Tasks/tasks.model";
-import { memberList } from "src/app/core/data";
-import { tasks } from "../list/data";
-import { IQuestion, QuestionName, QuestionType, Questions } from "../../types";
-import { QuestionService } from "../../services/question.service";
-import { randId } from "src/app/utiltis/functions";
+import { ExamService } from "../../services/exam.service";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 @Component({
@@ -47,7 +35,7 @@ export class NewExamComponent implements OnInit {
     public store: Store,
     private datePipe: DatePipe,
     private fb: FormBuilder,
-    private questionService: QuestionService
+    private examService: ExamService
   ) {}
 
   ngOnInit() {
@@ -58,8 +46,8 @@ export class NewExamComponent implements OnInit {
   }
 
   availableFields = [
-    { type: "single", label: "Single Choice", options: [] },
-    { type: "multiple", label: "Multiple Choice", options: [] },
+    { type: "single", label: "Single Choice", answers: [] },
+    { type: "multiple", label: "Multiple Choice", answers: [] },
   ];
 
   formFields = [];
@@ -69,7 +57,7 @@ export class NewExamComponent implements OnInit {
       ...field,
       id: Date.now(),
       label: field.label,
-      options: field.options || [],
+      answers: field.answers || [],
       newOption: "",
       editMode: false,
       required: false,
@@ -99,7 +87,7 @@ export class NewExamComponent implements OnInit {
 
   addOption(field) {
     if (!field.newOption || field.newOption.trim() === "") return;
-    field.options.push(field.newOption);
+    field.answers.push(field.newOption);
     field.newOption = "";
   }
 
@@ -117,7 +105,7 @@ export class NewExamComponent implements OnInit {
   }
 
   removeOption(field, index) {
-    field.options.splice(index, 1);
+    field.answers.splice(index, 1);
   }
 
   onDrop(event: DndDropEvent) {
@@ -131,7 +119,7 @@ export class NewExamComponent implements OnInit {
       type: field.type,
       labelText: field.labelText,
       labelImage: field.labelImage,
-      options: field.options,
+      answers: field.answers,
       correctAnswers: field.correctAnswers,
       required: field.required,
     }));

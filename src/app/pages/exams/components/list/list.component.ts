@@ -1,12 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
-import { BsModalService, BsModalRef, ModalDirective } from 'ngx-bootstrap/modal';
+import { BsModalService, ModalDirective } from 'ngx-bootstrap/modal';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-
-import { Store } from '@ngrx/store';
-import { adduserlist, deleteuserlist, fetchuserlistData, updateuserlist } from 'src/app/store/UserList/userlist.action';
-import { selectData } from 'src/app/store/UserList/userlist-selector';
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import { Exam } from '../../types';
+import { ExamService } from '../../services/exam.service';
+import { convertDateToLocalDate } from 'src/app/utiltis/functions';
 
 @Component({
   selector: 'app-list',
@@ -14,14 +13,15 @@ import { PageChangedEvent } from 'ngx-bootstrap/pagination';
   styleUrls: ['./list.component.scss']
 })
 
-/**
- * Tasks-list component
- */
+
 export class ListComponent implements OnInit {
+
+  convertDateToLocalDate = convertDateToLocalDate;
   // bread crumb items
   breadCrumbItems: Array<{}>;
   term: any
   contactsList: any
+  
   // Table data
   total: Observable<number>;
   createContactForm!: UntypedFormGroup;
@@ -33,22 +33,24 @@ export class ListComponent implements OnInit {
   @ViewChild('newContactModal', { static: false }) newContactModal?: ModalDirective;
   @ViewChild('removeItemModal', { static: false }) removeItemModal?: ModalDirective;
   deleteId: any;
-  returnedArray: any
 
-  constructor(private modalService: BsModalService, private formBuilder: UntypedFormBuilder, public store: Store) {
+
+  loading: boolean = false;
+  list: Exam[];
+  filteredList: Exam[];
+
+  totalCount: number = 0;
+  page: number = 1;
+  pageSize: number = 10;
+
+
+  constructor(private modalService: BsModalService, private formBuilder: UntypedFormBuilder, public examService: ExamService) {
   }
 
   ngOnInit() {
     this.breadCrumbItems = [{ label: 'Exams' }, { label: 'Exams List', active: true }];
-    setTimeout(() => {
-      this.store.dispatch(fetchuserlistData());
-      this.store.select(selectData).subscribe(data => {
-        this.contactsList = data
-        this.returnedArray = data
-        this.contactsList = this.returnedArray.slice(0, 10)
-      })
-      document.getElementById('elmLoader')?.classList.add('d-none')
-    }, 1200);
+  
+    this.getAllData(this.page, this.pageSize);
 
     this.createContactForm = this.formBuilder.group({
       id: [''],
@@ -58,6 +60,22 @@ export class ListComponent implements OnInit {
       tags: ['', [Validators.required]],
       profile: ['', [Validators.required]],
     })
+  }
+
+
+  getAllData(pageNumber: number, pageSize: number, search: string = "") {
+    this.loading = true;
+    this.examService.getAllExams(pageNumber, pageSize, search).subscribe(
+      (response) => {
+        this.list = response.items;
+        this.filteredList = [...this.list];
+        this.totalCount = response.totalCount;
+        this.loading = false;
+      },
+      (error) => {
+        this.loading = false;
+      }
+    );
   }
 
   // File Upload
@@ -81,11 +99,9 @@ export class ListComponent implements OnInit {
     if (this.createContactForm.valid) {
       if (this.createContactForm.get('id')?.value) {
         const updatedData = this.createContactForm.value;
-        this.store.dispatch(updateuserlist({ updatedData }));
       } else {
         this.createContactForm.controls['id'].setValue((this.contactsList.length + 1).toString());
         const newData = this.createContactForm.value;
-        this.store.dispatch(adduserlist({ newData }));
       }
     }
     this.newContactModal?.hide()
@@ -101,11 +117,11 @@ export class ListComponent implements OnInit {
   // fiter job
   searchJob() {
     if (this.term) {
-      this.contactsList = this.returnedArray.filter((data: any) => {
+      this.filteredList = this.list.filter((data: any) => {
         return data.name.toLowerCase().includes(this.term.toLowerCase())
       })
     } else {
-      this.contactsList = this.returnedArray
+      this.filteredList = this.list
     }
   }
 
@@ -124,7 +140,7 @@ export class ListComponent implements OnInit {
   pageChanged(event: PageChangedEvent): void {
     const startItem = (event.page - 1) * event.itemsPerPage;
     this.endItem = event.page * event.itemsPerPage;
-    this.contactsList = this.returnedArray.slice(startItem, this.endItem);
+    this.contactsList = this.filteredList.slice(startItem, this.endItem);
   }
 
   // Delete User
@@ -134,7 +150,6 @@ export class ListComponent implements OnInit {
   }
 
   confirmDelete(id: any) {
-    this.store.dispatch(deleteuserlist({ id: this.deleteId }));
     this.removeItemModal?.hide();
   }
 

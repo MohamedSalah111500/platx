@@ -5,9 +5,8 @@ import { HttpClient } from "@angular/common/http";
 import { Observable, Observer } from "rxjs";
 
 import { FILE_MANAGER_URLS } from "src/app/utiltis/urls";
-import { pagination, paginationWithSearch } from "src/app/utiltis/functions";
+import { paginationWithSearch } from "src/app/utiltis/functions";
 import {
-  CreateFilePayload,
   GetAllFilesResponse,
   GetAllFilesSizeResponse,
   UpdateFilePayload,
